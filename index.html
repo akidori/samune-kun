@@ -66,7 +66,9 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
 .page.active { display: block; }
 
 /* ══ SAMUNE PAGE ══ */
-.sheet-wrap { overflow-x: auto; }
+.sheet-wrap {
+  overflow-x: auto;
+}
 table.sheet { border-collapse: collapse; width: 100%; min-width: 820px; table-layout: fixed; background: var(--white); }
 table.sheet thead th { background: var(--hdr2); border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 2px solid rgba(255,255,255,0.08); padding: 0; position: sticky; top: 52px; z-index: 200; }
 table.sheet thead th:last-child { border-right: none; }
@@ -139,7 +141,11 @@ td.ref-td:last-child { border-right: none; }
 .clear-lnk.show { display: block; }
 
 /* ══ SCRIPT PAGE ══ */
-#page-script { padding: 0; }
+#page-script {
+  padding: 0;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+}
 
 /* 案件タブバー */
 .case-tabbar {
@@ -149,7 +155,7 @@ td.ref-td:last-child { border-right: none; }
   align-items: stretch;
   overflow-x: auto;
   position: sticky;
-  top: 52px;
+  top: 0;
   z-index: 200;
   padding: 0 16px;
 }
@@ -259,7 +265,7 @@ table.sc-tbl {
   background: var(--white);
 }
 table.sc-tbl thead tr { background: var(--hdr2); }
-table.sc-tbl th { color: var(--green-xl); font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; position: sticky; top: 104px; z-index: 100; }
+table.sc-tbl th { color: var(--green-xl); font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; position: sticky; top: 44px; z-index: 100; }
 table.sc-tbl td { border: 1px solid var(--border); padding: 0; vertical-align: top; }
 
 /* 編集可能セル */
@@ -494,13 +500,6 @@ async function init() {
     await loadCases();
     if (rowCount === 0) { addSamuneRow(); addSamuneRow(); addSamuneRow(); }
     if (cases.length === 0) addCase();
-    // #1とカラムヘッダーが重ならないようstickyのtopをヘッダー高さに合わせる
-    requestAnimationFrame(() => {
-      const hdrH = document.getElementById('mainHdr').offsetHeight;
-      document.querySelectorAll('table.sheet thead th').forEach(th => th.style.top = hdrH + 'px');
-      document.querySelector('.case-tabbar') && (document.querySelector('.case-tabbar').style.top = hdrH + 'px');
-      document.querySelectorAll('table.sc-tbl thead th').forEach(th => th.style.top = (hdrH + 44) + 'px');
-    });
   }
 }
 
