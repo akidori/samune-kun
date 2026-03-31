@@ -65,6 +65,70 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
 .page { display: none; }
 .page.active { display: block; }
 
+/* ══ ROUGH CANVAS ══ */
+.rough-wrap {
+  margin-bottom: 8px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.rough-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: var(--green-bg);
+  border-bottom: 1px solid var(--border);
+}
+.rough-tool {
+  width: 24px; height: 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  transition: all 0.15s;
+  padding: 0;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+}
+.rough-tool:hover { background: var(--border2); color: var(--green); }
+.rough-tool.active { background: var(--green); color: #fff; border-color: var(--green); }
+.rough-color {
+  width: 24px; height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 1px;
+  background: transparent;
+}
+.rough-size {
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--white);
+  font-size: 10px;
+  color: var(--text);
+  padding: 0 4px;
+  cursor: pointer;
+  outline: none;
+}
+.rough-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+  touch-action: none;
+}
+.rough-canvas.text-mode { cursor: text; }
+
+td.plan-td {
+  min-width: 220px;
+}
+
 /* ══ SAMUNE PAGE ══ */
 .sheet-wrap {
   overflow-x: auto;
@@ -566,6 +630,158 @@ function switchMainTab(tab, force) {
 }
 
 // ══════════════════════════════
+// ROUGH CANVAS
+// ══════════════════════════════
+const roughState = {}; // {rid: {tool, history, current, drawing}}
+
+function initRoughCanvas(rid, docId) {
+  const canvas = document.getElementById(`rough-canvas-${rid}`);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // 白背景
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  roughState[rid] = { tool: 'pen', history: [], drawing: false, docId };
+
+  // スケール計算（表示サイズ vs 実際のcanvasサイズ）
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+
+  function getColor() { return document.getElementById(`rough-color-${rid}`).value; }
+  function getSize() { return parseInt(document.getElementById(`rough-size-${rid}`).value); }
+
+  function saveHistory() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    roughState[rid].history.push(imageData);
+    if (roughState[rid].history.length > 30) roughState[rid].history.shift();
+  }
+
+  // ── ペンモード ──
+  canvas.addEventListener('pointerdown', e => {
+    if (roughState[rid].tool !== 'pen') return;
+    e.preventDefault();
+    saveHistory();
+    roughState[rid].drawing = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    ctx.strokeStyle = getColor();
+    ctx.lineWidth = getSize();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!roughState[rid].drawing || roughState[rid].tool !== 'pen') return;
+    e.preventDefault();
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  });
+
+  canvas.addEventListener('pointerup', e => {
+    if (roughState[rid].tool !== 'pen') return;
+    roughState[rid].drawing = false;
+    ctx.closePath();
+    scheduleRoughSave(rid, docId, canvas);
+  });
+
+  // ── テキストモード ──
+  canvas.addEventListener('click', e => {
+    if (roughState[rid].tool !== 'text') return;
+    const pos = getPos(e);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'テキストを入力…';
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = rect.width / canvas.width;
+    const scaleY = rect.height / canvas.height;
+    Object.assign(input.style, {
+      position: 'fixed',
+      left: (rect.left + pos.x * scaleX) + 'px',
+      top: (rect.top + pos.y * scaleY - 12) + 'px',
+      background: 'rgba(255,255,255,0.9)',
+      border: '1px solid var(--green)',
+      borderRadius: '3px',
+      padding: '2px 6px',
+      fontSize: (getSize() * 3 + 10) + 'px',
+      color: getColor(),
+      zIndex: 9999,
+      outline: 'none',
+      minWidth: '80px',
+    });
+    document.body.appendChild(input);
+    input.focus();
+
+    function commitText() {
+      if (input.value.trim()) {
+        saveHistory();
+        ctx.font = `bold ${getSize() * 3 + 10}px 'Noto Sans JP', sans-serif`;
+        ctx.fillStyle = getColor();
+        ctx.fillText(input.value, pos.x, pos.y);
+        scheduleRoughSave(rid, docId, canvas);
+      }
+      input.remove();
+    }
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') commitText(); if (e.key === 'Escape') input.remove(); });
+    input.addEventListener('blur', commitText);
+  });
+}
+
+function setTool(rid, tool, btn) {
+  if (!roughState[rid]) return;
+  roughState[rid].tool = tool;
+  document.querySelectorAll(`#rough-${rid} .rough-tool[data-tool]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const canvas = document.getElementById(`rough-canvas-${rid}`);
+  if (canvas) canvas.className = `rough-canvas${tool === 'text' ? ' text-mode' : ''}`;
+}
+
+function undoRough(rid) {
+  const state = roughState[rid]; if (!state || !state.history.length) return;
+  const canvas = document.getElementById(`rough-canvas-${rid}`); if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const prev = state.history.pop();
+  ctx.putImageData(prev, 0, 0);
+  scheduleRoughSave(rid, state.docId, canvas);
+}
+
+function clearRough(rid) {
+  const canvas = document.getElementById(`rough-canvas-${rid}`); if (!canvas) return;
+  const state = roughState[rid]; if (!state) return;
+  const ctx = canvas.getContext('2d');
+  saveHistoryForRid(rid);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  scheduleRoughSave(rid, state.docId, canvas);
+}
+
+function saveHistoryForRid(rid) {
+  const canvas = document.getElementById(`rough-canvas-${rid}`); if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  if (roughState[rid]) roughState[rid].history.push(imageData);
+}
+
+const roughSaveTmr = {};
+function scheduleRoughSave(rid, docId, canvas) {
+  clearTimeout(roughSaveTmr[rid]);
+  roughSaveTmr[rid] = setTimeout(() => {
+    const dataUrl = canvas.toDataURL('image/png');
+    // Firestoreに保存（rowのdocIdに紐付け）
+    db.collection('samune_plans').doc(docId).update({ roughDataUrl: dataUrl }).catch(() => {});
+  }, 1500);
+}
+
+// ══════════════════════════════
 // SAMUNE TAB
 // ══════════════════════════════
 async function loadSamuneRows() {
@@ -574,8 +790,25 @@ async function loadSamuneRows() {
     for (const doc of snap.docs) {
       const d = doc.data();
       createSamuneRow(doc.id, d.planText||'', d.refs||[], false);
+      // ラフ画像を復元
+      if (d.roughDataUrl) {
+        setTimeout(() => restoreRough(doc.id, d.roughDataUrl), 100);
+      }
     }
   } catch(e) { console.error(e); }
+}
+
+function restoreRough(docId, dataUrl) {
+  // docIdからridを逆引き
+  const tr = document.querySelector(`[data-doc-id="${docId}"]`);
+  if (!tr) return;
+  const rid = parseInt(tr.id.replace('row-', ''));
+  const canvas = document.getElementById(`rough-canvas-${rid}`);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0);
+  img.src = dataUrl;
 }
 
 async function addSamuneRow() {
@@ -601,12 +834,31 @@ function createSamuneRow(docId, planText, refs, readOnly) {
     tdPlan.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:4px 6px;line-height:1.6">${esc(planText)||'（タイトルなし）'}</div>`;
   } else {
     tdPlan.innerHTML = `
-      <textarea class="plan-ta" rows="3" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
+      <!-- ラフキャンバス -->
+      <div class="rough-wrap" id="rough-${rid}">
+        <div class="rough-toolbar">
+          <button class="rough-tool active" data-tool="pen" onclick="setTool(${rid},'pen',this)" title="ペン">✏️</button>
+          <button class="rough-tool" data-tool="text" onclick="setTool(${rid},'text',this)" title="テキスト">T</button>
+          <input type="color" class="rough-color" id="rough-color-${rid}" value="#1a1a1a" title="色">
+          <select class="rough-size" id="rough-size-${rid}" title="サイズ">
+            <option value="2">細</option>
+            <option value="4" selected>中</option>
+            <option value="8">太</option>
+          </select>
+          <button class="rough-tool" onclick="undoRough(${rid})" title="元に戻す">↩</button>
+          <button class="rough-tool" onclick="clearRough(${rid})" title="全消去" style="color:#dc2626">✕</button>
+        </div>
+        <canvas class="rough-canvas" id="rough-canvas-${rid}" width="220" height="124"></canvas>
+      </div>
+      <!-- テキスト入力 -->
+      <textarea class="plan-ta" rows="2" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
       <div class="plan-actions">
         <button class="share-btn" onclick="openSamuneShare('${docId}',this)">🔗 共有</button>
         <button class="del-btn" onclick="delSamuneRow('${docId}',${rid})">✕</button>
       </div>`;
     tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSamuneSave(docId, rid));
+    // キャンバス初期化（DOMが揃ってから）
+    setTimeout(() => initRoughCanvas(rid, docId), 50);
   }
   tr.appendChild(tdPlan);
   for (let i = 0; i < 5; i++) {
