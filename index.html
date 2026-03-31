@@ -158,7 +158,7 @@ table.sheet tbody tr:hover .plan-actions { opacity: 1; }
 .del-btn { width: 22px; height: 22px; background: none; border: none; color: var(--muted2); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 12px; transition: all 0.15s; margin-left: auto; }
 .del-btn:hover { background: #fee2e2; color: #dc2626; }
 td.ref-td { border-right: 1px solid var(--border); background: var(--white); vertical-align: top; padding: 10px; }
-td.ref-td:last-child { border-right: none; }
+td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .url-row { display: flex; gap: 4px; margin-bottom: 8px; }
 .url-in { flex: 1; min-width: 0; background: var(--green-bg); border: 1px solid var(--border); border-radius: 4px; padding: 5px 8px; font-size: 9px; color: var(--text); font-family: 'DM Mono', monospace; outline: none; transition: all 0.15s; }
 .url-in:focus { border-color: var(--green); background: #fff; }
@@ -636,6 +636,7 @@ function switchMainTab(tab, force) {
 // キーワード抽出
 // ══════════════════════════════
 const kwTimers = {};
+const KW_WORKER = 'https://script-maker-api.aki-surf89315.workers.dev/';
 
 function scheduleKwExtract(rid) {
   clearTimeout(kwTimers[rid]);
@@ -643,7 +644,6 @@ function scheduleKwExtract(rid) {
 }
 
 async function extractKeywords(rid) {
-  // その行の参考サムネタイトルを収集
   const titles = [];
   for (let i = 0; i < 5; i++) {
     const card = document.getElementById(`c${rid}r${i}-card`);
@@ -655,11 +655,10 @@ async function extractKeywords(rid) {
 
   const kwArea = document.getElementById('kw-'+rid);
   if (!kwArea) return;
-
   kwArea.innerHTML = `<div class="kw-loading"><div class="kw-spin"></div>抽出中…</div>`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(KW_WORKER, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -673,20 +672,16 @@ async function extractKeywords(rid) {
 ${titles.map((t,i)=>`${i+1}. ${t}`).join('\n')}
 
 以下のJSON形式のみで返してください（説明不要）：
-{
-  "keywords": ["キーワード1","キーワード2",...],
-  "patterns": ["文言パターン1","文言パターン2",...],
-  "numbers": ["数字表現1","数字表現2",...]
-}
+{"keywords":["キーワード1","キーワード2"],"patterns":["文言パターン1","文言パターン2"],"numbers":["数字表現1"]}
 
-keywordsは感情・行動・状態を表す単語（最大8個）
-patternsはサムネによく使われる文言パターン（最大4個、例：「〇〇の理由」「〇〇した結果」）
-numbersは数字を使った表現（最大4個、例：「3つの方法」「100万円」）`
+keywords: 感情・行動・状態を表す単語（最大8個）
+patterns: サムネによく使われる文言パターン（最大4個）
+numbers: 数字を使った表現（最大4個）`
         }]
       })
     });
     const data = await res.json();
-    const txt = data.content[0].text.replace(/```json|```/g,'').trim();
+    const txt = data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
     const result = JSON.parse(txt);
 
     let html = '';
@@ -704,7 +699,8 @@ numbersは数字を使った表現（最大4個、例：「3つの方法」「10
     }
     kwArea.innerHTML = html || `<div class="kw-hint">抽出結果なし</div>`;
   } catch(e) {
-    kwArea.innerHTML = `<div class="kw-hint">抽出に失敗しました</div>`;
+    kwArea.innerHTML = `<div class="kw-hint" style="color:#dc2626">抽出に失敗しました</div>`;
+    console.error('kw extract error', e);
   }
 }
 
