@@ -399,15 +399,8 @@ tr:hover .sc-row-ctrl { opacity: 1; }
   <div id="ctrl-script" style="display:none;align-items:center;gap:8px">
     <button class="hdr-btn ghost" onclick="dlScriptHTML()">⬇ HTML出力</button>
     <button class="hdr-btn ghost" onclick="copyTSV()">📋 TSVコピー</button>
-    <button class="hdr-btn ghost" onclick="openScriptShare()">🔗 共有</button>
+    <button class="hdr-btn green" onclick="openCaseShare()">🔗 この案件を共有</button>
   </div>
-</div>
-
-<!-- SHARE VIEW HEADER -->
-<div class="share-view-hdr" id="shareViewHdr">
-  <div class="hdr-icon">🎬</div>
-  <div><div class="share-view-title" id="shareViewTitle">さむね君</div><div class="share-view-sub">台本（共有ビュー）</div></div>
-  <span class="readonly-badge">READ ONLY</span>
 </div>
 
 <!-- ══ PAGE: SAMUNE ══ -->
@@ -415,7 +408,7 @@ tr:hover .sc-row-ctrl { opacity: 1; }
   <div class="sheet-wrap">
     <table class="sheet" id="sheet">
       <colgroup><col style="width:36px"><col style="width:18%"><col><col><col><col><col></colgroup>
-      <thead><tr>
+      <thead><tr id="sheet-thead">
         <th><div class="th-in" style="justify-content:center">#</div></th>
         <th><div class="th-in plan-h">企画タイトル / 文言</div></th>
         <th><div class="th-in"><span class="th-badge">1</span>参考サムネ</div></th>
@@ -445,7 +438,7 @@ tr:hover .sc-row-ctrl { opacity: 1; }
     <div class="modal-title" id="modalTitle">🔗 共有リンク</div>
     <div class="modal-sub" id="modalSub"></div>
     <div class="modal-url-wrap"><input type="text" class="modal-url" id="modalUrl" readonly><button class="modal-copy" id="modalCopyBtn" onclick="copyUrl()">コピー</button></div>
-    <div class="modal-note">✓ このURLを知っている人だけが閲覧できます<br>✓ 閲覧者は編集できません（読み取り専用）</div>
+    <div class="modal-note">✓ このURLを知っている人だけが閲覧できます<br>✓ サムネ企画リストと台本が両方見えます<br>✓ 閲覧者は編集できません（読み取り専用）</div>
     <button class="modal-close" onclick="closeModal()">閉じる</button>
   </div>
 </div>
@@ -482,24 +475,82 @@ let caseSaveTmr = {};
 // ══ INIT ══
 async function init() {
   const params = new URLSearchParams(location.search);
-  const shareId = params.get('share');
-  const shareType = params.get('type') || 'samune';
+  const caseShareId = params.get('case'); // 案件共有モード
 
-  if (shareId) {
+  if (caseShareId) {
+    // ── 共有モード：案件全体を読み取り専用で表示 ──
     isShareMode = true;
-    document.getElementById('mainHdr').style.display = 'none';
-    document.getElementById('shareViewHdr').classList.add('visible');
-    if (shareType === 'script') {
-      switchMainTab('script', true);
-      await loadShareScript(shareId);
-    } else {
-      await loadShareRow(shareId);
-    }
+    // ヘッダーを共有モード表示に切り替え
+    const hdr = document.getElementById('mainHdr');
+    hdr.innerHTML = `
+      <div class="hdr-logo"><div class="hdr-icon">🎬</div><div><div class="hdr-name" id="shareViewTitle">読み込み中…</div><div class="hdr-sub">READ ONLY</div></div></div>
+      <div class="hdr-spacer"></div>
+      <span style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:10px;color:rgba(255,255,255,0.6);font-family:'DM Mono',monospace;letter-spacing:0.08em">READ ONLY</span>
+    `;
+    await loadCaseShare(caseShareId);
   } else {
+    // ── 通常モード ──
     await loadSamuneRows();
     await loadCases();
     if (rowCount === 0) { addSamuneRow(); addSamuneRow(); addSamuneRow(); }
     if (cases.length === 0) addCase();
+    // #1とカラムヘッダーが重ならないようstickyのtopをヘッダー高さに合わせる
+    requestAnimationFrame(() => {
+      const hdrH = document.getElementById('mainHdr').offsetHeight;
+      document.querySelectorAll('table.sheet thead th').forEach(th => th.style.top = hdrH + 'px');
+      document.querySelector('.case-tabbar') && (document.querySelector('.case-tabbar').style.top = hdrH + 'px');
+      document.querySelectorAll('table.sc-tbl thead th').forEach(th => th.style.top = (hdrH + 44) + 'px');
+    });
+  }
+}
+
+// ── 案件共有モード読み込み ──
+async function loadCaseShare(caseId) {
+  try {
+    // 案件データ（台本）
+    const caseDoc = await db.collection('script_cases').doc(caseId).get();
+    const caseName = caseDoc.exists ? (caseDoc.data().talent || caseDoc.data().name || '案件') : '';
+    document.getElementById('shareViewTitle').textContent = caseName ? `${caseName} — 企画資料` : '企画資料';
+    document.title = caseName ? `${caseName} — さむね君` : 'さむね君 企画資料';
+
+    // サムネ企画一覧（この案件に紐づくもの = case_idフィールドで紐付け）
+    // ※ 紐付けがない場合は全件表示（後方互換）
+    const samuneSnap = await db.collection('samune_plans')
+      .where('caseId', '==', caseId)
+      .orderBy('order').get();
+
+    // サムネタブを表示
+    switchMainTab('samune', true);
+    document.querySelector('#ctrl-samune').style.display = 'none';
+
+    if (!samuneSnap.empty) {
+      for (const doc of samuneSnap.docs) {
+        const d = doc.data();
+        createSamuneRow(doc.id, d.planText||'', d.refs||[], true);
+      }
+    } else {
+      // サムネなしの場合はメッセージ表示
+      document.getElementById('tbody').innerHTML = '<tr><td colspan="7" style="padding:32px;text-align:center;color:var(--muted);font-size:12px">参考サムネの登録はありません</td></tr>';
+    }
+
+    // 台本も表示（タブとして追加）
+    if (caseDoc.exists) {
+      cases.push({ id: caseId, name: caseName, data: caseDoc.data() });
+      activeCaseId = caseId;
+
+      // 台本タブボタンを追加（読み取り専用）
+      const mainTabs = document.querySelector('.main-tabs');
+      mainTabs.innerHTML = `
+        <button class="main-tab active" id="mtab-samune" onclick="switchMainTab('samune')">🖼 サムネ</button>
+        <button class="main-tab" id="mtab-script" onclick="switchMainTab('script')">📜 台本</button>
+      `;
+      // 台本ページにコンテンツをレンダリング（読み取り専用）
+      document.getElementById('caseTabbar').style.display = 'none';
+      renderCaseContentReadOnly(caseId, caseDoc.data());
+    }
+  } catch(e) {
+    console.error(e);
+    showToast('読み込みに失敗しました');
   }
 }
 
@@ -528,20 +579,14 @@ async function loadSamuneRows() {
   } catch(e) { console.error(e); }
 }
 
-async function loadShareRow(id) {
-  try {
-    const doc = await db.collection('samune_plans').doc(id).get();
-    if (!doc.exists) { document.getElementById('shareViewTitle').textContent = '企画が見つかりません'; return; }
-    const d = doc.data();
-    document.getElementById('shareViewTitle').textContent = d.planText || '（タイトルなし）';
-    createSamuneRow(id, d.planText||'', d.refs||[], true);
-  } catch(e) { showToast('読み込みに失敗しました'); }
-}
-
 async function addSamuneRow() {
   if (isShareMode) return;
   const snap = await db.collection('samune_plans').orderBy('order').get();
-  const ref = await db.collection('samune_plans').add({ planText:'', refs:[{},{},{},{},{}], order: snap.size, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+  const ref = await db.collection('samune_plans').add({
+    planText:'', refs:[{},{},{},{},{}], order: snap.size,
+    caseId: activeCaseId || null,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
   createSamuneRow(ref.id, '', [{},{},{},{},{}], false);
 }
 
@@ -657,10 +702,18 @@ function clearCell(cid,docId,idx){
   if(docId){const tr=document.querySelector(`[data-doc-id="${docId}"]`);if(tr) scheduleSamuneSave(docId,parseInt(tr.id.replace('row-','')));}
 }
 function openSamuneShare(docId,btn){
-  const tr=btn.closest('tr'); const planText=tr.querySelector('.plan-ta')?.value||'（タイトルなし）';
-  document.getElementById('modalTitle').textContent='🔗 この企画を共有';
-  document.getElementById('modalSub').textContent=`「${planText.slice(0,20)}${planText.length>20?'…':''}」の共有リンク`;
-  document.getElementById('modalUrl').value=`${location.origin}${location.pathname}?share=${docId}`;
+  // サムネ単体の共有 → 現在の案件共有に誘導
+  openCaseShare();
+}
+
+// ── 案件全体の共有URL発行 ──
+function openCaseShare() {
+  if (!activeCaseId) { showToast('台本タブで案件を選択してください'); return; }
+  const c = cases.find(c=>c.id===activeCaseId);
+  const name = c?.data?.talent || c?.data?.name || '案件';
+  document.getElementById('modalTitle').textContent = '🔗 この案件を共有';
+  document.getElementById('modalSub').textContent = `「${name}」のサムネ＋台本をまるごと共有`;
+  document.getElementById('modalUrl').value = `${location.origin}${location.pathname}?case=${activeCaseId}`;
   document.getElementById('modalCopyBtn').textContent='コピー'; document.getElementById('modalCopyBtn').classList.remove('copied');
   document.getElementById('modalBg').classList.add('open');
 }
@@ -717,6 +770,12 @@ function switchCase(id) {
   activeCaseId = id;
   document.querySelectorAll('.case-tab').forEach(t => t.classList.toggle('active', t.dataset.caseId === id));
   renderCaseContent(id);
+  // サムネタブの「企画を追加」ボタンのtitleを更新
+  const addBtn = document.querySelector('#ctrl-samune button.hdr-btn');
+  if (addBtn) {
+    const c = cases.find(c=>c.id===id);
+    addBtn.title = c ? `「${c.data.name||c.data.talent||'この案件'}」に企画を追加` : '';
+  }
 }
 
 function renderCaseContent(id) {
@@ -912,28 +971,8 @@ async function delCase(id) {
   showToast('案件を削除しました');
 }
 
-// 共有
-function openScriptShare() {
-  if (!activeCaseId) return;
-  const c = cases.find(c=>c.id===activeCaseId); if(!c) return;
-  document.getElementById('modalTitle').textContent = '🔗 台本を共有';
-  document.getElementById('modalSub').textContent = `「${(c.data.name||'案件').slice(0,20)}」の共有リンク`;
-  document.getElementById('modalUrl').value = `${location.origin}${location.pathname}?share=${activeCaseId}&type=script`;
-  document.getElementById('modalCopyBtn').textContent='コピー'; document.getElementById('modalCopyBtn').classList.remove('copied');
-  document.getElementById('modalBg').classList.add('open');
-}
-
-async function loadShareScript(id) {
-  try {
-    const doc = await db.collection('script_cases').doc(id).get();
-    if (!doc.exists) { document.getElementById('shareViewTitle').textContent='台本が見つかりません'; return; }
-    const d = doc.data();
-    document.getElementById('shareViewTitle').textContent = d.talent ? `${d.talent} 台本` : (d.name||'台本');
-    cases.push({ id, name: d.name||'', data: d });
-    activeCaseId = id;
-    renderCaseContentReadOnly(id, d);
-  } catch(e) { showToast('読み込みに失敗しました'); }
-}
+// 共有（案件全体）
+function openScriptShare() { openCaseShare(); }
 
 function renderCaseContentReadOnly(id, d) {
   const TYPE_CLASSES = {'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge'};
