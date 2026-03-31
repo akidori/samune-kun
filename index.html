@@ -65,71 +65,6 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
 .page { display: none; }
 .page.active { display: block; }
 
-/* ══ KEYWORD AREA ══ */
-.kw-area {
-  min-height: 36px;
-  padding: 6px 4px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  align-items: flex-start;
-}
-.kw-hint {
-  font-size: 10px;
-  color: var(--muted2);
-  line-height: 1.5;
-}
-.kw-loading {
-  font-size: 10px;
-  color: var(--green);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.kw-spin {
-  width: 10px; height: 10px;
-  border: 1.5px solid var(--border2);
-  border-top-color: var(--green);
-  border-radius: 50%;
-  animation: kwspin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes kwspin { to { transform: rotate(360deg); } }
-.kw-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 10px;
-  font-weight: 500;
-  cursor: default;
-  border: 1px solid;
-}
-.kw-tag.type-key {
-  background: var(--green-bg2);
-  color: var(--hdr2);
-  border-color: var(--border2);
-}
-.kw-tag.type-pattern {
-  background: #fff7ed;
-  color: #92400e;
-  border-color: #fcd34d;
-}
-.kw-tag.type-num {
-  background: #eff6ff;
-  color: #1e40af;
-  border-color: #93c5fd;
-}
-.kw-section-label {
-  width: 100%;
-  font-size: 9px;
-  color: var(--muted2);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 4px;
-}
-
 td.plan-td { min-width: 200px; }
 
 /* ══ SAMUNE PAGE ══ */
@@ -633,78 +568,6 @@ function switchMainTab(tab, force) {
 }
 
 // ══════════════════════════════
-// キーワード抽出
-// ══════════════════════════════
-const kwTimers = {};
-const KW_WORKER = 'https://script-maker-api.aki-surf89315.workers.dev/';
-
-function scheduleKwExtract(rid) {
-  clearTimeout(kwTimers[rid]);
-  kwTimers[rid] = setTimeout(() => extractKeywords(rid), 800);
-}
-
-async function extractKeywords(rid) {
-  const titles = [];
-  for (let i = 0; i < 5; i++) {
-    const card = document.getElementById(`c${rid}r${i}-card`);
-    if (!card?.classList.contains('loaded')) continue;
-    const titleEl = card.querySelector('.v-title');
-    if (titleEl?.textContent?.trim()) titles.push(titleEl.textContent.trim());
-  }
-  if (titles.length === 0) return;
-
-  const kwArea = document.getElementById('kw-'+rid);
-  if (!kwArea) return;
-  kwArea.innerHTML = `<div class="kw-loading"><div class="kw-spin"></div>抽出中…</div>`;
-
-  try {
-    const res = await fetch(KW_WORKER, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
-        messages: [{
-          role: 'user',
-          content: `以下のYouTubeサムネタイトル群から、サムネに使えるキーワードと共通文言パターンを抽出してください。
-
-タイトル一覧：
-${titles.map((t,i)=>`${i+1}. ${t}`).join('\n')}
-
-以下のJSON形式のみで返してください（説明不要）：
-{"keywords":["キーワード1","キーワード2"],"patterns":["文言パターン1","文言パターン2"],"numbers":["数字表現1"]}
-
-keywords: 感情・行動・状態を表す単語（最大8個）
-patterns: サムネによく使われる文言パターン（最大4個）
-numbers: 数字を使った表現（最大4個）`
-        }]
-      })
-    });
-    const data = await res.json();
-    const txt = data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
-    const result = JSON.parse(txt);
-
-    let html = '';
-    if (result.keywords?.length) {
-      html += `<div class="kw-section-label">キーワード</div>`;
-      html += result.keywords.map(k => `<span class="kw-tag type-key">${esc(k)}</span>`).join('');
-    }
-    if (result.patterns?.length) {
-      html += `<div class="kw-section-label">文言パターン</div>`;
-      html += result.patterns.map(p => `<span class="kw-tag type-pattern">${esc(p)}</span>`).join('');
-    }
-    if (result.numbers?.length) {
-      html += `<div class="kw-section-label">数字表現</div>`;
-      html += result.numbers.map(n => `<span class="kw-tag type-num">${esc(n)}</span>`).join('');
-    }
-    kwArea.innerHTML = html || `<div class="kw-hint">抽出結果なし</div>`;
-  } catch(e) {
-    kwArea.innerHTML = `<div class="kw-hint" style="color:#dc2626">抽出に失敗しました</div>`;
-    console.error('kw extract error', e);
-  }
-}
-
-// ══════════════════════════════
 // SAMUNE TAB
 // ══════════════════════════════
 async function loadSamuneRows() {
@@ -741,9 +604,6 @@ function createSamuneRow(docId, planText, refs, readOnly) {
   } else {
     tdPlan.innerHTML = `
       <textarea class="plan-ta" rows="2" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
-      <div class="kw-area" id="kw-${rid}">
-        <div class="kw-hint">参考サムネのURLを入力すると<br>キーワードを自動抽出します</div>
-      </div>
       <div class="plan-actions">
         <button class="share-btn" onclick="openSamuneShare('${docId}',this)">🔗 共有</button>
         <button class="del-btn" onclick="delSamuneRow('${docId}',${rid})">✕</button>
@@ -820,12 +680,7 @@ function renderCard(cid,vid,info,readOnly){
   el.dataset.refdata=JSON.stringify(info);
   el.innerHTML=`<div class="score-badge ${sc.grade}">${sc.label}</div><div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div><a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener"><img src="${thumb}" alt=""><div class="thumb-ov"><div class="thumb-play"></div></div><span class="thumb-dur">${esc(info.duration)}</span></a><div class="v-ch">${esc(info.channel)}</div><div class="v-title">${esc(info.title)}</div><div class="v-stats"><div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div><div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div><div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span><span class="v-stat-sub">${info.uploadDate}</span></div></div><div class="v-ratio ${rCls}">再生/登録 = ${rStr}</div>`;
   el.classList.add('loaded');
-  if(!readOnly) {
-    document.getElementById(cid+'-clear')?.classList.add('show');
-    // ridを抽出してキーワード再抽出をスケジュール
-    const rid = parseInt(cid.replace(/c(\d+)r\d+/, '$1'));
-    scheduleKwExtract(rid);
-  }
+  if(!readOnly) document.getElementById(cid+'-clear')?.classList.add('show');
 }
 function calcScore(info){
   const days=(Date.now()-new Date(info.uploadDate))/86400000;
