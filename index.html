@@ -23,7 +23,6 @@
   --text2: #374151;
   --muted: #6b7280;
   --muted2: #9ca3af;
-  --radius: 6px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,35 +41,120 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
   z-index: 300;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-.hdr-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.hdr-logo { display: flex; align-items: center; gap: 8px; }
 .hdr-icon { width: 28px; height: 28px; background: linear-gradient(135deg,var(--green-l),var(--green)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
 .hdr-name { font-size: 14px; font-weight: 700; color: #fff; }
 .hdr-sub { font-size: 9px; color: rgba(255,255,255,0.4); }
 .hdr-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
 .hdr-spacer { flex: 1; }
-
-/* Main tabs */
-.main-tabs { display: flex; gap: 2px; background: rgba(0,0,0,0.2); border-radius: 7px; padding: 3px; }
-.main-tab { padding: 4px 12px; border-radius: 5px; border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; white-space: nowrap; }
-.main-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
-.main-tab:hover:not(.active) { color: rgba(255,255,255,0.75); }
-
 .hdr-btn { height: 30px; padding: 0 12px; border-radius: 5px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 5px; transition: all 0.15s; flex-shrink: 0; }
 .hdr-btn.green { background: var(--green-l); color: var(--hdr2); }
 .hdr-btn.green:hover { background: var(--green-xl); }
-.hdr-btn.ghost { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+.hdr-btn.ghost { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
 .hdr-btn.ghost:hover { background: rgba(255,255,255,0.18); color: #fff; }
 
-/* ══ PAGES ══ */
-.page { display: none; }
-.page.active { display: block; }
+/* legend */
+.legend { display: flex; gap: 8px; align-items: center; padding: 4px 10px; background: rgba(0,0,0,0.2); border-radius: 20px; }
+.ldot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.litem { display: flex; align-items: center; gap: 4px; font-size: 10px; color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; white-space: nowrap; }
 
-td.plan-td { min-width: 200px; }
-
-/* ══ SAMUNE PAGE ══ */
-.sheet-wrap {
+/* ══ 案件タブバー ══ */
+.case-tabbar {
+  background: var(--white);
+  border-bottom: 2px solid var(--border2);
+  display: flex;
+  align-items: stretch;
   overflow-x: auto;
+  position: sticky;
+  top: 52px;
+  z-index: 200;
+  padding: 0 12px;
 }
+.case-tabbar::-webkit-scrollbar { height: 3px; }
+.case-tabbar::-webkit-scrollbar-thumb { background: var(--border2); }
+
+.case-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 14px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.case-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
+.case-tab:hover:not(.active) { color: var(--text2); background: var(--green-bg); }
+
+.case-tab-name {
+  border: none; background: transparent;
+  font-size: 12px; font-weight: inherit; color: inherit;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer; outline: none;
+  min-width: 40px; max-width: 120px;
+}
+.case-tab-name:focus { background: rgba(22,163,74,0.08); border-radius: 3px; padding: 0 4px; }
+
+.case-tab-del {
+  width: 15px; height: 15px; background: none; border: none;
+  color: var(--muted2); cursor: pointer; font-size: 11px;
+  border-radius: 3px; transition: all 0.12s; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+}
+.case-tab:hover .case-tab-del { opacity: 1; }
+.case-tab-del:hover { background: #fee2e2; color: #dc2626; }
+
+.case-tab-add {
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 12px; height: 40px;
+  border: none; background: transparent;
+  color: var(--muted2); font-size: 11px;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  transition: color 0.12s; white-space: nowrap; flex-shrink: 0;
+}
+.case-tab-add:hover { color: var(--green); }
+
+.case-tabbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.tab-share-btn {
+  height: 26px; padding: 0 10px;
+  border: 1px solid var(--border2);
+  border-radius: 5px; background: var(--green-bg);
+  font-size: 10px; font-weight: 600; color: var(--green);
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  display: flex; align-items: center; gap: 4px;
+  transition: all 0.12s; white-space: nowrap;
+}
+.tab-share-btn:hover { background: var(--green-bg2); }
+.tab-add-row-btn {
+  height: 26px; padding: 0 10px;
+  border: none; border-radius: 5px;
+  background: var(--green); color: #fff;
+  font-size: 10px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  display: flex; align-items: center; gap: 3px;
+  transition: background 0.12s; white-space: nowrap;
+}
+.tab-add-row-btn:hover { background: var(--green-l); }
+
+/* ══ TABLE ══ */
+.sheet-wrap { overflow-x: auto; }
 table.sheet { border-collapse: collapse; width: 100%; min-width: 820px; table-layout: fixed; background: var(--white); }
 table.sheet thead th { background: var(--hdr2); border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 2px solid rgba(255,255,255,0.08); padding: 0; }
 table.sheet thead th:last-child { border-right: none; }
@@ -82,16 +166,14 @@ table.sheet tbody tr:last-child { border-bottom: none; }
 table.sheet tbody tr:hover td { background: #f6fef8; }
 table.sheet tbody tr:hover td.plan-td { background: #e8faf0; }
 td.rn { width: 36px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green-l); background: var(--green-bg); border-right: 1px solid var(--border2); vertical-align: top; padding-top: 14px; user-select: none; }
-td.plan-td { background: var(--green-bg); border-right: 2px solid var(--border2); vertical-align: top; padding: 10px 12px; position: relative; }
-.plan-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 12px; font-weight: 600; color: var(--hdr2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.65; min-height: 58px; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
+td.plan-td { width: 18%; background: var(--green-bg); border-right: 2px solid var(--border2); vertical-align: top; padding: 10px 12px; position: relative; min-width: 180px; }
+.plan-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 12px; font-weight: 600; color: var(--hdr2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.65; min-height: 56px; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
 .plan-ta:focus { background: rgba(22,163,74,0.06); }
 .plan-ta::placeholder { color: var(--border2); font-weight: 300; font-size: 11px; }
-.plan-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; opacity: 0; transition: opacity 0.15s; }
+.plan-actions { display: flex; align-items: center; gap: 6px; margin-top: 6px; opacity: 0; transition: opacity 0.15s; }
 table.sheet tbody tr:hover .plan-actions { opacity: 1; }
-.share-btn { display: flex; align-items: center; gap: 4px; padding: 4px 9px; background: var(--green-bg2); border: 1px solid var(--border2); border-radius: 4px; font-size: 10px; color: var(--green); font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; }
-.share-btn:hover { background: var(--border2); }
-.del-btn { width: 22px; height: 22px; background: none; border: none; color: var(--muted2); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 12px; transition: all 0.15s; margin-left: auto; }
-.del-btn:hover { background: #fee2e2; color: #dc2626; }
+.del-row-btn { width: 20px; height: 20px; background: none; border: none; color: var(--muted2); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; font-size: 12px; transition: all 0.12s; margin-left: auto; }
+.del-row-btn:hover { background: #fee2e2; color: #dc2626; }
 td.ref-td { border-right: 1px solid var(--border); background: var(--white); vertical-align: top; padding: 10px; }
 td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .url-row { display: flex; gap: 4px; margin-bottom: 8px; }
@@ -112,7 +194,7 @@ td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .score-bar.B { background: #3b82f6; }
 .score-bar.C { background: #f59e0b; }
 .score-bar.X { background: #ef4444; }
-.thumb-link { display: block; position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 5px; overflow: hidden; background: var(--green-bg2); margin-bottom: 7px; cursor: pointer; text-decoration: none; }
+.thumb-link { display: block; position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 5px; overflow: hidden; background: var(--green-bg2); margin-bottom: 7px; text-decoration: none; }
 .thumb-link:hover .thumb-ov { opacity: 1; }
 .thumb-link img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .thumb-ov { position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
@@ -142,212 +224,12 @@ td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .clear-lnk { font-size: 9px; color: var(--muted2); background: none; border: none; cursor: pointer; text-decoration: underline; font-family: 'Noto Sans JP', sans-serif; margin-top: 5px; display: none; padding: 0; }
 .clear-lnk.show { display: block; }
 
-/* ══ SCRIPT PAGE ══ */
-#page-script {
-  padding: 0;
-  height: calc(100vh - 52px);
-  overflow-y: auto;
-}
-
-/* 案件タブバー */
-.case-tabbar {
-  background: var(--white);
-  border-bottom: 2px solid var(--border2);
-  display: flex;
-  align-items: stretch;
-  overflow-x: auto;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  padding: 0 16px;
-}
-.case-tabbar::-webkit-scrollbar { height: 3px; }
-.case-tabbar::-webkit-scrollbar-thumb { background: var(--border2); }
-
-.case-tab {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  border: none;
-  background: transparent;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: all 0.15s;
-  position: relative;
-}
-.case-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
-.case-tab:hover:not(.active) { color: var(--text2); background: var(--green-bg); }
-.case-tab-del {
-  width: 16px; height: 16px;
-  background: none; border: none;
-  color: var(--muted2); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 3px; font-size: 11px;
-  transition: all 0.15s;
-  padding: 0;
-}
-.case-tab-del:hover { background: #fee2e2; color: #dc2626; }
-.add-case-btn {
-  display: flex; align-items: center; gap: 4px;
-  padding: 10px 14px;
-  border: none; background: transparent;
-  color: var(--muted2); font-size: 11px;
-  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
-  transition: color 0.15s;
-  white-space: nowrap;
-}
-.add-case-btn:hover { color: var(--green); }
-
-/* 案件ヘッダー */
-.case-header {
-  background: linear-gradient(135deg, #064e2e, #0f4c2a);
-  padding: 16px 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 12px;
-  align-items: end;
-}
-.case-header-field { display: flex; flex-direction: column; gap: 4px; }
-.case-header-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); font-family: 'DM Mono', monospace; }
-.case-header-input {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 5px;
-  padding: 6px 10px;
-  font-size: 12px;
-  color: #fff;
-  font-family: 'Noto Sans JP', sans-serif;
-  outline: none;
-  transition: all 0.15s;
-}
-.case-header-input:focus { background: rgba(255,255,255,0.14); border-color: var(--green-l); }
-.case-header-input::placeholder { color: rgba(255,255,255,0.25); }
-
-/* タイトル・サムネ・ハイライト */
-.case-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 16px 20px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-}
-.case-info-card { background: var(--green-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-.case-info-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
-.case-info-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 11.5px; color: var(--text2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.7; min-height: 80px; }
-.case-info-ta::placeholder { color: var(--muted2); }
-
-/* 凡例 */
-.sc-legend {
-  padding: 10px 20px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.sc-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
-.sc-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-
-/* スクリプトテーブル */
-.sc-tbl-wrap { overflow-x: auto; }
-table.sc-tbl {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 1000px;
-  font-size: 11.5px;
-  background: var(--white);
-}
-table.sc-tbl thead tr { background: var(--hdr2); }
-table.sc-tbl th { color: var(--green-xl); font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; position: sticky; top: 44px; z-index: 100; }
-table.sc-tbl td { border: 1px solid var(--border); padding: 0; vertical-align: top; }
-
-/* 編集可能セル */
-.editable {
-  width: 100%;
-  min-height: 36px;
-  padding: 7px 8px;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 11.5px;
-  color: var(--text);
-  font-family: 'Noto Sans JP', sans-serif;
-  resize: none;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  display: block;
-}
-.editable:focus { background: rgba(22,163,74,0.04); }
-select.editable { cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 20px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; }
-
-/* セクション行カラー */
-tr.sc-insert td { background: #f0faf0; }
-tr.sc-vlog td { background: #fefce8; }
-tr.sc-kaisetsu td { background: #f0f6ff; }
-tr.sc-sokyu td { background: #fff8f0; }
-tr.sc-bridge td { background: #faf0ff; }
-tr.sc-total td { background: var(--hdr2); }
-tr.sc-total .editable { color: var(--green-xl); font-weight: 700; text-align: center; font-family: 'DM Mono', monospace; font-size: 11px; }
-
-/* 行操作ボタン */
-.sc-row-ctrl {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 4px;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-tr:hover .sc-row-ctrl { opacity: 1; }
-.sc-row-btn { width: 18px; height: 18px; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; font-size: 10px; color: var(--muted2); transition: all 0.15s; padding: 0; }
-.sc-row-btn:hover { background: var(--green-bg2); color: var(--green); }
-.sc-row-btn.del:hover { background: #fee2e2; color: #dc2626; }
-
-/* 行追加ボタン */
-.add-row-area {
-  padding: 10px 20px;
-  background: var(--white);
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.add-row-type-btn {
-  padding: 5px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  background: transparent;
-  font-size: 11px;
-  color: var(--muted);
-  cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif;
-  transition: all 0.15s;
-}
-.add-row-type-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
-
-/* フッターバー */
-.sc-footer {
-  padding: 8px 20px;
-  background: var(--hdr2);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: rgba(255,255,255,0.5);
-}
-.sc-footer-val { color: var(--green-l); font-weight: 500; }
+/* ══ 共有モード ══ */
+.readonly-bar { background: linear-gradient(135deg,#064e2e,#0f4c2a); padding: 12px 20px; display: none; align-items: center; gap: 12px; }
+.readonly-bar.visible { display: flex; }
+.readonly-title { font-size: 15px; font-weight: 700; color: #fff; }
+.readonly-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.readonly-badge { margin-left: auto; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 10px; font-size: 9px; color: rgba(255,255,255,0.6); font-family: 'DM Mono', monospace; }
 
 /* ══ MODAL ══ */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
@@ -364,99 +246,84 @@ tr:hover .sc-row-ctrl { opacity: 1; }
 .modal-close { width: 100%; padding: 8px; background: var(--green-bg2); border: 1px solid var(--border2); border-radius: 5px; color: var(--green); font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s; }
 .modal-close:hover { background: var(--border2); }
 
-/* ══ TOAST ══ */
+/* TOAST */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--hdr2); color: #fff; font-size: 12px; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 600; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
-
-/* SHARE VIEW */
-.share-view-hdr { background: linear-gradient(135deg,#064e2e,#0f4c2a); padding: 18px 22px; display: none; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.share-view-hdr.visible { display: flex; }
-.share-view-title { font-size: 16px; font-weight: 700; color: #fff; }
-.share-view-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-.readonly-badge { margin-left: auto; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 10px; font-size: 9px; color: rgba(255,255,255,0.6); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; }
-
-/* 名前変更インライン */
-.case-tab-name { border: none; background: transparent; font-size: 12px; font-weight: 500; color: inherit; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; outline: none; min-width: 60px; max-width: 140px; }
-.case-tab.active .case-tab-name { font-weight: 700; }
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="hdr" id="mainHdr">
-  <div class="hdr-logo"><div class="hdr-icon">🎬</div><div><div class="hdr-name">さむね君</div><div class="hdr-sub">BirdFlip 企画ツール</div></div></div>
-  <div class="hdr-sep"></div>
-  <div class="main-tabs">
-    <button class="main-tab active" id="mtab-samune" onclick="switchMainTab('samune')">🖼 サムネ</button>
-    <button class="main-tab" id="mtab-script" onclick="switchMainTab('script')">📜 台本</button>
+  <div class="hdr-logo">
+    <div class="hdr-icon">🎬</div>
+    <div><div class="hdr-name">さむね君</div><div class="hdr-sub">BirdFlip 企画ツール</div></div>
   </div>
   <div class="hdr-sep"></div>
   <div class="hdr-spacer"></div>
-  <!-- サムネコントロール -->
-  <div id="ctrl-samune" style="display:flex;align-items:center;gap:10px">
-    <div style="display:flex;gap:8px;align-items:center;background:rgba(0,0,0,0.2);border-radius:20px;padding:5px 12px">
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#16a34a;display:inline-block"></span>S(5倍+)</div>
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block"></span>A(3〜5倍)</div>
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#3b82f6;display:inline-block"></span>B(1〜3倍)</div>
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block"></span>C(3倍未満)</div>
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block"></span>×(1年超)</div>
-    </div>
-    <button class="hdr-btn green" onclick="addSamuneRow()">＋ 企画を追加</button>
-  </div>
-  <!-- 台本コントロール -->
-  <div id="ctrl-script" style="display:none;align-items:center;gap:8px">
-    <button class="hdr-btn ghost" onclick="dlScriptHTML()">⬇ HTML出力</button>
-    <button class="hdr-btn ghost" onclick="copyTSV()">📋 TSVコピー</button>
-    <button class="hdr-btn green" onclick="openCaseShare()">🔗 この案件を共有</button>
+  <div class="legend">
+    <div class="litem"><span class="ldot" style="background:#16a34a"></span>S(5倍+)</div>
+    <div class="litem"><span class="ldot" style="background:#22c55e"></span>A(3〜5倍)</div>
+    <div class="litem"><span class="ldot" style="background:#3b82f6"></span>B(1〜3倍)</div>
+    <div class="litem"><span class="ldot" style="background:#f59e0b"></span>C(3倍未満)</div>
+    <div class="litem"><span class="ldot" style="background:#ef4444"></span>×(1年超)</div>
   </div>
 </div>
 
-<!-- ══ PAGE: SAMUNE ══ -->
-<div class="page active" id="page-samune">
-  <div class="sheet-wrap">
-    <table class="sheet" id="sheet">
-      <colgroup><col style="width:36px"><col style="width:18%"><col><col><col><col><col></colgroup>
-      <thead><tr id="sheet-thead">
-        <th><div class="th-in" style="justify-content:center">#</div></th>
-        <th><div class="th-in plan-h">企画タイトル / 文言</div></th>
-        <th><div class="th-in"><span class="th-badge">1</span>参考サムネ</div></th>
-        <th><div class="th-in"><span class="th-badge">2</span>参考サムネ</div></th>
-        <th><div class="th-in"><span class="th-badge">3</span>参考サムネ</div></th>
-        <th><div class="th-in"><span class="th-badge">4</span>参考サムネ</div></th>
-        <th><div class="th-in"><span class="th-badge">5</span>参考サムネ</div></th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
+<!-- 共有モード用バー -->
+<div class="readonly-bar" id="readonlyBar">
+  <div class="hdr-icon">🎬</div>
+  <div><div class="readonly-title" id="readonlyTitle">読み込み中…</div><div class="readonly-sub">さむね君 — 企画資料</div></div>
+  <span class="readonly-badge">READ ONLY</span>
+</div>
+
+<!-- 案件タブバー -->
+<div class="case-tabbar" id="caseTabbar" style="display:none">
+  <button class="case-tab-add" onclick="addCase()">＋ 案件を追加</button>
+  <div class="case-tabbar-right">
+    <button class="tab-share-btn" onclick="openShareModal()">🔗 この案件を共有</button>
+    <button class="tab-add-row-btn" onclick="addRow()">＋ 企画を追加</button>
   </div>
 </div>
 
-<!-- ══ PAGE: SCRIPT ══ -->
-<div class="page" id="page-script">
-  <!-- 案件タブバー -->
-  <div class="case-tabbar" id="caseTabbar">
-    <button class="add-case-btn" onclick="addCase()">＋ 案件を追加</button>
-  </div>
-  <!-- 案件コンテンツ -->
-  <div id="caseContent"></div>
+<!-- テーブル -->
+<div class="sheet-wrap">
+  <table class="sheet" id="sheet">
+    <colgroup>
+      <col style="width:36px"><col style="width:18%">
+      <col><col><col><col><col>
+    </colgroup>
+    <thead><tr>
+      <th><div class="th-in" style="justify-content:center">#</div></th>
+      <th><div class="th-in plan-h">企画タイトル / 文言</div></th>
+      <th><div class="th-in"><span class="th-badge">1</span>参考サムネ</div></th>
+      <th><div class="th-in"><span class="th-badge">2</span>参考サムネ</div></th>
+      <th><div class="th-in"><span class="th-badge">3</span>参考サムネ</div></th>
+      <th><div class="th-in"><span class="th-badge">4</span>参考サムネ</div></th>
+      <th><div class="th-in"><span class="th-badge">5</span>参考サムネ</div></th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
 </div>
 
 <!-- MODAL -->
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="modal-title" id="modalTitle">🔗 共有リンク</div>
+    <div class="modal-title">🔗 この案件を共有</div>
     <div class="modal-sub" id="modalSub"></div>
-    <div class="modal-url-wrap"><input type="text" class="modal-url" id="modalUrl" readonly><button class="modal-copy" id="modalCopyBtn" onclick="copyUrl()">コピー</button></div>
-    <div class="modal-note">✓ このURLを知っている人だけが閲覧できます<br>✓ サムネ企画リストと台本が両方見えます<br>✓ 閲覧者は編集できません（読み取り専用）</div>
+    <div class="modal-url-wrap">
+      <input type="text" class="modal-url" id="modalUrl" readonly>
+      <button class="modal-copy" id="modalCopyBtn" onclick="copyUrl()">コピー</button>
+    </div>
+    <div class="modal-note">✓ このURLを知っている人だけが閲覧できます<br>✓ 閲覧者は編集できません（読み取り専用）</div>
     <button class="modal-close" onclick="closeModal()">閉じる</button>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
 <script>
 // ══ FIREBASE ══
 firebase.initializeApp({
@@ -472,165 +339,196 @@ const YT_KEY = 'AIzaSyC1QpmOcd_xyBzXr4UXvh8XfroMAe8NRJo';
 
 // ══ STATE ══
 let rowCount = 0;
-const dbt = {};
-const saveTmr = {};
-let isShareMode = false;
-let currentMainTab = 'samune';
-let cases = []; // [{id, name, data}]
+const dbt = {}, saveTmr = {};
+let isShare = false;
 let activeCaseId = null;
-let caseSaveTmr = {};
+let cases = []; // [{id, name}]
 
 // ══ INIT ══
 async function init() {
   const params = new URLSearchParams(location.search);
-  const caseShareId = params.get('case'); // 案件共有モード
+  const caseId = params.get('case');
 
-  if (caseShareId) {
-    // ── 共有モード：案件全体を読み取り専用で表示 ──
-    isShareMode = true;
-    // ヘッダーを共有モード表示に切り替え
-    const hdr = document.getElementById('mainHdr');
-    hdr.innerHTML = `
-      <div class="hdr-logo"><div class="hdr-icon">🎬</div><div><div class="hdr-name" id="shareViewTitle">読み込み中…</div><div class="hdr-sub">READ ONLY</div></div></div>
-      <div class="hdr-spacer"></div>
-      <span style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:10px;color:rgba(255,255,255,0.6);font-family:'DM Mono',monospace;letter-spacing:0.08em">READ ONLY</span>
-    `;
-    await loadCaseShare(caseShareId);
+  if (caseId) {
+    // 共有モード
+    isShare = true;
+    document.getElementById('mainHdr').style.display = 'none';
+    document.getElementById('readonlyBar').classList.add('visible');
+    await loadShareCase(caseId);
   } else {
-    // ── 通常モード ──
-    await loadSamuneRows();
+    // 通常モード
+    document.getElementById('caseTabbar').style.display = 'flex';
     await loadCases();
-    if (rowCount === 0) { addSamuneRow(); addSamuneRow(); addSamuneRow(); }
-    if (cases.length === 0) addCase();
+    if (cases.length === 0) await addCase();
   }
 }
 
-// ── 案件共有モード読み込み ──
-async function loadCaseShare(caseId) {
+// ══ 案件管理 ══
+async function loadCases() {
   try {
-    // 案件データ（台本）
-    const caseDoc = await db.collection('script_cases').doc(caseId).get();
-    const caseName = caseDoc.exists ? (caseDoc.data().talent || caseDoc.data().name || '案件') : '';
-    document.getElementById('shareViewTitle').textContent = caseName ? `${caseName} — 企画資料` : '企画資料';
-    document.title = caseName ? `${caseName} — さむね君` : 'さむね君 企画資料';
-
-    // サムネ企画一覧（この案件に紐づくもの = case_idフィールドで紐付け）
-    // ※ 紐付けがない場合は全件表示（後方互換）
-    const samuneSnap = await db.collection('samune_plans')
-      .where('caseId', '==', caseId)
-      .orderBy('order').get();
-
-    // サムネタブを表示
-    switchMainTab('samune', true);
-    document.querySelector('#ctrl-samune').style.display = 'none';
-
-    if (!samuneSnap.empty) {
-      for (const doc of samuneSnap.docs) {
-        const d = doc.data();
-        createSamuneRow(doc.id, d.planText||'', d.refs||[], true);
-      }
-    } else {
-      // サムネなしの場合はメッセージ表示
-      document.getElementById('tbody').innerHTML = '<tr><td colspan="7" style="padding:32px;text-align:center;color:var(--muted);font-size:12px">参考サムネの登録はありません</td></tr>';
-    }
-
-    // 台本も表示（タブとして追加）
-    if (caseDoc.exists) {
-      cases.push({ id: caseId, name: caseName, data: caseDoc.data() });
-      activeCaseId = caseId;
-
-      // 台本タブボタンを追加（読み取り専用）
-      const mainTabs = document.querySelector('.main-tabs');
-      mainTabs.innerHTML = `
-        <button class="main-tab active" id="mtab-samune" onclick="switchMainTab('samune')">🖼 サムネ</button>
-        <button class="main-tab" id="mtab-script" onclick="switchMainTab('script')">📜 台本</button>
-      `;
-      // 台本ページにコンテンツをレンダリング（読み取り専用）
-      document.getElementById('caseTabbar').style.display = 'none';
-      renderCaseContentReadOnly(caseId, caseDoc.data());
-    }
-  } catch(e) {
-    console.error(e);
-    showToast('読み込みに失敗しました');
-  }
-}
-
-// ══ MAIN TAB SWITCH ══
-function switchMainTab(tab, force) {
-  if (tab === currentMainTab && !force) return;
-  currentMainTab = tab;
-  document.getElementById('page-samune').classList.toggle('active', tab === 'samune');
-  document.getElementById('page-script').classList.toggle('active', tab === 'script');
-  document.getElementById('mtab-samune').classList.toggle('active', tab === 'samune');
-  document.getElementById('mtab-script').classList.toggle('active', tab === 'script');
-  document.getElementById('ctrl-samune').style.display = tab === 'samune' ? 'flex' : 'none';
-  document.getElementById('ctrl-script').style.display = tab === 'script' ? 'flex' : 'none';
-}
-
-// ══════════════════════════════
-// SAMUNE TAB
-// ══════════════════════════════
-async function loadSamuneRows() {
-  try {
-    const snap = await db.collection('samune_plans').orderBy('order').get();
+    const snap = await db.collection('samune_cases').orderBy('order').get();
     for (const doc of snap.docs) {
-      const d = doc.data();
-      createSamuneRow(doc.id, d.planText||'', d.refs||[], false);
+      addCaseTab(doc.id, doc.data().name || '案件');
     }
+    if (cases.length > 0) await switchCase(cases[0].id, false);
   } catch(e) { console.error(e); }
 }
 
-async function addSamuneRow() {
-  if (isShareMode) return;
-  const snap = await db.collection('samune_plans').orderBy('order').get();
-  const ref = await db.collection('samune_plans').add({
-    planText:'', refs:[{},{},{},{},{}], order: snap.size,
-    caseId: activeCaseId || null,
+async function addCase() {
+  const snap = await db.collection('samune_cases').get();
+  const name = `案件 ${snap.size + 1}`;
+  const ref = await db.collection('samune_cases').add({
+    name, order: snap.size,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  createSamuneRow(ref.id, '', [{},{},{},{},{}], false);
+  addCaseTab(ref.id, name);
+  await switchCase(ref.id, true);
 }
 
-function createSamuneRow(docId, planText, refs, readOnly) {
+function addCaseTab(id, name) {
+  cases.push({ id, name });
+  const tabbar = document.getElementById('caseTabbar');
+  const addBtn = tabbar.querySelector('.case-tab-add');
+  const btn = document.createElement('button');
+  btn.className = 'case-tab';
+  btn.id = 'ctab-' + id;
+  btn.dataset.caseId = id;
+  btn.innerHTML = `<input class="case-tab-name" value="${esc(name)}" onclick="event.stopPropagation()" onchange="renameCase('${id}',this.value)" title="クリックで名前変更"><button class="case-tab-del" onclick="event.stopPropagation();delCase('${id}')" title="削除">✕</button>`;
+  btn.addEventListener('click', e => { if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') switchCase(id, true); else if(e.target.tagName !== 'BUTTON') switchCase(id, true); });
+  tabbar.insertBefore(btn, addBtn);
+}
+
+async function switchCase(id, loadRows) {
+  activeCaseId = id;
+  document.querySelectorAll('.case-tab').forEach(t => t.classList.toggle('active', t.dataset.caseId === id));
+  if (loadRows) await loadCaseRows(id);
+}
+
+async function loadCaseRows(caseId) {
+  // テーブルをクリア
+  document.getElementById('tbody').innerHTML = '';
+  rowCount = 0;
+  try {
+    const snap = await db.collection('samune_plans')
+      .where('caseId', '==', caseId)
+      .orderBy('order').get();
+    if (snap.empty) {
+      // 新規案件は3行追加
+      await addRow(); await addRow(); await addRow();
+    } else {
+      for (const doc of snap.docs) {
+        const d = doc.data();
+        createRow(doc.id, d.planText||'', d.refs||[], false);
+      }
+    }
+  } catch(e) {
+    console.error(e);
+    await addRow(); await addRow(); await addRow();
+  }
+}
+
+async function renameCase(id, name) {
+  const c = cases.find(c=>c.id===id);
+  if (c) c.name = name;
+  try { await db.collection('samune_cases').doc(id).update({ name }); } catch(e) {}
+}
+
+async function delCase(id) {
+  if (cases.length <= 1) { showToast('最低1案件必要です'); return; }
+  if (!confirm('この案件を削除しますか？（企画データも削除されます）')) return;
+  // 紐付いた企画も削除
+  const snap = await db.collection('samune_plans').where('caseId','==',id).get();
+  const batch = db.batch();
+  snap.docs.forEach(d => batch.delete(d.ref));
+  await batch.commit();
+  await db.collection('samune_cases').doc(id).delete();
+  document.getElementById('ctab-'+id)?.remove();
+  cases = cases.filter(c=>c.id!==id);
+  if (activeCaseId === id) await switchCase(cases[0].id, true);
+  showToast('案件を削除しました');
+}
+
+// ══ 行管理 ══
+async function addRow() {
+  if (isShare) return;
+  const snap = await db.collection('samune_plans').where('caseId','==',activeCaseId).get();
+  const ref = await db.collection('samune_plans').add({
+    planText: '', refs:[{},{},{},{},{}],
+    caseId: activeCaseId,
+    order: snap.size,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  createRow(ref.id, '', [{},{},{},{},{}], false);
+}
+
+function createRow(docId, planText, refs, readOnly) {
   rowCount++;
   const rid = rowCount;
   const tr = document.createElement('tr');
-  tr.id = 'row-' + rid;
+  tr.id = 'row-'+rid;
   tr.dataset.docId = docId;
-  const tdNum = document.createElement('td'); tdNum.className = 'rn'; tdNum.textContent = rid; tr.appendChild(tdNum);
-  const tdPlan = document.createElement('td'); tdPlan.className = 'plan-td';
+
+  const tdNum = document.createElement('td');
+  tdNum.className = 'rn'; tdNum.textContent = rid;
+  tr.appendChild(tdNum);
+
+  const tdPlan = document.createElement('td');
+  tdPlan.className = 'plan-td';
   if (readOnly) {
-    tdPlan.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:4px 6px;line-height:1.6">${esc(planText)||'（タイトルなし）'}</div>`;
+    tdPlan.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:4px 6px;line-height:1.65">${esc(planText)||'（タイトルなし）'}</div>`;
   } else {
     tdPlan.innerHTML = `
-      <textarea class="plan-ta" rows="2" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
+      <textarea class="plan-ta" rows="3" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
       <div class="plan-actions">
-        <button class="share-btn" onclick="openSamuneShare('${docId}',this)">🔗 共有</button>
-        <button class="del-btn" onclick="delSamuneRow('${docId}',${rid})">✕</button>
+        <button class="del-row-btn" onclick="delRow('${docId}',${rid})" title="削除">✕ 削除</button>
       </div>`;
-    tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSamuneSave(docId, rid));
+    tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSave(docId, rid));
   }
   tr.appendChild(tdPlan);
+
   for (let i = 0; i < 5; i++) {
     const cid = `c${rid}r${i}`;
-    const td = document.createElement('td'); td.className = 'ref-td';
-    const refData = (refs && refs[i]) || {};
-    td.innerHTML = readOnly ? `<div id="${cid}-skel" style="display:none"></div><div class="err-box" id="${cid}-err"></div><div class="vc" id="${cid}-card"></div><button class="clear-lnk" id="${cid}-clear" style="display:none"></button>`
-      : `<div class="url-row"><input class="url-in" id="${cid}-url" type="text" value="${esc(refData.url||'')}" placeholder="YouTube URL" onpaste="onPaste(event,'${cid}','${docId}',${i})" oninput="onInput('${cid}','${docId}',${i})"><button class="go-btn" onclick="fetchVideo('${cid}','${docId}',${i})">→</button></div><div id="${cid}-skel" style="display:none"><div class="skel skel-thumb"></div><div class="skel skel-line" style="width:90%"></div><div class="skel skel-line" style="width:55%"></div></div><div class="err-box" id="${cid}-err"></div><div class="vc" id="${cid}-card"></div><button class="clear-lnk" id="${cid}-clear" onclick="clearCell('${cid}','${docId}',${i})">✕ クリア</button>`;
+    const td = document.createElement('td');
+    td.className = 'ref-td';
+    const ref = (refs && refs[i]) || {};
+    if (readOnly) {
+      td.innerHTML = `<div id="${cid}-skel" style="display:none"></div><div class="err-box" id="${cid}-err"></div><div class="vc" id="${cid}-card"></div><button class="clear-lnk" id="${cid}-clear" style="display:none"></button>`;
+    } else {
+      td.innerHTML = `
+        <div class="url-row">
+          <input class="url-in" id="${cid}-url" type="text" value="${esc(ref.url||'')}" placeholder="YouTube URL を貼り付け"
+            onpaste="onPaste(event,'${cid}','${docId}',${i})" oninput="onInput('${cid}','${docId}',${i})">
+          <button class="go-btn" onclick="fetchVideo('${cid}','${docId}',${i})">→</button>
+        </div>
+        <div id="${cid}-skel" style="display:none">
+          <div class="skel skel-thumb"></div>
+          <div class="skel skel-line" style="width:90%"></div>
+          <div class="skel skel-line" style="width:55%"></div>
+        </div>
+        <div class="err-box" id="${cid}-err"></div>
+        <div class="vc" id="${cid}-card"></div>
+        <button class="clear-lnk" id="${cid}-clear" onclick="clearCell('${cid}','${docId}',${i})">✕ クリア</button>`;
+    }
     tr.appendChild(td);
-    if (refData.vid) setTimeout(() => renderCard(cid, refData.vid, refData, readOnly), 50);
+    if (ref.vid) setTimeout(() => renderCard(cid, ref.vid, ref, readOnly), 50);
   }
+
   document.getElementById('tbody').appendChild(tr);
   if (!readOnly && !planText) tr.querySelector('.plan-ta')?.focus();
   renum();
 }
 
-function scheduleSamuneSave(docId, rid) {
-  clearTimeout(saveTmr[docId]);
-  saveTmr[docId] = setTimeout(() => saveSamuneRow(docId, rid), 1000);
+function renum() {
+  document.querySelectorAll('#tbody tr').forEach((r,i) => r.querySelector('.rn').textContent = i+1);
 }
-async function saveSamuneRow(docId, rid) {
-  const tr = document.getElementById('row-' + rid); if (!tr) return;
+
+function scheduleSave(docId, rid) {
+  clearTimeout(saveTmr[docId]);
+  saveTmr[docId] = setTimeout(() => saveRow(docId, rid), 1000);
+}
+
+async function saveRow(docId, rid) {
+  const tr = document.getElementById('row-'+rid); if (!tr) return;
   const planText = tr.querySelector('.plan-ta')?.value || '';
   const refs = [];
   for (let i = 0; i < 5; i++) {
@@ -640,19 +538,21 @@ async function saveSamuneRow(docId, rid) {
   }
   try { await db.collection('samune_plans').doc(docId).update({ planText, refs }); } catch(e) {}
 }
-async function delSamuneRow(docId, rid) {
+
+async function delRow(docId, rid) {
   if (!confirm('この企画を削除しますか？')) return;
   await db.collection('samune_plans').doc(docId).delete();
   document.getElementById('row-'+rid)?.remove();
-  renum(); showToast('削除しました');
-}
-function renum() {
-  document.querySelectorAll('#tbody tr').forEach((r,i) => r.querySelector('.rn').textContent = i+1);
+  renum();
+  showToast('削除しました');
 }
 
-// YouTube fetch
+// ══ YouTube ══
 function onPaste(e,cid,docId,idx) { setTimeout(()=>fetchVideo(cid,docId,idx),80); }
-function onInput(cid,docId,idx) { clearTimeout(dbt[cid]); dbt[cid]=setTimeout(()=>{ if(document.getElementById(cid+'-url')?.value?.includes('youtu')) fetchVideo(cid,docId,idx); },900); }
+function onInput(cid,docId,idx) {
+  clearTimeout(dbt[cid]);
+  dbt[cid] = setTimeout(()=>{ if(document.getElementById(cid+'-url')?.value?.includes('youtu')) fetchVideo(cid,docId,idx); },900);
+}
 function extractId(url) { const m=url.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/)([a-zA-Z0-9_-]{11})/); return m?m[1]:null; }
 
 async function fetchVideo(cid,docId,idx) {
@@ -666,23 +566,57 @@ async function fetchVideo(cid,docId,idx) {
     const item = vData.items[0];
     const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${item.snippet.channelId}&key=${YT_KEY}`);
     const cData = await cRes.json();
-    const info = { url, vid, title:item.snippet.title, channel:item.snippet.channelTitle, views:parseInt(item.statistics.viewCount||0), subs:parseInt(cData.items?.[0]?.statistics?.subscriberCount||0), uploadDate:item.snippet.publishedAt.slice(0,10), duration:parseDur(item.contentDetails?.duration||'PT0S') };
-    setSkel(cid,false); renderCard(cid,vid,info,false);
-    if(docId){ const tr=document.querySelector(`[data-doc-id="${docId}"]`); if(tr) scheduleSamuneSave(docId,parseInt(tr.id.replace('row-',''))); }
+    const info = {
+      url, vid,
+      title: item.snippet.title,
+      channel: item.snippet.channelTitle,
+      views: parseInt(item.statistics.viewCount||0),
+      subs: parseInt(cData.items?.[0]?.statistics?.subscriberCount||0),
+      uploadDate: item.snippet.publishedAt.slice(0,10),
+      duration: parseDur(item.contentDetails?.duration||'PT0S')
+    };
+    setSkel(cid,false);
+    renderCard(cid,vid,info,false);
+    const tr = document.querySelector(`[data-doc-id="${docId}"]`);
+    if (tr) scheduleSave(docId, parseInt(tr.id.replace('row-','')));
   } catch(e) { setSkel(cid,false); showErr(cid,'取得に失敗しました'); }
 }
-function parseDur(iso){ const m=iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if(!m) return '--:--'; return `${parseInt(m[1]||0)*60+parseInt(m[2]||0)}:${String(parseInt(m[3]||0)).padStart(2,'0')}`; }
-function renderCard(cid,vid,info,readOnly){
-  const sc=calcScore(info); const thumb=`https://img.youtube.com/vi/${vid}/mqdefault.jpg`; const ytUrl=`https://www.youtube.com/watch?v=${vid}`;
-  const rStr=sc.ratio>=1?sc.ratio.toFixed(1)+'倍':(sc.ratio*100).toFixed(0)+'%'; const rCls=sc.ratio>=5?'great':sc.ratio>=3?'ok':'low';
-  const dLabel=sc.days<=30?`${sc.days}日前`:sc.days<=365?`${Math.round(sc.days/30)}ヶ月前`:'1年超';
-  const el=document.getElementById(cid+'-card'); if(!el) return;
-  el.dataset.refdata=JSON.stringify(info);
-  el.innerHTML=`<div class="score-badge ${sc.grade}">${sc.label}</div><div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div><a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener"><img src="${thumb}" alt=""><div class="thumb-ov"><div class="thumb-play"></div></div><span class="thumb-dur">${esc(info.duration)}</span></a><div class="v-ch">${esc(info.channel)}</div><div class="v-title">${esc(info.title)}</div><div class="v-stats"><div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div><div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div><div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span><span class="v-stat-sub">${info.uploadDate}</span></div></div><div class="v-ratio ${rCls}">再生/登録 = ${rStr}</div>`;
+
+function parseDur(iso) {
+  const m=iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if(!m) return '--:--';
+  return `${parseInt(m[1]||0)*60+parseInt(m[2]||0)}:${String(parseInt(m[3]||0)).padStart(2,'0')}`;
+}
+
+function renderCard(cid,vid,info,readOnly) {
+  const sc = calcScore(info);
+  const thumb = `https://img.youtube.com/vi/${vid}/mqdefault.jpg`;
+  const ytUrl = `https://www.youtube.com/watch?v=${vid}`;
+  const rStr = sc.ratio>=1?sc.ratio.toFixed(1)+'倍':(sc.ratio*100).toFixed(0)+'%';
+  const rCls = sc.ratio>=5?'great':sc.ratio>=3?'ok':'low';
+  const dLabel = sc.days<=30?`${sc.days}日前`:sc.days<=365?`${Math.round(sc.days/30)}ヶ月前`:'1年超';
+  const el = document.getElementById(cid+'-card'); if(!el) return;
+  el.dataset.refdata = JSON.stringify(info);
+  el.innerHTML = `
+    <div class="score-badge ${sc.grade}">${sc.label}</div>
+    <div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div>
+    <a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener">
+      <img src="${thumb}" alt="">
+      <div class="thumb-ov"><div class="thumb-play"></div></div>
+      <span class="thumb-dur">${esc(info.duration)}</span>
+    </a>
+    <div class="v-ch">${esc(info.channel)}</div>
+    <div class="v-title">${esc(info.title)}</div>
+    <div class="v-stats">
+      <div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div>
+      <div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div>
+      <div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span><span class="v-stat-sub">${info.uploadDate}</span></div>
+    </div>
+    <div class="v-ratio ${rCls}">再生/登録 = ${rStr}</div>`;
   el.classList.add('loaded');
   if(!readOnly) document.getElementById(cid+'-clear')?.classList.add('show');
 }
-function calcScore(info){
+
+function calcScore(info) {
   const days=(Date.now()-new Date(info.uploadDate))/86400000;
   if(!info.uploadDate||isNaN(days)||days>365) return{grade:'X',label:'× 1年超',score:0,ratio:0,days:9999};
   const ratio=info.subs>0?info.views/info.subs:0;
@@ -693,347 +627,66 @@ function calcScore(info){
   if(total<20&&grade!=='C') grade='C';
   return{grade,label:`${grade}  ${total}pt`,score:total,ratio,days:Math.round(days)};
 }
-function setSkel(cid,show){ document.getElementById(cid+'-skel').style.display=show?'block':'none'; if(show){document.getElementById(cid+'-card')?.classList.remove('loaded');document.getElementById(cid+'-clear')?.classList.remove('show');} }
-function showErr(cid,msg){ const e=document.getElementById(cid+'-err');if(e){e.textContent=msg;e.classList.add('show');} }
-function clearErr(cid){ document.getElementById(cid+'-err')?.classList.remove('show'); }
+
+function setSkel(cid,show) {
+  document.getElementById(cid+'-skel').style.display=show?'block':'none';
+  if(show){document.getElementById(cid+'-card')?.classList.remove('loaded');document.getElementById(cid+'-clear')?.classList.remove('show');}
+}
+function showErr(cid,msg){const e=document.getElementById(cid+'-err');if(e){e.textContent=msg;e.classList.add('show');}}
+function clearErr(cid){document.getElementById(cid+'-err')?.classList.remove('show');}
 function clearCell(cid,docId,idx){
   document.getElementById(cid+'-url').value='';
   const c=document.getElementById(cid+'-card');c.innerHTML='';c.classList.remove('loaded');delete c.dataset.refdata;
-  document.getElementById(cid+'-clear')?.classList.remove('show'); clearErr(cid);
-  if(docId){const tr=document.querySelector(`[data-doc-id="${docId}"]`);if(tr) scheduleSamuneSave(docId,parseInt(tr.id.replace('row-','')));}
-}
-function openSamuneShare(docId,btn){
-  // サムネ単体の共有 → 現在の案件共有に誘導
-  openCaseShare();
+  document.getElementById(cid+'-clear')?.classList.remove('show');clearErr(cid);
+  const tr=document.querySelector(`[data-doc-id="${docId}"]`);
+  if(tr) scheduleSave(docId,parseInt(tr.id.replace('row-','')));
 }
 
-// ── 案件全体の共有URL発行 ──
-function openCaseShare() {
-  if (!activeCaseId) { showToast('台本タブで案件を選択してください'); return; }
+// ══ 共有 ══
+function openShareModal() {
+  if (!activeCaseId) return;
   const c = cases.find(c=>c.id===activeCaseId);
-  const name = c?.data?.talent || c?.data?.name || '案件';
-  document.getElementById('modalTitle').textContent = '🔗 この案件を共有';
-  document.getElementById('modalSub').textContent = `「${name}」のサムネ＋台本をまるごと共有`;
+  document.getElementById('modalSub').textContent = `「${c?.name||'案件'}」の企画をまるごと共有`;
   document.getElementById('modalUrl').value = `${location.origin}${location.pathname}?case=${activeCaseId}`;
-  document.getElementById('modalCopyBtn').textContent='コピー'; document.getElementById('modalCopyBtn').classList.remove('copied');
+  document.getElementById('modalCopyBtn').textContent = 'コピー';
+  document.getElementById('modalCopyBtn').classList.remove('copied');
   document.getElementById('modalBg').classList.add('open');
 }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+function copyUrl() {
+  navigator.clipboard.writeText(document.getElementById('modalUrl').value).then(()=>{
+    const b=document.getElementById('modalCopyBtn');b.textContent='コピー済 ✓';b.classList.add('copied');
+    showToast('URLをコピーしました！');
+  });
+}
 
-// ══════════════════════════════
-// SCRIPT TAB - 案件管理
-// ══════════════════════════════
-async function loadCases() {
+// ══ 共有モード読み込み ══
+async function loadShareCase(caseId) {
   try {
-    const snap = await db.collection('script_cases').orderBy('order').get();
-    for (const doc of snap.docs) {
-      const d = doc.data();
-      addCaseDOM(doc.id, d.name||'案件', d);
+    const caseDoc = await db.collection('samune_cases').doc(caseId).get();
+    const name = caseDoc.exists ? (caseDoc.data().name||'案件') : '企画資料';
+    document.getElementById('readonlyTitle').textContent = name;
+    document.title = `${name} — さむね君`;
+
+    const snap = await db.collection('samune_plans')
+      .where('caseId','==',caseId)
+      .orderBy('order').get();
+
+    if (snap.empty) {
+      document.getElementById('tbody').innerHTML = '<tr><td colspan="7" style="padding:32px;text-align:center;color:#9ca3af;font-size:12px">企画が登録されていません</td></tr>';
+    } else {
+      for (const doc of snap.docs) {
+        const d = doc.data();
+        createRow(doc.id, d.planText||'', d.refs||[], true);
+      }
     }
-    if (cases.length > 0) switchCase(cases[0].id);
-  } catch(e) { console.error(e); }
-}
-
-async function addCase() {
-  const snap = await db.collection('script_cases').orderBy('order').get();
-  const name = `案件 ${snap.size + 1}`;
-  const defaultData = {
-    name, order: snap.size,
-    talent:'', date:'', place:'', duration:'25',
-    titles:'', thumbnail:'',
-    rows: [
-      {time:'朝',scene:'自宅',type:'インサート',seconds:5,chars:0,script:'',memo:'冒頭の映像'},
-      {time:'午前',scene:'',type:'VLOG',seconds:30,chars:0,script:'',memo:''},
-      {time:'昼',scene:'',type:'解説系',seconds:60,chars:0,script:'',memo:''},
-      {time:'午後',scene:'',type:'訴求',seconds:180,chars:0,script:'',memo:''},
-      {time:'夜',scene:'',type:'ブリッジ',seconds:10,chars:0,script:'',memo:''},
-    ],
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
-  const ref = await db.collection('script_cases').add(defaultData);
-  addCaseDOM(ref.id, name, defaultData);
-  switchCase(ref.id);
-}
-
-function addCaseDOM(id, name, data) {
-  cases.push({ id, name, data });
-  const tabbar = document.getElementById('caseTabbar');
-  const addBtn = tabbar.querySelector('.add-case-btn');
-  const btn = document.createElement('button');
-  btn.className = 'case-tab';
-  btn.id = 'ctab-' + id;
-  btn.dataset.caseId = id;
-  btn.innerHTML = `<input class="case-tab-name" value="${esc(name)}" onclick="event.stopPropagation()" onchange="renameCaseTab('${id}',this.value)" title="クリックして名前変更"><button class="case-tab-del" onclick="event.stopPropagation();delCase('${id}')" title="削除">✕</button>`;
-  btn.addEventListener('click', (e) => { if(e.target.tagName!=='INPUT'&&e.target.tagName!=='BUTTON') switchCase(id); else if(e.target.tagName!=='BUTTON') switchCase(id); });
-  tabbar.insertBefore(btn, addBtn);
-}
-
-function switchCase(id) {
-  activeCaseId = id;
-  document.querySelectorAll('.case-tab').forEach(t => t.classList.toggle('active', t.dataset.caseId === id));
-  renderCaseContent(id);
-  // サムネタブの「企画を追加」ボタンのtitleを更新
-  const addBtn = document.querySelector('#ctrl-samune button.hdr-btn');
-  if (addBtn) {
-    const c = cases.find(c=>c.id===id);
-    addBtn.title = c ? `「${c.data.name||c.data.talent||'この案件'}」に企画を追加` : '';
-  }
-}
-
-function renderCaseContent(id) {
-  const caseObj = cases.find(c => c.id === id);
-  if (!caseObj) return;
-  const d = caseObj.data;
-  const container = document.getElementById('caseContent');
-
-  const TYPE_CLASSES = { 'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge' };
-  const TYPES = ['インサート','VLOG','解説系','訴求','ブリッジ'];
-
-  let rowsHTML = (d.rows||[]).map((r,i) => {
-    const cls = TYPE_CLASSES[r.type]||'';
-    const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;
-    const timeStr=dm>0?`${dm}分${ds>0?ds+'秒':''}`:`${ds}秒`;
-    const charCount = (r.script||'').replace(/\s/g,'').length;
-    return `<tr class="${cls}" id="scrow-${id}-${i}" data-case-id="${id}" data-row-idx="${i}">
-      <td><textarea class="editable" rows="1" onchange="updateScRow('${id}',${i},'time',this.value)" oninput="autoResize(this);scheduleScSave('${id}')">${esc(r.time||'')}</textarea></td>
-      <td><textarea class="editable" rows="1" onchange="updateScRow('${id}',${i},'scene',this.value)" oninput="autoResize(this);scheduleScSave('${id}')">${esc(r.scene||'')}</textarea></td>
-      <td><select class="editable" onchange="updateScRow('${id}',${i},'type',this.value);scheduleScSave('${id}');updateRowClass(this,'${id}',${i})">${TYPES.map(t=>`<option value="${t}"${t===r.type?' selected':''}>${t}</option>`).join('')}</select></td>
-      <td><input class="editable" type="number" value="${r.seconds||0}" style="min-height:36px" onchange="updateScRow('${id}',${i},'seconds',parseInt(this.value)||0);scheduleScSave('${id}');updateFooter('${id}')"></td>
-      <td style="text-align:center;padding:8px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${timeStr}</td>
-      <td style="text-align:center;padding:8px;font-size:11px;font-family:'DM Mono',monospace" id="chars-${id}-${i}">${charCount}</td>
-      <td><textarea class="editable" rows="3" onchange="updateScRow('${id}',${i},'script',this.value)" oninput="autoResize(this);updateChars('${id}',${i},this.value);scheduleScSave('${id}')">${esc(r.script||'')}</textarea></td>
-      <td><textarea class="editable" rows="1" onchange="updateScRow('${id}',${i},'memo',this.value)" oninput="autoResize(this);scheduleScSave('${id}')">${esc(r.memo||'')}</textarea></td>
-      <td><div class="sc-row-ctrl"><button class="sc-row-btn" onclick="insertScRow('${id}',${i})" title="上に行追加">＋</button><button class="sc-row-btn del" onclick="delScRow('${id}',${i})" title="削除">✕</button></div></td>
-    </tr>`;
-  }).join('');
-
-  const totalSec = (d.rows||[]).reduce((s,r)=>s+(r.seconds||0),0);
-  const totalChars = (d.rows||[]).reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0);
-  const tm=Math.floor(totalSec/60),ts=totalSec%60;
-
-  container.innerHTML = `
-    <div class="case-header">
-      <div class="case-header-field">
-        <span class="case-header-label">出演者名</span>
-        <input class="case-header-input" value="${esc(d.talent||'')}" placeholder="例：宮本さん" onchange="updateCaseField('${id}','talent',this.value)">
-      </div>
-      <div class="case-header-field">
-        <span class="case-header-label">撮影日</span>
-        <input class="case-header-input" value="${esc(d.date||'')}" placeholder="例：4月9日（木）" onchange="updateCaseField('${id}','date',this.value)">
-      </div>
-      <div class="case-header-field">
-        <span class="case-header-label">撮影場所</span>
-        <input class="case-header-input" value="${esc(d.place||'')}" placeholder="例：東京本社・自宅" onchange="updateCaseField('${id}','place',this.value)">
-      </div>
-      <div class="case-header-field">
-        <span class="case-header-label">目標尺（分）</span>
-        <input class="case-header-input" type="number" value="${d.duration||25}" style="width:80px" onchange="updateCaseField('${id}','duration',this.value)">
-      </div>
-    </div>
-
-    <div class="case-info-grid">
-      <div class="case-info-card">
-        <div class="case-info-label">タイトル案</div>
-        <textarea class="case-info-ta" placeholder="案①&#10;案②&#10;案③" onchange="updateCaseField('${id}','titles',this.value)">${esc(d.titles||'')}</textarea>
-      </div>
-      <div class="case-info-card">
-        <div class="case-info-label">サムネイル案</div>
-        <textarea class="case-info-ta" placeholder="左上：&#10;右：&#10;下：" onchange="updateCaseField('${id}','thumbnail',this.value)">${esc(d.thumbnail||'')}</textarea>
-      </div>
-    </div>
-
-    <div class="sc-legend">
-      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#c8e6c9;border:1px solid #4caf50"></div>インサート（3〜5秒）</div>
-      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#fff9c4;border:1px solid #f5a623"></div>VLOG（15〜30秒）</div>
-      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#bbdefb;border:1px solid #2196f3"></div>解説系（30秒〜1分）</div>
-      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#ffe0b2;border:1px solid #ff9800"></div>訴求（2〜3分）</div>
-      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#e1bee7;border:1px solid #9c27b0"></div>ブリッジ（5〜10秒）</div>
-    </div>
-
-    <div class="sc-tbl-wrap">
-      <table class="sc-tbl" id="sc-tbl-${id}">
-        <thead><tr>
-          <th style="width:70px">時間帯</th>
-          <th style="width:120px">シーン</th>
-          <th style="width:100px">セクション</th>
-          <th style="width:50px">秒数</th>
-          <th style="width:65px">所要時間</th>
-          <th style="width:50px">文字数</th>
-          <th>原稿</th>
-          <th style="width:120px">メモ</th>
-          <th style="width:40px"></th>
-        </tr></thead>
-        <tbody id="sc-tbody-${id}">${rowsHTML}</tbody>
-      </table>
-    </div>
-
-    <div class="add-row-area">
-      <span style="font-size:11px;color:var(--muted);align-self:center">行を追加：</span>
-      ${['インサート','VLOG','解説系','訴求','ブリッジ'].map(t=>`<button class="add-row-type-btn" onclick="appendScRow('${id}','${t}')">${t}</button>`).join('')}
-    </div>
-
-    <div class="sc-footer" id="sc-footer-${id}">
-      <span>合計</span>
-      <span class="sc-footer-val" id="sc-total-sec-${id}">${totalSec}秒</span>
-      <span style="color:rgba(255,255,255,0.3)">|</span>
-      <span class="sc-footer-val" id="sc-total-time-${id}">${tm}分${ts>0?ts+'秒':''}</span>
-      <span style="color:rgba(255,255,255,0.3)">|</span>
-      <span>文字数</span>
-      <span class="sc-footer-val" id="sc-total-chars-${id}">${totalChars}</span>
-    </div>
-  `;
-
-  // textareaの高さ調整
-  setTimeout(() => container.querySelectorAll('textarea.editable').forEach(autoResize), 50);
-}
-
-function updateScRow(id, idx, key, val) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  if (!c.data.rows[idx]) c.data.rows[idx] = {};
-  c.data.rows[idx][key] = key==='seconds'?parseInt(val)||0:val;
-  if (key==='seconds') updateFooter(id);
-}
-
-function updateCaseField(id, key, val) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  c.data[key] = val;
-  if (key==='name') { document.querySelector(`#ctab-${id} .case-tab-name`).value = val; }
-  scheduleScSave(id);
-}
-
-function updateRowClass(select, id, idx) {
-  const TYPE_CLASSES = {'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge'};
-  const tr = document.getElementById(`scrow-${id}-${idx}`);
-  if (!tr) return;
-  tr.className = TYPE_CLASSES[select.value] || '';
-  updateScRow(id, idx, 'type', select.value);
-}
-
-function updateChars(id, idx, val) {
-  const charCount = val.replace(/\s/g,'').length;
-  const el = document.getElementById(`chars-${id}-${idx}`);
-  if (el) el.textContent = charCount;
-  const c = cases.find(c=>c.id===id); if(c&&c.data.rows[idx]) c.data.rows[idx].chars = charCount;
-  updateFooter(id);
-}
-
-function updateFooter(id) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  const totalSec = (c.data.rows||[]).reduce((s,r)=>s+(r.seconds||0),0);
-  const totalChars = (c.data.rows||[]).reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0);
-  const tm=Math.floor(totalSec/60),ts=totalSec%60;
-  const elSec=document.getElementById(`sc-total-sec-${id}`); if(elSec) elSec.textContent=`${totalSec}秒`;
-  const elTime=document.getElementById(`sc-total-time-${id}`); if(elTime) elTime.textContent=`${tm}分${ts>0?ts+'秒':''}`;
-  const elChars=document.getElementById(`sc-total-chars-${id}`); if(elChars) elChars.textContent=totalChars;
-}
-
-function appendScRow(id, type) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  c.data.rows.push({ time:'', scene:'', type, seconds: type==='インサート'?5:type==='VLOG'?30:type==='ブリッジ'?10:60, chars:0, script:'', memo:'' });
-  renderCaseContent(id); scheduleScSave(id);
-}
-
-function insertScRow(id, beforeIdx) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  c.data.rows.splice(beforeIdx, 0, { time:'', scene:'', type:'VLOG', seconds:30, chars:0, script:'', memo:'' });
-  renderCaseContent(id); scheduleScSave(id);
-}
-
-function delScRow(id, idx) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  if (c.data.rows.length <= 1) { showToast('最低1行必要です'); return; }
-  c.data.rows.splice(idx, 1);
-  renderCaseContent(id); scheduleScSave(id);
-}
-
-function scheduleScSave(id) {
-  clearTimeout(caseSaveTmr[id]);
-  caseSaveTmr[id] = setTimeout(() => saveCase(id), 1500);
-}
-
-async function saveCase(id) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  try { await db.collection('script_cases').doc(id).update({ name:c.data.name||'案件', talent:c.data.talent||'', date:c.data.date||'', place:c.data.place||'', duration:c.data.duration||'25', titles:c.data.titles||'', thumbnail:c.data.thumbnail||'', rows:c.data.rows||[] }); }
-  catch(e) { console.error('save error', e); }
-}
-
-async function renameCaseTab(id, name) {
-  const c = cases.find(c=>c.id===id); if(!c) return;
-  c.data.name = name; c.name = name;
-  scheduleScSave(id);
-}
-
-async function delCase(id) {
-  if (cases.length <= 1) { showToast('最低1案件必要です'); return; }
-  if (!confirm('この案件を削除しますか？')) return;
-  await db.collection('script_cases').doc(id).delete();
-  cases = cases.filter(c=>c.id!==id);
-  document.getElementById('ctab-'+id)?.remove();
-  if (activeCaseId === id) { switchCase(cases[0].id); }
-  showToast('案件を削除しました');
-}
-
-// 共有（案件全体）
-function openScriptShare() { openCaseShare(); }
-
-function renderCaseContentReadOnly(id, d) {
-  const TYPE_CLASSES = {'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge'};
-  const rows = d.rows||[];
-  const totalSec = rows.reduce((s,r)=>s+(r.seconds||0),0);
-  const tm=Math.floor(totalSec/60),ts=totalSec%60;
-
-  document.getElementById('caseContent').innerHTML = `
-    <div class="case-header">
-      <div class="case-header-field"><span class="case-header-label">出演者</span><div style="color:#fff;font-size:13px;font-weight:600;padding:6px 0">${esc(d.talent||'—')}</div></div>
-      <div class="case-header-field"><span class="case-header-label">撮影日</span><div style="color:rgba(255,255,255,0.7);font-size:12px;padding:6px 0">${esc(d.date||'未定')}</div></div>
-      <div class="case-header-field"><span class="case-header-label">撮影場所</span><div style="color:rgba(255,255,255,0.7);font-size:12px;padding:6px 0">${esc(d.place||'未定')}</div></div>
-      <div class="case-header-field"><span class="case-header-label">目標尺</span><div style="color:var(--green-xl);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;padding:6px 0">${d.duration||25}分</div></div>
-    </div>
-    ${d.titles ? `<div class="case-info-grid"><div class="case-info-card"><div class="case-info-label">タイトル案</div><div style="font-size:11.5px;line-height:1.8;white-space:pre-wrap;color:var(--text2)">${esc(d.titles)}</div></div>${d.thumbnail?`<div class="case-info-card"><div class="case-info-label">サムネイル案</div><div style="font-size:11.5px;line-height:1.8;white-space:pre-wrap;color:var(--text2)">${esc(d.thumbnail)}</div></div>`:'<div></div>'}</div>` : ''}
-    <div class="sc-tbl-wrap"><table class="sc-tbl"><thead><tr>
-      <th style="width:70px">時間帯</th><th style="width:120px">シーン</th><th style="width:100px">セクション</th>
-      <th style="width:50px">秒数</th><th style="width:65px">所要時間</th><th style="width:50px">文字数</th>
-      <th>原稿</th><th style="width:120px">メモ</th>
-    </tr></thead><tbody>
-    ${rows.map(r=>{const cls=TYPE_CLASSES[r.type]||'';const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;return `<tr class="${cls}"><td style="padding:8px">${esc(r.time||'')}</td><td style="padding:8px">${esc(r.scene||'')}</td><td style="padding:8px">${esc(r.type||'')}</td><td style="padding:8px;text-align:center">${r.seconds||''}</td><td style="padding:8px;text-align:center">${dm>0?dm+'分':''}${ds>0?ds+'秒':''}</td><td style="padding:8px;text-align:center">${(r.script||'').replace(/\s/g,'').length}</td><td style="padding:8px;white-space:pre-wrap;line-height:1.7">${esc(r.script||'')}</td><td style="padding:8px">${esc(r.memo||'')}</td></tr>`;}).join('')}
-    <tr class="sc-total"><td colspan="3" style="padding:8px;text-align:center">TOTAL</td><td style="padding:8px;text-align:center">${totalSec}</td><td style="padding:8px;text-align:center">${tm}分${ts>0?ts+'秒':''}</td><td style="padding:8px;text-align:center">${rows.reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0)}</td><td colspan="2" style="padding:8px"></td></tr>
-    </tbody></table></div>`;
-}
-
-// HTML出力
-function dlScriptHTML() {
-  if (!activeCaseId) return;
-  const c = cases.find(c=>c.id===activeCaseId); if(!c) return;
-  const d = c.data;
-  const TYPE_CLASSES = {'インサート':'type-insert','VLOG':'type-vlog','解説系':'type-kaisetsu','訴求':'type-sokyu','ブリッジ':'type-bridge'};
-  const rows = d.rows||[];
-  const totalSec = rows.reduce((s,r)=>s+(r.seconds||0),0);
-  const tm=Math.floor(totalSec/60),ts=totalSec%60;
-  const totalChars = rows.reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0);
-  const rowsHTML = rows.map(r=>{const cls=TYPE_CLASSES[r.type]||'';const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;return `<tr class="${cls}"><td>${esc(r.time||'')}</td><td>${esc(r.scene||'')}</td><td>${esc(r.type||'')}</td><td style="text-align:center">${r.seconds||''}</td><td style="text-align:center">${dm>0?dm+'分':''}${ds>0?ds+'秒':''}</td><td style="text-align:center">${(r.script||'').replace(/\s/g,'').length}</td><td>${esc(r.script||'')}</td><td>${esc(r.memo||'')}</td><td></td></tr>`;}).join('');
-  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"><title>【台本】${esc(d.talent||d.name||'')}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Noto Sans JP',sans-serif;font-size:12px;background:#fff;color:#0d1b2a;padding:40px;}.doc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;padding-bottom:18px;border-bottom:2px solid #0d1b2a;}.doc-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}.doc-title span{color:#16a34a;}.doc-meta{font-size:11px;color:#8898aa;text-align:right;line-height:1.8;}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}.info-card{border:1px solid #e8ecf2;border-radius:6px;padding:12px 14px;}.info-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#16a34a;margin-bottom:8px;}.info-body{font-size:11.5px;line-height:1.8;white-space:pre-wrap;color:#374151;}.tbl-wrap{overflow-x:auto;border:1px solid #e8ecf2;border-radius:6px;margin-top:16px;}.sc{width:100%;border-collapse:collapse;min-width:1000px;font-size:11.5px;}thead tr{background:#0a3d22;}th{color:#4ade80;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px 8px;text-align:center;border:1px solid rgba(255,255,255,.06);white-space:nowrap;}td{border:1px solid #e8ecf2;padding:8px 9px;vertical-align:top;white-space:pre-wrap;line-height:1.7;}.type-insert td{background:#f0faf0;}.type-vlog td{background:#fefce8;}.type-kaisetsu td{background:#f0f6ff;}.type-sokyu td{background:#fff8f0;}.type-bridge td{background:#faf0ff;}.type-total td{background:#0a3d22;color:#4ade80;font-weight:700;text-align:center;font-family:'Syne',sans-serif;}.caution{background:#fffbeb;border:1px solid rgba(245,166,35,.3);border-radius:5px;padding:9px 12px;font-size:11px;color:#92400e;margin-bottom:14px;}</style></head><body>
-<div class="doc-header"><div><div class="doc-title">【台本】<span>${esc(d.talent||d.name||'')}</span></div><div style="font-size:11px;color:#8898aa;margin-top:4px">${esc(d.place||'')}　目標尺：${d.duration||25}分</div></div><div class="doc-meta">撮影日：${esc(d.date||'未定')}<br>合計：${tm}分${ts>0?ts+'秒':''}</div></div>
-${(d.titles||d.thumbnail)?`<div class="info-grid">${d.titles?`<div class="info-card"><div class="info-label">タイトル案</div><div class="info-body">${esc(d.titles)}</div></div>`:'<div></div>'}${d.thumbnail?`<div class="info-card"><div class="info-label">サムネイル案</div><div class="info-body">${esc(d.thumbnail)}</div></div>`:''}</div>`:''}
-<div class="caution">⚠️ <strong>白い箇所に原稿を打ち込んでください。</strong></div>
-<div class="tbl-wrap"><table class="sc"><thead><tr><th style="width:65px">時間帯</th><th style="width:110px">シーン</th><th style="width:95px">セクション</th><th style="width:46px">秒数</th><th style="width:60px">所要時間</th><th style="width:46px">文字数</th><th>原稿</th><th style="width:120px">メモ</th><th style="width:130px">コメント欄</th></tr></thead><tbody>${rowsHTML}<tr class="type-total"><td colspan="3">TOTAL</td><td style="text-align:center">${totalSec}</td><td style="text-align:center">${tm}分${ts>0?ts+'秒':''}</td><td style="text-align:center">${totalChars}</td><td colspan="3">※白い箇所に原稿を打ち込んでください</td></tr></tbody></table></div>
-</body></html>`;
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));a.download=`${d.talent||d.name||'台本'}_構成.html`;a.click();
-}
-
-function copyTSV() {
-  if (!activeCaseId) return;
-  const c = cases.find(c=>c.id===activeCaseId); if(!c) return;
-  let t = '時間帯\tシーン\tセクション\t秒数\t所要時間\t文字数\t原稿\tメモ\n';
-  (c.data.rows||[]).forEach(r=>{const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;t+=`${r.time||''}\t${r.scene||''}\t${r.type||''}\t${r.seconds||0}\t${dm>0?dm+'分':''}${ds>0?ds+'秒':''}\t${(r.script||'').replace(/\s/g,'').length}\t${(r.script||'').replace(/\n/g,' ')}\t${r.memo||''}\n`;});
-  navigator.clipboard.writeText(t).then(()=>showToast('TSVをコピーしました！'));
+  } catch(e) { showToast('読み込みに失敗しました'); }
 }
 
 // ══ UTILS ══
-function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
-function copyUrl() { const u=document.getElementById('modalUrl').value; navigator.clipboard.writeText(u).then(()=>{ const b=document.getElementById('modalCopyBtn');b.textContent='コピー済 ✓';b.classList.add('copied'); showToast('コピーしました！'); }); }
-function fmt(n){ if(!n&&n!==0)return'—';if(n>=1e8)return(n/1e8).toFixed(1)+'億';if(n>=1e4)return(n/1e4).toFixed(1)+'万';return Number(n).toLocaleString(); }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function showToast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500); }
+function fmt(n){if(!n&&n!==0)return'—';if(n>=1e8)return(n/1e8).toFixed(1)+'億';if(n>=1e4)return(n/1e4).toFixed(1)+'万';return Number(n).toLocaleString();}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
 init();
 </script>
