@@ -9,10 +9,9 @@
 
 :root {
   --bg: #f8faf8;
-  --white: #ffffff;
+  --white: #fff;
   --hdr: #0f4c2a;
   --hdr2: #0a3d22;
-  --col-hdr: #0a3d22;
   --green: #16a34a;
   --green-l: #22c55e;
   --green-xl: #4ade80;
@@ -24,690 +23,399 @@
   --text2: #374151;
   --muted: #6b7280;
   --muted2: #9ca3af;
-  --cell: #f9fffe;
-  --plan-bg: #f0fdf4;
   --radius: 6px;
-
-  --s-s: #15803d; --s-a: #16a34a; --s-b: #2563eb;
-  --s-c: #d97706; --s-x: #dc2626;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: var(--text); font-size: 12px; min-height: 100vh; }
 
-body {
-  background: var(--bg);
-  font-family: 'Noto Sans JP', sans-serif;
-  color: var(--text);
-  font-size: 12px;
-  min-height: 100vh;
-}
-
-/* ══════════════════════════════
-   HEADER
-══════════════════════════════ */
+/* ══ HEADER ══ */
 .hdr {
   background: var(--hdr);
-  padding: 0 20px;
   height: 52px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   position: sticky;
   top: 0;
   z-index: 300;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 4px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-
-.hdr-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-.hdr-icon {
-  width: 30px; height: 30px;
-  background: linear-gradient(135deg, var(--green-l), var(--green));
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  flex-shrink: 0;
-}
-.hdr-name {
-  font-family: 'Noto Sans JP', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.02em;
-}
-.hdr-sub {
-  font-size: 10px;
-  color: rgba(255,255,255,0.4);
-  font-weight: 300;
-  letter-spacing: 0.04em;
-}
-
-.hdr-sep {
-  width: 1px; height: 24px;
-  background: rgba(255,255,255,0.1);
-  flex-shrink: 0;
-}
+.hdr-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.hdr-icon { width: 28px; height: 28px; background: linear-gradient(135deg,var(--green-l),var(--green)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.hdr-name { font-size: 14px; font-weight: 700; color: #fff; }
+.hdr-sub { font-size: 9px; color: rgba(255,255,255,0.4); }
+.hdr-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
 .hdr-spacer { flex: 1; }
 
-.legend {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 5px 12px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 20px;
-}
-.legend-item {
-  display: flex; align-items: center; gap: 4px;
-  font-size: 10px;
-  color: rgba(255,255,255,0.5);
-  font-family: 'DM Mono', monospace;
-  white-space: nowrap;
-}
-.ldot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+/* Main tabs */
+.main-tabs { display: flex; gap: 2px; background: rgba(0,0,0,0.2); border-radius: 7px; padding: 3px; }
+.main-tab { padding: 4px 12px; border-radius: 5px; border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; white-space: nowrap; }
+.main-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
+.main-tab:hover:not(.active) { color: rgba(255,255,255,0.75); }
 
-.hdr-btn {
-  height: 32px;
-  padding: 0 14px;
-  border-radius: 6px;
-  border: none;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif;
-  display: flex; align-items: center; gap: 6px;
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-.hdr-btn.add {
-  background: var(--green-l);
-  color: var(--hdr2);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-}
-.hdr-btn.add:hover { background: var(--green-xl); }
+.hdr-btn { height: 30px; padding: 0 12px; border-radius: 5px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 5px; transition: all 0.15s; flex-shrink: 0; }
+.hdr-btn.green { background: var(--green-l); color: var(--hdr2); }
+.hdr-btn.green:hover { background: var(--green-xl); }
+.hdr-btn.ghost { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+.hdr-btn.ghost:hover { background: rgba(255,255,255,0.18); color: #fff; }
 
-/* ══════════════════════════════
-   SHARE BANNER
-══════════════════════════════ */
-.share-banner {
-  background: linear-gradient(90deg, #065f46, #047857);
-  padding: 8px 20px;
-  display: none;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.8);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.share-banner.visible { display: flex; }
-.share-banner strong { color: #fff; }
+/* ══ PAGES ══ */
+.page { display: none; }
+.page.active { display: block; }
 
-/* ══════════════════════════════
-   TABLE
-══════════════════════════════ */
+/* ══ SAMUNE PAGE ══ */
 .sheet-wrap { overflow-x: auto; }
-.sheet-wrap::-webkit-scrollbar { height: 4px; }
-.sheet-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-table.sheet {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 820px;
-  table-layout: fixed;
-  background: var(--white);
-}
-
-/* Column headers */
-table.sheet thead th {
-  background: var(--col-hdr);
-  border-right: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 2px solid rgba(255,255,255,0.08);
-  padding: 0;
-  position: sticky;
-  top: 52px;
-  z-index: 200;
-}
+table.sheet { border-collapse: collapse; width: 100%; min-width: 820px; table-layout: fixed; background: var(--white); }
+table.sheet thead th { background: var(--hdr2); border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 2px solid rgba(255,255,255,0.08); padding: 0; position: sticky; top: 52px; z-index: 200; }
 table.sheet thead th:last-child { border-right: none; }
-
-.th-in {
-  padding: 9px 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
-  display: flex; align-items: center; gap: 6px;
-  white-space: nowrap;
-}
+.th-in { padding: 8px 10px; font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .th-in.plan-h { color: var(--green-xl); }
-.th-badge {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 16px; height: 16px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 3px;
-  font-size: 9px;
-  color: rgba(255,255,255,0.3);
-}
-
-/* Row */
+.th-badge { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; background: rgba(255,255,255,0.08); border-radius: 3px; font-size: 9px; color: rgba(255,255,255,0.3); }
 table.sheet tbody tr { border-bottom: 1px solid var(--border); }
 table.sheet tbody tr:last-child { border-bottom: none; }
 table.sheet tbody tr:hover td { background: #f6fef8; }
 table.sheet tbody tr:hover td.plan-td { background: #e8faf0; }
-
-/* Row num */
-td.rn {
-  width: 36px;
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--green-l);
-  background: var(--green-bg);
-  border-right: 1px solid var(--border2);
-  vertical-align: top;
-  padding-top: 14px;
-  user-select: none;
-}
-
-/* Plan cell */
-td.plan-td {
-  background: var(--plan-bg);
-  border-right: 2px solid var(--border2);
-  vertical-align: top;
-  padding: 10px 12px;
-  position: relative;
-}
-.plan-ta {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--hdr2);
-  font-family: 'Noto Sans JP', sans-serif;
-  resize: none;
-  line-height: 1.65;
-  min-height: 58px;
-  padding: 4px 6px;
-  border-radius: 4px;
-  transition: background 0.15s;
-}
+td.rn { width: 36px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green-l); background: var(--green-bg); border-right: 1px solid var(--border2); vertical-align: top; padding-top: 14px; user-select: none; }
+td.plan-td { background: var(--green-bg); border-right: 2px solid var(--border2); vertical-align: top; padding: 10px 12px; position: relative; }
+.plan-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 12px; font-weight: 600; color: var(--hdr2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.65; min-height: 58px; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
 .plan-ta:focus { background: rgba(22,163,74,0.06); }
 .plan-ta::placeholder { color: var(--border2); font-weight: 300; font-size: 11px; }
-
-.plan-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
+.plan-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; opacity: 0; transition: opacity 0.15s; }
 table.sheet tbody tr:hover .plan-actions { opacity: 1; }
-
-.share-btn {
-  display: flex; align-items: center; gap: 4px;
-  padding: 4px 9px;
-  background: var(--green-bg2);
-  border: 1px solid var(--border2);
-  border-radius: 4px;
-  font-size: 10px;
-  color: var(--green);
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif;
-  transition: all 0.15s;
-}
+.share-btn { display: flex; align-items: center; gap: 4px; padding: 4px 9px; background: var(--green-bg2); border: 1px solid var(--border2); border-radius: 4px; font-size: 10px; color: var(--green); font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; }
 .share-btn:hover { background: var(--border2); }
-
-.del-btn {
-  width: 22px; height: 22px;
-  background: none;
-  border: none;
-  color: var(--muted2);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 4px;
-  font-size: 13px;
-  transition: all 0.15s;
-  margin-left: auto;
-}
+.del-btn { width: 22px; height: 22px; background: none; border: none; color: var(--muted2); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 12px; transition: all 0.15s; margin-left: auto; }
 .del-btn:hover { background: #fee2e2; color: #dc2626; }
-
-/* Ref cell */
-td.ref-td {
-  border-right: 1px solid var(--border);
-  background: var(--cell);
-  vertical-align: top;
-  padding: 10px;
-}
+td.ref-td { border-right: 1px solid var(--border); background: var(--white); vertical-align: top; padding: 10px; }
 td.ref-td:last-child { border-right: none; }
-
-/* URL input */
 .url-row { display: flex; gap: 4px; margin-bottom: 8px; }
-.url-in {
-  flex: 1; min-width: 0;
-  background: var(--green-bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 5px 8px;
-  font-size: 9px;
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  outline: none;
-  transition: all 0.15s;
-}
-.url-in:focus { border-color: var(--green); background: #fff; box-shadow: 0 0 0 2px rgba(34,197,94,0.1); }
+.url-in { flex: 1; min-width: 0; background: var(--green-bg); border: 1px solid var(--border); border-radius: 4px; padding: 5px 8px; font-size: 9px; color: var(--text); font-family: 'DM Mono', monospace; outline: none; transition: all 0.15s; }
+.url-in:focus { border-color: var(--green); background: #fff; }
 .url-in::placeholder { color: var(--muted2); font-family: 'Noto Sans JP', sans-serif; font-size: 9px; }
-.go-btn {
-  width: 24px; height: 24px;
-  background: var(--green);
-  border: none; border-radius: 4px;
-  cursor: pointer; color: #fff; font-size: 11px;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.15s;
-}
+.go-btn { width: 24px; height: 24px; background: var(--green); border: none; border-radius: 4px; cursor: pointer; color: #fff; font-size: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
 .go-btn:hover { background: var(--green-l); }
-
-/* Score badge */
-.score-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  border-radius: 4px;
-  padding: 3px 8px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px; font-weight: 600;
-  margin-bottom: 6px;
-  border: 1px solid transparent;
-}
-.score-badge.S  { color: var(--s-s); background: #f0fdf4; border-color: #86efac; }
-.score-badge.A  { color: var(--s-a); background: #f0fdf4; border-color: #bbf7d0; }
-.score-badge.B  { color: var(--s-b); background: #eff6ff; border-color: #93c5fd; }
-.score-badge.C  { color: var(--s-c); background: #fffbeb; border-color: #fcd34d; }
-.score-badge.X  { color: var(--s-x); background: #fef2f2; border-color: #fca5a5; }
-
+.score-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 4px; padding: 3px 8px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; margin-bottom: 6px; border: 1px solid transparent; }
+.score-badge.S { color: #15803d; background: #f0fdf4; border-color: #86efac; }
+.score-badge.A { color: #16a34a; background: #f0fdf4; border-color: #bbf7d0; }
+.score-badge.B { color: #2563eb; background: #eff6ff; border-color: #93c5fd; }
+.score-badge.C { color: #d97706; background: #fffbeb; border-color: #fcd34d; }
+.score-badge.X { color: #dc2626; background: #fef2f2; border-color: #fca5a5; }
 .score-bar-wrap { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 8px; overflow: hidden; }
-.score-bar { height: 100%; border-radius: 1px; transition: width 0.5s ease; }
+.score-bar { height: 100%; border-radius: 1px; transition: width 0.5s; }
 .score-bar.S,.score-bar.A { background: var(--green); }
 .score-bar.B { background: #3b82f6; }
 .score-bar.C { background: #f59e0b; }
 .score-bar.X { background: #ef4444; }
-
-/* Thumbnail */
-.thumb-link {
-  display: block;
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: 5px;
-  overflow: hidden;
-  background: var(--green-bg2);
-  margin-bottom: 7px;
-  cursor: pointer;
-  text-decoration: none;
-}
-.thumb-link:hover .thumb-overlay { opacity: 1; }
+.thumb-link { display: block; position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 5px; overflow: hidden; background: var(--green-bg2); margin-bottom: 7px; cursor: pointer; text-decoration: none; }
+.thumb-link:hover .thumb-ov { opacity: 1; }
 .thumb-link img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.thumb-overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.35);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.thumb-play {
-  width: 36px; height: 36px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-.thumb-play::after {
-  content: '';
-  border-style: solid;
-  border-width: 7px 0 7px 14px;
-  border-color: transparent transparent transparent #000;
-  margin-left: 3px;
-}
-.thumb-dur {
-  position: absolute; bottom: 4px; right: 4px;
-  background: rgba(0,0,0,0.8);
-  color: #fff;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  padding: 1px 4px;
-  border-radius: 2px;
-}
-
-/* Video info */
-.v-ch {
-  font-size: 9px; color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-bottom: 3px;
-}
-.v-title {
-  font-size: 11px; font-weight: 500;
-  line-height: 1.45; color: var(--text2);
-  margin-bottom: 7px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+.thumb-ov { position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+.thumb-play { width: 34px; height: 34px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.thumb-play::after { content: ''; border-style: solid; border-width: 6px 0 6px 12px; border-color: transparent transparent transparent #000; margin-left: 3px; }
+.thumb-dur { position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.8); color: #fff; font-family: 'DM Mono', monospace; font-size: 9px; padding: 1px 4px; border-radius: 2px; }
+.v-ch { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+.v-title { font-size: 11px; font-weight: 500; line-height: 1.45; color: var(--text2); margin-bottom: 7px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .v-stats { display: flex; flex-direction: column; gap: 3px; }
-.v-stat {
-  display: flex; align-items: center; gap: 5px;
-  font-family: 'DM Mono', monospace; font-size: 9px;
-}
-.v-stat-icon { color: var(--green-l); width: 10px; font-size: 10px; }
+.v-stat { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 9px; }
+.v-stat-icon { color: var(--green-l); width: 10px; }
 .v-stat-val { color: var(--text); font-weight: 500; }
 .v-stat-sub { color: var(--muted2); }
-.v-ratio {
-  font-family: 'DM Mono', monospace; font-size: 9px;
-  margin-top: 5px; padding: 3px 7px; border-radius: 3px;
-  display: inline-block; font-weight: 600;
-}
-.v-ratio.great { background: #f0fdf4; color: var(--s-s); }
-.v-ratio.ok    { background: #dbeafe; color: #1d4ed8; }
-.v-ratio.low   { background: #fef2f2; color: #dc2626; }
-
-/* Skeleton */
-.skel {
-  animation: shimmer 1.1s linear infinite;
-  background: linear-gradient(90deg, var(--green-bg2) 25%, #f0fdf4 50%, var(--green-bg2) 75%);
-  background-size: 200% 100%;
-  border-radius: 4px;
-}
+.v-ratio { font-family: 'DM Mono', monospace; font-size: 9px; margin-top: 5px; padding: 3px 7px; border-radius: 3px; display: inline-block; font-weight: 600; }
+.v-ratio.great { background: #f0fdf4; color: #15803d; }
+.v-ratio.ok { background: #dbeafe; color: #1d4ed8; }
+.v-ratio.low { background: #fef2f2; color: #dc2626; }
+.skel { animation: shimmer 1.1s linear infinite; background: linear-gradient(90deg,var(--green-bg2) 25%,#f0fdf4 50%,var(--green-bg2) 75%); background-size: 200% 100%; border-radius: 4px; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 .skel-thumb { width:100%; aspect-ratio:16/9; border-radius:5px; margin-bottom:7px; }
 .skel-line { height:9px; margin-bottom:4px; }
-
 .vc { display: none; }
 .vc.loaded { display: block; animation: fadeUp 0.2s ease; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
-
-.err-box {
-  font-size: 10px; color: #dc2626;
-  background: #fef2f2; padding: 6px 8px;
-  border-radius: 4px; display: none; line-height: 1.5;
-}
+.err-box { font-size: 10px; color: #dc2626; background: #fef2f2; padding: 6px 8px; border-radius: 4px; display: none; line-height: 1.5; }
 .err-box.show { display: block; }
-.clear-lnk {
-  font-size: 9px; color: var(--muted2);
-  background: none; border: none;
-  cursor: pointer; text-decoration: underline;
-  font-family: 'Noto Sans JP', sans-serif;
-  margin-top: 5px; display: none; padding: 0;
-}
+.clear-lnk { font-size: 9px; color: var(--muted2); background: none; border: none; cursor: pointer; text-decoration: underline; font-family: 'Noto Sans JP', sans-serif; margin-top: 5px; display: none; padding: 0; }
 .clear-lnk.show { display: block; }
-.clear-lnk:hover { color: var(--muted); }
 
-/* ══════════════════════════════
-   SHARE MODAL
-══════════════════════════════ */
-.modal-bg {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 500;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(2px);
-}
-.modal-bg.open { display: flex; }
-.modal {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  width: 440px;
-  max-width: 90vw;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-}
-.modal-title {
-  font-size: 15px; font-weight: 700;
-  color: var(--hdr2);
-  margin-bottom: 6px;
-  display: flex; align-items: center; gap: 8px;
-}
-.modal-sub { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
-.modal-url-wrap { position: relative; margin-bottom: 12px; }
-.modal-url {
-  width: 100%;
-  background: var(--green-bg);
-  border: 1px solid var(--border2);
-  border-radius: 6px;
-  padding: 9px 80px 9px 12px;
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  color: var(--text);
-  outline: none;
-}
-.modal-copy {
-  position: absolute; right: 6px; top: 50%;
-  transform: translateY(-50%);
-  background: var(--green);
-  border: none; border-radius: 4px;
-  padding: 5px 12px;
-  font-size: 11px; font-weight: 700;
-  color: #fff; cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif;
-  transition: background 0.15s;
-}
-.modal-copy:hover { background: var(--green-l); }
-.modal-copy.copied { background: #059669; }
-.modal-note {
-  font-size: 10px; color: var(--muted2);
-  line-height: 1.6;
-  background: #f9fafb;
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-bottom: 14px;
-}
-.modal-close {
-  width: 100%; padding: 9px;
-  background: var(--green-bg2);
-  border: 1px solid var(--border2);
-  border-radius: 6px;
-  color: var(--green);
-  font-size: 12px; font-weight: 600;
-  cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif;
-  transition: background 0.15s;
-}
-.modal-close:hover { background: var(--border2); }
+/* ══ SCRIPT PAGE ══ */
+#page-script { padding: 0; }
 
-/* ══════════════════════════════
-   TOAST
-══════════════════════════════ */
-.toast {
-  position: fixed; bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--hdr2);
-  color: #fff; font-size: 12px;
-  padding: 10px 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  z-index: 600;
-  transition: transform 0.3s ease;
-  pointer-events: none;
-  white-space: nowrap;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-
-/* ══════════════════════════════
-   SHARE VIEW (read-only)
-══════════════════════════════ */
-.share-view-header {
-  background: linear-gradient(135deg, #064e2e, #0f4c2a);
-  padding: 20px 24px;
-  display: none;
-  align-items: center;
-  gap: 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.share-view-header.visible { display: flex; }
-.share-view-title {
-  font-size: 18px; font-weight: 700;
-  color: #fff; letter-spacing: -0.3px;
-}
-.share-view-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-.readonly-badge {
-  margin-left: auto;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 10px;
-  color: rgba(255,255,255,0.6);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.08em;
-}
-/* ── タブ ── */
-.hdr-tabs {
+/* 案件タブバー */
+.case-tabbar {
+  background: var(--white);
+  border-bottom: 2px solid var(--border2);
   display: flex;
-  gap: 2px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 8px;
-  padding: 3px;
+  align-items: stretch;
+  overflow-x: auto;
+  position: sticky;
+  top: 52px;
+  z-index: 200;
+  padding: 0 16px;
 }
-.hdr-tab {
-  padding: 5px 14px;
-  border-radius: 6px;
+.case-tabbar::-webkit-scrollbar { height: 3px; }
+.case-tabbar::-webkit-scrollbar-thumb { background: var(--border2); }
+
+.case-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
   border: none;
   background: transparent;
-  color: rgba(255,255,255,0.5);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  position: relative;
+}
+.case-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
+.case-tab:hover:not(.active) { color: var(--text2); background: var(--green-bg); }
+.case-tab-del {
+  width: 16px; height: 16px;
+  background: none; border: none;
+  color: var(--muted2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 3px; font-size: 11px;
+  transition: all 0.15s;
+  padding: 0;
+}
+.case-tab-del:hover { background: #fee2e2; color: #dc2626; }
+.add-case-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 10px 14px;
+  border: none; background: transparent;
+  color: var(--muted2); font-size: 11px;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.add-case-btn:hover { color: var(--green); }
+
+/* 案件ヘッダー */
+.case-header {
+  background: linear-gradient(135deg, #064e2e, #0f4c2a);
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+.case-header-field { display: flex; flex-direction: column; gap: 4px; }
+.case-header-label { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); font-family: 'DM Mono', monospace; }
+.case-header-input {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #fff;
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+  transition: all 0.15s;
+}
+.case-header-input:focus { background: rgba(255,255,255,0.14); border-color: var(--green-l); }
+.case-header-input::placeholder { color: rgba(255,255,255,0.25); }
+
+/* タイトル・サムネ・ハイライト */
+.case-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.case-info-card { background: var(--green-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.case-info-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+.case-info-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 11.5px; color: var(--text2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.7; min-height: 80px; }
+.case-info-ta::placeholder { color: var(--muted2); }
+
+/* 凡例 */
+.sc-legend {
+  padding: 10px 20px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sc-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+.sc-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* スクリプトテーブル */
+.sc-tbl-wrap { overflow-x: auto; }
+table.sc-tbl {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 1000px;
+  font-size: 11.5px;
+  background: var(--white);
+}
+table.sc-tbl thead tr { background: var(--hdr2); }
+table.sc-tbl th { color: var(--green-xl); font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; position: sticky; top: 104px; z-index: 100; }
+table.sc-tbl td { border: 1px solid var(--border); padding: 0; vertical-align: top; }
+
+/* 編集可能セル */
+.editable {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 8px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 11.5px;
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  resize: none;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  display: block;
+}
+.editable:focus { background: rgba(22,163,74,0.04); }
+select.editable { cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 20px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; }
+
+/* セクション行カラー */
+tr.sc-insert td { background: #f0faf0; }
+tr.sc-vlog td { background: #fefce8; }
+tr.sc-kaisetsu td { background: #f0f6ff; }
+tr.sc-sokyu td { background: #fff8f0; }
+tr.sc-bridge td { background: #faf0ff; }
+tr.sc-total td { background: var(--hdr2); }
+tr.sc-total .editable { color: var(--green-xl); font-weight: 700; text-align: center; font-family: 'DM Mono', monospace; font-size: 11px; }
+
+/* 行操作ボタン */
+.sc-row-ctrl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+tr:hover .sc-row-ctrl { opacity: 1; }
+.sc-row-btn { width: 18px; height: 18px; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; font-size: 10px; color: var(--muted2); transition: all 0.15s; padding: 0; }
+.sc-row-btn:hover { background: var(--green-bg2); color: var(--green); }
+.sc-row-btn.del:hover { background: #fee2e2; color: #dc2626; }
+
+/* 行追加ボタン */
+.add-row-area {
+  padding: 10px 20px;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.add-row-type-btn {
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 11px;
+  color: var(--muted);
   cursor: pointer;
   font-family: 'Noto Sans JP', sans-serif;
   transition: all 0.15s;
-  white-space: nowrap;
 }
-.hdr-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
-.hdr-tab:hover:not(.active) { color: rgba(255,255,255,0.75); }
+.add-row-type-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
 
-/* ── 台本ページ ── */
-#page-script { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
-#page-script.active { display: block; }
-#page-samune.hidden { display: none; }
+/* フッターバー */
+.sc-footer {
+  padding: 8px 20px;
+  background: var(--hdr2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+}
+.sc-footer-val { color: var(--green-l); font-weight: 500; }
 
-.sc-grid { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-bottom: 20px; }
-.sc-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
-.sc-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
-.sc-input, .sc-ta {
-  width: 100%; background: var(--green-bg); border: 1px solid var(--border);
-  border-radius: 5px; padding: 8px 10px; font-size: 12px; color: var(--text);
-  font-family: 'Noto Sans JP', sans-serif; outline: none; margin-bottom: 10px;
-  transition: border-color 0.15s;
-}
-.sc-input:focus, .sc-ta:focus { border-color: var(--green); background: #fff; }
-.sc-ta { resize: vertical; min-height: 200px; line-height: 1.7; }
-.sc-gen-btn {
-  width: 100%; padding: 11px; background: var(--green); border: none; border-radius: 6px;
-  color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
-  font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.sc-gen-btn:hover { background: var(--green-l); }
-.sc-gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.sc-progress { display: none; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
-.sc-progress.show { display: block; }
-.sc-prog-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
-.sc-prog-bar { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
-.sc-prog-msg { font-size: 11px; color: var(--muted); }
-.sc-output { display: none; }
-.sc-output.show { display: block; }
-.sc-titles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.sc-title-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-.sc-title-card-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
-.sc-title-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; line-height: 1.5; margin-bottom: 5px; }
-.sc-title-num { flex-shrink: 0; background: var(--green); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-top: 2px; font-family: 'DM Mono', monospace; }
-.sc-tbl-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
-.sc-tbl { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 11.5px; }
-.sc-tbl thead tr { background: var(--hdr2); }
-.sc-tbl th { color: var(--green-xl); font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; }
-.sc-tbl td { border: 1px solid var(--border); padding: 8px 10px; vertical-align: top; white-space: pre-wrap; line-height: 1.7; }
-.sc-tbl tr:hover td { filter: brightness(0.97); }
-.sc-type-insert td { background: #f0faf0; }
-.sc-type-vlog td { background: #fefce8; }
-.sc-type-kaisetsu td { background: #f0f6ff; }
-.sc-type-sokyu td { background: #fff8f0; }
-.sc-type-bridge td { background: #faf0ff; }
-.sc-type-total td { background: var(--hdr2); color: var(--green-xl); font-weight: 700; text-align: center; font-family: 'DM Mono', monospace; font-size: 11px; }
-.sc-dur-badge { display: inline-block; background: var(--green); color: #fff; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; }
-.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ══ MODAL ══ */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.modal-bg.open { display: flex; }
+.modal { background: #fff; border-radius: 12px; padding: 22px; width: 420px; max-width: 90vw; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal-title { font-size: 14px; font-weight: 700; color: var(--hdr2); margin-bottom: 5px; }
+.modal-sub { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+.modal-url-wrap { position: relative; margin-bottom: 10px; }
+.modal-url { width: 100%; background: var(--green-bg); border: 1px solid var(--border2); border-radius: 5px; padding: 8px 80px 8px 10px; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text); outline: none; }
+.modal-copy { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: var(--green); border: none; border-radius: 4px; padding: 4px 10px; font-size: 10px; font-weight: 700; color: #fff; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s; }
+.modal-copy:hover { background: var(--green-l); }
+.modal-copy.copied { background: #059669; }
+.modal-note { font-size: 10px; color: var(--muted2); line-height: 1.6; background: #f9fafb; border-radius: 5px; padding: 8px 10px; margin-bottom: 12px; }
+.modal-close { width: 100%; padding: 8px; background: var(--green-bg2); border: 1px solid var(--border2); border-radius: 5px; color: var(--green); font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s; }
+.modal-close:hover { background: var(--border2); }
+
+/* ══ TOAST ══ */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--hdr2); color: #fff; font-size: 12px; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 600; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* SHARE VIEW */
+.share-view-hdr { background: linear-gradient(135deg,#064e2e,#0f4c2a); padding: 18px 22px; display: none; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.share-view-hdr.visible { display: flex; }
+.share-view-title { font-size: 16px; font-weight: 700; color: #fff; }
+.share-view-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.readonly-badge { margin-left: auto; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 10px; font-size: 9px; color: rgba(255,255,255,0.6); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; }
+
+/* 名前変更インライン */
+.case-tab-name { border: none; background: transparent; font-size: 12px; font-weight: 500; color: inherit; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; outline: none; min-width: 60px; max-width: 140px; }
+.case-tab.active .case-tab-name { font-weight: 700; }
 </style>
+</head>
 <body>
 
 <!-- HEADER -->
 <div class="hdr" id="mainHdr">
-  <div class="hdr-logo">
-    <div class="hdr-icon">🎬</div>
-    <div>
-      <div class="hdr-name">さむね君</div>
-      <div class="hdr-sub">BirdFlip 企画ツール</div>
-    </div>
-  </div>
+  <div class="hdr-logo"><div class="hdr-icon">🎬</div><div><div class="hdr-name">さむね君</div><div class="hdr-sub">BirdFlip 企画ツール</div></div></div>
   <div class="hdr-sep"></div>
-  <!-- タブ -->
-  <div class="hdr-tabs">
-    <button class="hdr-tab active" id="tab-samune" onclick="switchMainTab('samune')">🖼 サムネ</button>
-    <button class="hdr-tab" id="tab-script" onclick="switchMainTab('script')">📜 台本</button>
+  <div class="main-tabs">
+    <button class="main-tab active" id="mtab-samune" onclick="switchMainTab('samune')">🖼 サムネ</button>
+    <button class="main-tab" id="mtab-script" onclick="switchMainTab('script')">📜 台本</button>
   </div>
   <div class="hdr-sep"></div>
   <div class="hdr-spacer"></div>
-  <!-- サムネタブ用コントロール -->
-  <div id="ctrl-samune" style="display:flex;align-items:center;gap:12px">
-    <div class="legend">
-      <div class="legend-item"><span class="ldot" style="background:#16a34a"></span>S (5倍+)</div>
-      <div class="legend-item"><span class="ldot" style="background:#22c55e"></span>A (3〜5倍)</div>
-      <div class="legend-item"><span class="ldot" style="background:#3b82f6"></span>B (1〜3倍)</div>
-      <div class="legend-item"><span class="ldot" style="background:#f59e0b"></span>C (3倍未満)</div>
-      <div class="legend-item"><span class="ldot" style="background:#ef4444"></span>× 1年超</div>
+  <!-- サムネコントロール -->
+  <div id="ctrl-samune" style="display:flex;align-items:center;gap:10px">
+    <div style="display:flex;gap:8px;align-items:center;background:rgba(0,0,0,0.2);border-radius:20px;padding:5px 12px">
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#16a34a;display:inline-block"></span>S(5倍+)</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block"></span>A(3〜5倍)</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#3b82f6;display:inline-block"></span>B(1〜3倍)</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block"></span>C(3倍未満)</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace"><span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block"></span>×(1年超)</div>
     </div>
-    <div class="hdr-sep"></div>
-    <button class="hdr-btn add" onclick="addRow()">
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      企画を追加
-    </button>
+    <button class="hdr-btn green" onclick="addSamuneRow()">＋ 企画を追加</button>
   </div>
-  <!-- 台本タブ用コントロール -->
+  <!-- 台本コントロール -->
   <div id="ctrl-script" style="display:none;align-items:center;gap:8px">
-    <button class="hdr-btn" style="background:rgba(255,255,255,0.1);color:#fff" onclick="dlScriptHTML()">⬇ HTML出力</button>
-    <button class="hdr-btn" style="background:rgba(255,255,255,0.1);color:#fff" onclick="copyTSV()">📋 TSVコピー</button>
+    <button class="hdr-btn ghost" onclick="dlScriptHTML()">⬇ HTML出力</button>
+    <button class="hdr-btn ghost" onclick="copyTSV()">📋 TSVコピー</button>
+    <button class="hdr-btn ghost" onclick="openScriptShare()">🔗 共有</button>
   </div>
 </div>
 
-<!-- SHARE VIEW HEADER (共有モードのみ表示) -->
-<div class="share-view-header" id="shareViewHdr">
+<!-- SHARE VIEW HEADER -->
+<div class="share-view-hdr" id="shareViewHdr">
   <div class="hdr-icon">🎬</div>
-  <div>
-    <div class="share-view-title" id="shareViewTitle">さむね君</div>
-    <div class="share-view-sub">サムネ企画リサーチシート（共有ビュー）</div>
-  </div>
+  <div><div class="share-view-title" id="shareViewTitle">さむね君</div><div class="share-view-sub">台本（共有ビュー）</div></div>
   <span class="readonly-badge">READ ONLY</span>
 </div>
 
-<!-- サムネページ -->
-<div id="page-samune">
-<!-- TABLE -->
-<div class="sheet-wrap">
-  <table class="sheet" id="sheet">
-    <colgroup>
-      <col style="width:36px">
-      <col style="width:18%">
-      <col><col><col><col><col>
-    </colgroup>
-    <thead>
-      <tr>
+<!-- ══ PAGE: SAMUNE ══ -->
+<div class="page active" id="page-samune">
+  <div class="sheet-wrap">
+    <table class="sheet" id="sheet">
+      <colgroup><col style="width:36px"><col style="width:18%"><col><col><col><col><col></colgroup>
+      <thead><tr>
         <th><div class="th-in" style="justify-content:center">#</div></th>
         <th><div class="th-in plan-h">企画タイトル / 文言</div></th>
         <th><div class="th-in"><span class="th-badge">1</span>参考サムネ</div></th>
@@ -715,93 +423,33 @@ td.ref-td:last-child { border-right: none; }
         <th><div class="th-in"><span class="th-badge">3</span>参考サムネ</div></th>
         <th><div class="th-in"><span class="th-badge">4</span>参考サムネ</div></th>
         <th><div class="th-in"><span class="th-badge">5</span>参考サムネ</div></th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-</div>
-</div><!-- /page-samune -->
-
-<!-- 台本ページ -->
-<div id="page-script">
-  <div class="sc-grid">
-    <!-- 左：入力フォーム -->
-    <div>
-      <div class="sc-card" style="margin-bottom:12px">
-        <div class="sc-label">出演者名</div>
-        <input class="sc-input" id="sc-name" type="text" placeholder="例：松田 健太">
-        <div class="sc-label">目標尺（分）</div>
-        <input class="sc-input" id="sc-dur" type="number" value="25" min="5" max="60">
-        <div class="sc-label">撮影日</div>
-        <input class="sc-input" id="sc-date" type="text" placeholder="例：4月9日（木）東京本社">
-        <div class="sc-label">撮影場所</div>
-        <input class="sc-input" id="sc-place" type="text" placeholder="例：東京本社">
-      </div>
-      <button class="sc-gen-btn" id="sc-gen-btn" onclick="generateScript()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        台本を生成
-      </button>
-    </div>
-    <!-- 右：文字起こし入力 -->
-    <div class="sc-card">
-      <div class="sc-label">文字起こし（そのまま貼り付け）</div>
-      <textarea class="sc-ta" id="sc-transcript" placeholder="ここにヒアリングの文字起こしをそのまま貼り付けてください。
-
-【注意】このツールは文字起こしにある情報だけを使います。情報を勝手に上乗せしません（ハレーション防止）。"></textarea>
-    </div>
-  </div>
-
-  <!-- プログレス -->
-  <div class="sc-progress" id="sc-progress">
-    <div class="sc-prog-bar-wrap"><div class="sc-prog-bar" id="sc-prog-bar" style="width:0%"></div></div>
-    <div class="sc-prog-msg" id="sc-prog-msg">生成中…</div>
-  </div>
-
-  <!-- 出力エリア -->
-  <div class="sc-output" id="sc-output">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-      <div class="sc-dur-badge" id="sc-dur-badge">-- 分</div>
-    </div>
-    <div class="sc-titles-grid" id="sc-titles"></div>
-    <div class="sc-tbl-wrap">
-      <table class="sc-tbl" id="sc-tbl">
-        <thead>
-          <tr>
-            <th style="width:80px">時間帯</th>
-            <th style="width:120px">シーン</th>
-            <th style="width:80px">種別</th>
-            <th style="width:50px">秒数</th>
-            <th style="width:70px">所要時間</th>
-            <th style="width:50px">文字数</th>
-            <th>原稿</th>
-            <th style="width:120px">メモ</th>
-          </tr>
-        </thead>
-        <tbody id="sc-tbody"></tbody>
-      </table>
-    </div>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
   </div>
 </div>
 
-<!-- SHARE MODAL -->
+<!-- ══ PAGE: SCRIPT ══ -->
+<div class="page" id="page-script">
+  <!-- 案件タブバー -->
+  <div class="case-tabbar" id="caseTabbar">
+    <button class="add-case-btn" onclick="addCase()">＋ 案件を追加</button>
+  </div>
+  <!-- 案件コンテンツ -->
+  <div id="caseContent"></div>
+</div>
+
+<!-- MODAL -->
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="modal-title">🔗 この企画を共有</div>
-    <div class="modal-sub" id="modalSubTitle">企画のURLを共有できます</div>
-    <div class="modal-url-wrap">
-      <input type="text" class="modal-url" id="modalUrl" readonly>
-      <button class="modal-copy" id="modalCopyBtn" onclick="copyShareUrl()">コピー</button>
-    </div>
-    <div class="modal-note">
-      ✓ このURLを知っている人だけが閲覧できます<br>
-      ✓ 閲覧者は編集できません（読み取り専用）<br>
-      ✓ 他の企画は表示されません
-    </div>
+    <div class="modal-title" id="modalTitle">🔗 共有リンク</div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-url-wrap"><input type="text" class="modal-url" id="modalUrl" readonly><button class="modal-copy" id="modalCopyBtn" onclick="copyUrl()">コピー</button></div>
+    <div class="modal-note">✓ このURLを知っている人だけが閲覧できます<br>✓ 閲覧者は編集できません（読み取り専用）</div>
     <button class="modal-close" onclick="closeModal()">閉じる</button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- Firebase -->
@@ -809,624 +457,544 @@ td.ref-td:last-child { border-right: none; }
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-// ══════════════════════════════
-// FIREBASE INIT
-// ══════════════════════════════
-const fbConfig = {
+// ══ FIREBASE ══
+firebase.initializeApp({
   apiKey: "AIzaSyAjBviZ8Pcg3fX8ti2y3y1nMcBz_Dps7mw",
   authDomain: "birdstraike.firebaseapp.com",
   projectId: "birdstraike",
   storageBucket: "birdstraike.firebasestorage.app",
   messagingSenderId: "177151250196",
   appId: "1:177151250196:web:21aefe5c0a53dcb82b7c01"
-};
-firebase.initializeApp(fbConfig);
+});
 const db = firebase.firestore();
-const COL = 'samune_plans';
-
 const YT_KEY = 'AIzaSyC1QpmOcd_xyBzXr4UXvh8XfroMAe8NRJo';
 
-// ══════════════════════════════
-// STATE
-// ══════════════════════════════
+// ══ STATE ══
 let rowCount = 0;
 const dbt = {};
-let saveTimers = {};
+const saveTmr = {};
 let isShareMode = false;
-let shareRowId = null;
+let currentMainTab = 'samune';
+let cases = []; // [{id, name, data}]
+let activeCaseId = null;
+let caseSaveTmr = {};
 
-// ══════════════════════════════
-// INIT: URL判定
-// ══════════════════════════════
+// ══ INIT ══
 async function init() {
   const params = new URLSearchParams(location.search);
   const shareId = params.get('share');
+  const shareType = params.get('type') || 'samune';
 
   if (shareId) {
-    // 共有モード：該当企画のみ読み込み
     isShareMode = true;
     document.getElementById('mainHdr').style.display = 'none';
     document.getElementById('shareViewHdr').classList.add('visible');
-    await loadShareRow(shareId);
+    if (shareType === 'script') {
+      switchMainTab('script', true);
+      await loadShareScript(shareId);
+    } else {
+      await loadShareRow(shareId);
+    }
   } else {
-    // 通常モード：全企画読み込み
-    await loadAllRows();
-    if (rowCount === 0) {
-      addRow(); addRow(); addRow();
-    }
+    await loadSamuneRows();
+    await loadCases();
+    if (rowCount === 0) { addSamuneRow(); addSamuneRow(); addSamuneRow(); }
+    if (cases.length === 0) addCase();
   }
 }
 
+// ══ MAIN TAB SWITCH ══
+function switchMainTab(tab, force) {
+  if (tab === currentMainTab && !force) return;
+  currentMainTab = tab;
+  document.getElementById('page-samune').classList.toggle('active', tab === 'samune');
+  document.getElementById('page-script').classList.toggle('active', tab === 'script');
+  document.getElementById('mtab-samune').classList.toggle('active', tab === 'samune');
+  document.getElementById('mtab-script').classList.toggle('active', tab === 'script');
+  document.getElementById('ctrl-samune').style.display = tab === 'samune' ? 'flex' : 'none';
+  document.getElementById('ctrl-script').style.display = tab === 'script' ? 'flex' : 'none';
+}
+
 // ══════════════════════════════
-// LOAD ALL
+// SAMUNE TAB
 // ══════════════════════════════
-async function loadAllRows() {
+async function loadSamuneRows() {
   try {
-    const snap = await db.collection(COL).orderBy('order').get();
-    if (snap.empty) return;
+    const snap = await db.collection('samune_plans').orderBy('order').get();
     for (const doc of snap.docs) {
-      const data = doc.data();
-      createRowDOM(doc.id, data.planText || '', data.refs || [], false);
+      const d = doc.data();
+      createSamuneRow(doc.id, d.planText||'', d.refs||[], false);
     }
-  } catch(e) {
-    console.error('load error', e);
-    showToast('読み込みに失敗しました');
-  }
+  } catch(e) { console.error(e); }
 }
 
-// ══════════════════════════════
-// LOAD SHARE ROW
-// ══════════════════════════════
 async function loadShareRow(id) {
   try {
-    const doc = await db.collection(COL).doc(id).get();
-    if (!doc.exists) {
-      document.getElementById('shareViewTitle').textContent = '企画が見つかりません';
-      return;
-    }
-    const data = doc.data();
-    document.getElementById('shareViewTitle').textContent = data.planText || '（タイトルなし）';
-    createRowDOM(id, data.planText || '', data.refs || [], true);
-  } catch(e) {
-    showToast('読み込みに失敗しました');
-  }
+    const doc = await db.collection('samune_plans').doc(id).get();
+    if (!doc.exists) { document.getElementById('shareViewTitle').textContent = '企画が見つかりません'; return; }
+    const d = doc.data();
+    document.getElementById('shareViewTitle').textContent = d.planText || '（タイトルなし）';
+    createSamuneRow(id, d.planText||'', d.refs||[], true);
+  } catch(e) { showToast('読み込みに失敗しました'); }
 }
 
-// ══════════════════════════════
-// ADD ROW
-// ══════════════════════════════
-async function addRow() {
+async function addSamuneRow() {
   if (isShareMode) return;
-  const snap = await db.collection(COL).orderBy('order').get();
-  const nextOrder = snap.size;
-  const ref = await db.collection(COL).add({
-    planText: '',
-    refs: [{},{},{},{},{}],
-    order: nextOrder,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  });
-  createRowDOM(ref.id, '', [{},{},{},{},{}], false);
+  const snap = await db.collection('samune_plans').orderBy('order').get();
+  const ref = await db.collection('samune_plans').add({ planText:'', refs:[{},{},{},{},{}], order: snap.size, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+  createSamuneRow(ref.id, '', [{},{},{},{},{}], false);
 }
 
-// ══════════════════════════════
-// CREATE ROW DOM
-// ══════════════════════════════
-function createRowDOM(docId, planText, refs, readOnly) {
+function createSamuneRow(docId, planText, refs, readOnly) {
   rowCount++;
   const rid = rowCount;
   const tr = document.createElement('tr');
   tr.id = 'row-' + rid;
   tr.dataset.docId = docId;
-
-  // Row num
-  const tdNum = document.createElement('td');
-  tdNum.className = 'rn';
-  tdNum.textContent = rid;
-  tr.appendChild(tdNum);
-
-  // Plan cell
-  const tdPlan = document.createElement('td');
-  tdPlan.className = 'plan-td';
+  const tdNum = document.createElement('td'); tdNum.className = 'rn'; tdNum.textContent = rid; tr.appendChild(tdNum);
+  const tdPlan = document.createElement('td'); tdPlan.className = 'plan-td';
   if (readOnly) {
-    tdPlan.innerHTML = `<div style="font-size:13px;font-weight:600;color:var(--hdr2);line-height:1.6;padding:4px 6px">${esc(planText) || '（タイトルなし）'}</div>`;
+    tdPlan.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:4px 6px;line-height:1.6">${esc(planText)||'（タイトルなし）'}</div>`;
   } else {
     tdPlan.innerHTML = `
-      <textarea class="plan-ta" rows="3" placeholder="企画タイトル・サムネ文言&#10;メモなど自由に入力">${esc(planText)}</textarea>
+      <textarea class="plan-ta" rows="3" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
       <div class="plan-actions">
-        <button class="share-btn" onclick="openShareModal('${docId}', this)">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="10" cy="2" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="10" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="2" cy="6" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 5.2L8.5 2.8M3.5 6.8L8.5 9.2" stroke="currentColor" stroke-width="1.2"/></svg>
-          共有リンク
-        </button>
-        <button class="del-btn" onclick="delRow('${docId}', ${rid})" title="削除">✕</button>
-      </div>
-    `;
-    // テキスト変更で保存
-    const ta = tdPlan.querySelector('.plan-ta');
-    ta.addEventListener('input', () => scheduleSave(docId, rid));
+        <button class="share-btn" onclick="openSamuneShare('${docId}',this)">🔗 共有</button>
+        <button class="del-btn" onclick="delSamuneRow('${docId}',${rid})">✕</button>
+      </div>`;
+    tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSamuneSave(docId, rid));
   }
   tr.appendChild(tdPlan);
-
-  // Ref cells x5
   for (let i = 0; i < 5; i++) {
-    const refData = (refs && refs[i]) ? refs[i] : {};
     const cid = `c${rid}r${i}`;
-    const td = document.createElement('td');
-    td.className = 'ref-td';
-
-    if (readOnly) {
-      td.innerHTML = buildRefCellReadOnly(cid, refData, i);
-    } else {
-      td.innerHTML = buildRefCell(cid, refData, i, docId);
-    }
-
-    // 保存済みデータがあればカード表示
-    if (refData.vid) {
-      setTimeout(() => renderCard(cid, refData.vid, refData, readOnly), 50);
-    }
+    const td = document.createElement('td'); td.className = 'ref-td';
+    const refData = (refs && refs[i]) || {};
+    td.innerHTML = readOnly ? `<div id="${cid}-skel" style="display:none"></div><div class="err-box" id="${cid}-err"></div><div class="vc" id="${cid}-card"></div><button class="clear-lnk" id="${cid}-clear" style="display:none"></button>`
+      : `<div class="url-row"><input class="url-in" id="${cid}-url" type="text" value="${esc(refData.url||'')}" placeholder="YouTube URL" onpaste="onPaste(event,'${cid}','${docId}',${i})" oninput="onInput('${cid}','${docId}',${i})"><button class="go-btn" onclick="fetchVideo('${cid}','${docId}',${i})">→</button></div><div id="${cid}-skel" style="display:none"><div class="skel skel-thumb"></div><div class="skel skel-line" style="width:90%"></div><div class="skel skel-line" style="width:55%"></div></div><div class="err-box" id="${cid}-err"></div><div class="vc" id="${cid}-card"></div><button class="clear-lnk" id="${cid}-clear" onclick="clearCell('${cid}','${docId}',${i})">✕ クリア</button>`;
     tr.appendChild(td);
+    if (refData.vid) setTimeout(() => renderCard(cid, refData.vid, refData, readOnly), 50);
   }
-
   document.getElementById('tbody').appendChild(tr);
+  if (!readOnly && !planText) tr.querySelector('.plan-ta')?.focus();
   renum();
-
-  if (!readOnly && !planText) {
-    tr.querySelector('.plan-ta')?.focus();
-  }
 }
 
-function buildRefCell(cid, refData, idx, docId) {
-  return `
-    <div class="url-row">
-      <input class="url-in" id="${cid}-url" type="text"
-        value="${esc(refData.url||'')}"
-        placeholder="YouTube URL を貼り付け"
-        onpaste="onPaste(event,'${cid}','${docId}',${idx})"
-        oninput="onInput('${cid}','${docId}',${idx})">
-      <button class="go-btn" onclick="fetchVideo('${cid}','${docId}',${idx})">→</button>
-    </div>
-    <div id="${cid}-skel" style="display:none">
-      <div class="skel skel-thumb"></div>
-      <div class="skel skel-line" style="width:90%"></div>
-      <div class="skel skel-line" style="width:55%"></div>
-    </div>
-    <div class="err-box" id="${cid}-err"></div>
-    <div class="vc" id="${cid}-card"></div>
-    <button class="clear-lnk" id="${cid}-clear" onclick="clearCell('${cid}','${docId}',${idx})">✕ クリア</button>
-  `;
+function scheduleSamuneSave(docId, rid) {
+  clearTimeout(saveTmr[docId]);
+  saveTmr[docId] = setTimeout(() => saveSamuneRow(docId, rid), 1000);
 }
-
-function buildRefCellReadOnly(cid, refData, idx) {
-  return `
-    <div id="${cid}-skel" style="display:none"></div>
-    <div class="err-box" id="${cid}-err"></div>
-    <div class="vc" id="${cid}-card"></div>
-    <button class="clear-lnk" id="${cid}-clear" style="display:none"></button>
-  `;
-}
-
-// ══════════════════════════════
-// SAVE
-// ══════════════════════════════
-function scheduleSave(docId, rid) {
-  clearTimeout(saveTimers[docId]);
-  saveTimers[docId] = setTimeout(() => saveRow(docId, rid), 1000);
-}
-
-async function saveRow(docId, rid) {
-  const tr = document.getElementById('row-' + rid);
-  if (!tr) return;
+async function saveSamuneRow(docId, rid) {
+  const tr = document.getElementById('row-' + rid); if (!tr) return;
   const planText = tr.querySelector('.plan-ta')?.value || '';
   const refs = [];
   for (let i = 0; i < 5; i++) {
     const cid = `c${rid}r${i}`;
-    const card = document.getElementById(cid + '-card');
-    const urlEl = document.getElementById(cid + '-url');
-    refs.push(card?.dataset?.refdata ? JSON.parse(card.dataset.refdata) : { url: urlEl?.value || '' });
+    const card = document.getElementById(cid+'-card');
+    refs.push(card?.dataset?.refdata ? JSON.parse(card.dataset.refdata) : { url: document.getElementById(cid+'-url')?.value||'' });
   }
-  try {
-    await db.collection(COL).doc(docId).update({ planText, refs });
-  } catch(e) {
-    console.error('save error', e);
-  }
+  try { await db.collection('samune_plans').doc(docId).update({ planText, refs }); } catch(e) {}
 }
-
-// ══════════════════════════════
-// DELETE ROW
-// ══════════════════════════════
-async function delRow(docId, rid) {
+async function delSamuneRow(docId, rid) {
   if (!confirm('この企画を削除しますか？')) return;
-  try {
-    await db.collection(COL).doc(docId).delete();
-    document.getElementById('row-' + rid)?.remove();
-    renum();
-    showToast('企画を削除しました');
-  } catch(e) {
-    showToast('削除に失敗しました');
-  }
+  await db.collection('samune_plans').doc(docId).delete();
+  document.getElementById('row-'+rid)?.remove();
+  renum(); showToast('削除しました');
 }
-
 function renum() {
-  document.querySelectorAll('#tbody tr').forEach((r, i) => {
-    r.querySelector('.rn').textContent = i + 1;
-  });
+  document.querySelectorAll('#tbody tr').forEach((r,i) => r.querySelector('.rn').textContent = i+1);
 }
 
-// ══════════════════════════════
-// URL INPUT
-// ══════════════════════════════
-function onPaste(e, cid, docId, idx) {
-  setTimeout(() => fetchVideo(cid, docId, idx), 80);
-}
-function onInput(cid, docId, idx) {
-  clearTimeout(dbt[cid]);
-  dbt[cid] = setTimeout(() => {
-    const v = document.getElementById(cid + '-url')?.value || '';
-    if (v.includes('youtu')) fetchVideo(cid, docId, idx);
-  }, 900);
-}
+// YouTube fetch
+function onPaste(e,cid,docId,idx) { setTimeout(()=>fetchVideo(cid,docId,idx),80); }
+function onInput(cid,docId,idx) { clearTimeout(dbt[cid]); dbt[cid]=setTimeout(()=>{ if(document.getElementById(cid+'-url')?.value?.includes('youtu')) fetchVideo(cid,docId,idx); },900); }
+function extractId(url) { const m=url.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/)([a-zA-Z0-9_-]{11})/); return m?m[1]:null; }
 
-function extractId(url) {
-  const m = url.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/)([a-zA-Z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
-
-// ══════════════════════════════
-// FETCH YOUTUBE
-// ══════════════════════════════
-async function fetchVideo(cid, docId, idx) {
-  const urlEl = document.getElementById(cid + '-url');
-  const url = urlEl?.value?.trim() || '';
-  if (!url) return;
-  const vid = extractId(url);
-  if (!vid) { showErr(cid, '有効なYouTube URLを入力してください'); return; }
-
-  setSkel(cid, true); clearErr(cid);
-
+async function fetchVideo(cid,docId,idx) {
+  const url = document.getElementById(cid+'-url')?.value?.trim()||''; if(!url) return;
+  const vid = extractId(url); if(!vid){showErr(cid,'有効なYouTube URLを入力してください');return;}
+  setSkel(cid,true); clearErr(cid);
   try {
-    const [vRes, ] = await Promise.all([
-      fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${vid}&key=${YT_KEY}`)
-    ]);
+    const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${vid}&key=${YT_KEY}`);
     const vData = await vRes.json();
-    if (!vData.items?.length) { setSkel(cid, false); showErr(cid, '動画が見つかりませんでした'); return; }
-
+    if(!vData.items?.length){setSkel(cid,false);showErr(cid,'動画が見つかりませんでした');return;}
     const item = vData.items[0];
-    const channelId = item.snippet.channelId;
-
-    const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${YT_KEY}`);
+    const cRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${item.snippet.channelId}&key=${YT_KEY}`);
     const cData = await cRes.json();
-    const subs = parseInt(cData.items?.[0]?.statistics?.subscriberCount || 0);
-
-    const info = {
-      url,
-      vid,
-      title:      item.snippet.title,
-      channel:    item.snippet.channelTitle,
-      views:      parseInt(item.statistics.viewCount || 0),
-      subs,
-      uploadDate: item.snippet.publishedAt.slice(0, 10),
-      duration:   parseDur(item.contentDetails?.duration || 'PT0S')
-    };
-
-    setSkel(cid, false);
-    renderCard(cid, vid, info, false);
-
-    // Firestoreに保存
-    if (docId) {
-      const tr = document.querySelector(`[data-doc-id="${docId}"]`);
-      if (tr) scheduleSave(docId, parseInt(tr.id.replace('row-', '')));
-    }
-  } catch(e) {
-    setSkel(cid, false);
-    showErr(cid, '取得に失敗: ' + e.message);
-  }
+    const info = { url, vid, title:item.snippet.title, channel:item.snippet.channelTitle, views:parseInt(item.statistics.viewCount||0), subs:parseInt(cData.items?.[0]?.statistics?.subscriberCount||0), uploadDate:item.snippet.publishedAt.slice(0,10), duration:parseDur(item.contentDetails?.duration||'PT0S') };
+    setSkel(cid,false); renderCard(cid,vid,info,false);
+    if(docId){ const tr=document.querySelector(`[data-doc-id="${docId}"]`); if(tr) scheduleSamuneSave(docId,parseInt(tr.id.replace('row-',''))); }
+  } catch(e) { setSkel(cid,false); showErr(cid,'取得に失敗しました'); }
 }
-
-function parseDur(iso) {
-  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!m) return '--:--';
-  const h = parseInt(m[1]||0), min = parseInt(m[2]||0), sec = parseInt(m[3]||0);
-  return `${h*60+min}:${String(sec).padStart(2,'0')}`;
-}
-
-// ══════════════════════════════
-// RENDER CARD
-// ══════════════════════════════
-function renderCard(cid, vid, info, readOnly) {
-  const sc = calcScore(info);
-  const thumb = `https://img.youtube.com/vi/${vid}/mqdefault.jpg`;
-  const ytUrl = `https://www.youtube.com/watch?v=${vid}`;
-  const ratioStr = sc.ratio >= 1 ? sc.ratio.toFixed(1) + '倍' : (sc.ratio*100).toFixed(0) + '%';
-  const ratioClass = sc.ratio >= 5 ? 'great' : sc.ratio >= 3 ? 'ok' : 'low';
-  const dayLabel = sc.days <= 30 ? `${sc.days}日前` : sc.days <= 365 ? `${Math.round(sc.days/30)}ヶ月前` : '1年超';
-  const barPct = sc.grade === 'X' ? 0 : Math.min(sc.score * 2, 100);
-
-  const el = document.getElementById(cid + '-card');
-  if (!el) return;
-
-  el.dataset.refdata = JSON.stringify(info);
-
-  el.innerHTML = `
-    <div class="score-badge ${sc.grade}">${sc.label}</div>
-    <div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${barPct}%"></div></div>
-    <a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener">
-      <img src="${thumb}" alt="" onerror="this.style.display='none'">
-      <div class="thumb-overlay"><div class="thumb-play"></div></div>
-      <span class="thumb-dur">${esc(info.duration||'--:--')}</span>
-    </a>
-    <div class="v-ch">${esc(info.channel)}</div>
-    <div class="v-title">${esc(info.title)}</div>
-    <div class="v-stats">
-      <div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div>
-      <div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div>
-      <div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dayLabel}</span><span class="v-stat-sub">${info.uploadDate||''}</span></div>
-    </div>
-    <div class="v-ratio ${ratioClass}">再生/登録 = ${ratioStr}</div>
-  `;
+function parseDur(iso){ const m=iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if(!m) return '--:--'; return `${parseInt(m[1]||0)*60+parseInt(m[2]||0)}:${String(parseInt(m[3]||0)).padStart(2,'0')}`; }
+function renderCard(cid,vid,info,readOnly){
+  const sc=calcScore(info); const thumb=`https://img.youtube.com/vi/${vid}/mqdefault.jpg`; const ytUrl=`https://www.youtube.com/watch?v=${vid}`;
+  const rStr=sc.ratio>=1?sc.ratio.toFixed(1)+'倍':(sc.ratio*100).toFixed(0)+'%'; const rCls=sc.ratio>=5?'great':sc.ratio>=3?'ok':'low';
+  const dLabel=sc.days<=30?`${sc.days}日前`:sc.days<=365?`${Math.round(sc.days/30)}ヶ月前`:'1年超';
+  const el=document.getElementById(cid+'-card'); if(!el) return;
+  el.dataset.refdata=JSON.stringify(info);
+  el.innerHTML=`<div class="score-badge ${sc.grade}">${sc.label}</div><div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div><a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener"><img src="${thumb}" alt=""><div class="thumb-ov"><div class="thumb-play"></div></div><span class="thumb-dur">${esc(info.duration)}</span></a><div class="v-ch">${esc(info.channel)}</div><div class="v-title">${esc(info.title)}</div><div class="v-stats"><div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div><div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div><div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span><span class="v-stat-sub">${info.uploadDate}</span></div></div><div class="v-ratio ${rCls}">再生/登録 = ${rStr}</div>`;
   el.classList.add('loaded');
-  if (!readOnly) document.getElementById(cid + '-clear')?.classList.add('show');
+  if(!readOnly) document.getElementById(cid+'-clear')?.classList.add('show');
 }
-
-// ══════════════════════════════
-// SCORE
-// ══════════════════════════════
-function calcScore(info) {
-  const days = (Date.now() - new Date(info.uploadDate)) / 86400000;
-  if (!info.uploadDate || isNaN(days) || days > 365)
-    return { grade: 'X', label: '× 1年超', score: 0, ratio: 0, days: 9999 };
-  const ratio = info.subs > 0 ? info.views / info.subs : 0;
-  const recency = Math.max(0, 50 - (days/365)*50);
-  const ratioScore = ratio>=10?50 : ratio>=5?40 : ratio>=3?28 : ratio>=1?14 : 4;
-  const total = Math.round(recency + ratioScore);
-  let grade = ratio>=5?'S' : ratio>=3?'A' : ratio>=1?'B' : 'C';
-  if (total < 20 && grade !== 'C') grade = 'C';
-  return { grade, label: `${grade}  ${total}pt`, score: total, ratio, days: Math.round(days) };
+function calcScore(info){
+  const days=(Date.now()-new Date(info.uploadDate))/86400000;
+  if(!info.uploadDate||isNaN(days)||days>365) return{grade:'X',label:'× 1年超',score:0,ratio:0,days:9999};
+  const ratio=info.subs>0?info.views/info.subs:0;
+  const rec=Math.max(0,50-(days/365)*50);
+  const rs=ratio>=10?50:ratio>=5?40:ratio>=3?28:ratio>=1?14:4;
+  const total=Math.round(rec+rs);
+  let grade=ratio>=5?'S':ratio>=3?'A':ratio>=1?'B':'C';
+  if(total<20&&grade!=='C') grade='C';
+  return{grade,label:`${grade}  ${total}pt`,score:total,ratio,days:Math.round(days)};
 }
-
-// ══════════════════════════════
-// CLEAR CELL
-// ══════════════════════════════
-function clearCell(cid, docId, idx) {
-  const urlEl = document.getElementById(cid + '-url');
-  if (urlEl) urlEl.value = '';
-  const card = document.getElementById(cid + '-card');
-  if (card) { card.innerHTML = ''; card.classList.remove('loaded'); delete card.dataset.refdata; }
-  document.getElementById(cid + '-clear')?.classList.remove('show');
-  clearErr(cid);
-  if (docId) {
-    const tr = document.querySelector(`[data-doc-id="${docId}"]`);
-    if (tr) scheduleSave(docId, parseInt(tr.id.replace('row-', '')));
-  }
+function setSkel(cid,show){ document.getElementById(cid+'-skel').style.display=show?'block':'none'; if(show){document.getElementById(cid+'-card')?.classList.remove('loaded');document.getElementById(cid+'-clear')?.classList.remove('show');} }
+function showErr(cid,msg){ const e=document.getElementById(cid+'-err');if(e){e.textContent=msg;e.classList.add('show');} }
+function clearErr(cid){ document.getElementById(cid+'-err')?.classList.remove('show'); }
+function clearCell(cid,docId,idx){
+  document.getElementById(cid+'-url').value='';
+  const c=document.getElementById(cid+'-card');c.innerHTML='';c.classList.remove('loaded');delete c.dataset.refdata;
+  document.getElementById(cid+'-clear')?.classList.remove('show'); clearErr(cid);
+  if(docId){const tr=document.querySelector(`[data-doc-id="${docId}"]`);if(tr) scheduleSamuneSave(docId,parseInt(tr.id.replace('row-','')));}
 }
-
-// ══════════════════════════════
-// SHARE MODAL
-// ══════════════════════════════
-function openShareModal(docId, btn) {
-  const tr = btn.closest('tr');
-  const planText = tr.querySelector('.plan-ta')?.value || '（タイトルなし）';
-  const shareUrl = `${location.origin}${location.pathname}?share=${docId}`;
-  document.getElementById('modalSubTitle').textContent = `「${planText.slice(0,20)}${planText.length>20?'…':''}」の共有リンク`;
-  document.getElementById('modalUrl').value = shareUrl;
-  document.getElementById('modalCopyBtn').textContent = 'コピー';
-  document.getElementById('modalCopyBtn').classList.remove('copied');
+function openSamuneShare(docId,btn){
+  const tr=btn.closest('tr'); const planText=tr.querySelector('.plan-ta')?.value||'（タイトルなし）';
+  document.getElementById('modalTitle').textContent='🔗 この企画を共有';
+  document.getElementById('modalSub').textContent=`「${planText.slice(0,20)}${planText.length>20?'…':''}」の共有リンク`;
+  document.getElementById('modalUrl').value=`${location.origin}${location.pathname}?share=${docId}`;
+  document.getElementById('modalCopyBtn').textContent='コピー'; document.getElementById('modalCopyBtn').classList.remove('copied');
   document.getElementById('modalBg').classList.add('open');
 }
-function closeModal() {
-  document.getElementById('modalBg').classList.remove('open');
-}
-function copyShareUrl() {
-  const url = document.getElementById('modalUrl').value;
-  navigator.clipboard.writeText(url).then(() => {
-    const btn = document.getElementById('modalCopyBtn');
-    btn.textContent = 'コピー済 ✓';
-    btn.classList.add('copied');
-    showToast('リンクをコピーしました！');
-  });
-}
 
 // ══════════════════════════════
-// UTILS
+// SCRIPT TAB - 案件管理
 // ══════════════════════════════
-function setSkel(cid, show) {
-  const s = document.getElementById(cid + '-skel');
-  if (s) s.style.display = show ? 'block' : 'none';
-  if (show) {
-    document.getElementById(cid + '-card')?.classList.remove('loaded');
-    document.getElementById(cid + '-clear')?.classList.remove('show');
-  }
-}
-function showErr(cid, msg) {
-  const e = document.getElementById(cid + '-err');
-  if (e) { e.textContent = msg; e.classList.add('show'); }
-}
-function clearErr(cid) { document.getElementById(cid + '-err')?.classList.remove('show'); }
-function fmt(n) {
-  if (!n && n!==0) return '—';
-  if (n>=1e8) return (n/1e8).toFixed(1)+'億';
-  if (n>=1e4) return (n/1e4).toFixed(1)+'万';
-  return Number(n).toLocaleString();
-}
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// ══════════════════════════════
-// TAB SWITCH
-// ══════════════════════════════
-function switchMainTab(tab) {
-  const isSamune = tab === 'samune';
-  document.getElementById('page-samune').classList.toggle('hidden', !isSamune);
-  document.getElementById('page-script').classList.toggle('active', !isSamune);
-  document.getElementById('tab-samune').classList.toggle('active', isSamune);
-  document.getElementById('tab-script').classList.toggle('active', !isSamune);
-  document.getElementById('ctrl-samune').style.display = isSamune ? 'flex' : 'none';
-  document.getElementById('ctrl-script').style.display = isSamune ? 'none' : 'flex';
-}
-
-// ══════════════════════════════
-// 台本生成
-// ══════════════════════════════
-const WORKER_URL = 'https://script-maker-api.aki-surf89315.workers.dev/';
-
-async function generateScript() {
-  const tx = document.getElementById('sc-transcript').value.trim();
-  if (!tx) { showToast('文字起こしを入力してください'); return; }
-  const name  = document.getElementById('sc-name').value || '出演者';
-  const dur   = parseInt(document.getElementById('sc-dur').value) || 25;
-  const date  = document.getElementById('sc-date').value  || '未定';
-  const place = document.getElementById('sc-place').value || '未定';
-
-  const btn = document.getElementById('sc-gen-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span> 生成中…';
-  document.getElementById('sc-progress').classList.add('show');
-  document.getElementById('sc-output').classList.remove('show');
-
-  const bar = document.getElementById('sc-prog-bar');
-  const msg = document.getElementById('sc-prog-msg');
-  const steps = [
-    {m:'文字起こしを解析しています…', p:15},
-    {m:'話題の流れを整理しています…', p:35},
-    {m:'セクション構成を設計しています…', p:55},
-    {m:'各シーンの原稿を生成しています…', p:75},
-    {m:'秒数・尺を計算しています…', p:92},
-  ];
-  let si = 0;
-  const t = setInterval(() => {
-    if (si < steps.length) { msg.textContent = steps[si].m; bar.style.width = steps[si].p + '%'; si++; }
-  }, 2000);
-
-  const sys = `あなたはYouTube動画の台本作成の専門家です。
-ヒアリング文字起こしから台本をJSON形式で出力してください。
-
-【絶対ルール】
-- 文字起こしにある情報のみを使う。情報の上乗せ・創作・推測は禁止（ハレーション防止）
-- フィラー（えー、あのー、言い直し）は整理して読みやすくする
-- 目標動画尺：${dur}分（合計秒数が${dur*60}秒前後になるよう設計）
-- 訴求セクションは積極的に2〜3分（120〜180秒）使う
-- 秒数目安：インサート3〜5秒、ブリッジ5〜10秒、VLOG15〜30秒、解説系30〜60秒、訴求120〜180秒
-
-【JSON形式】
-{"talent":"","shoot_date":"","shoot_place":"","total_seconds":0,
-"titles":["","",""],
-"rows":[{"time":"","scene":"","type":"インサート or VLOG or 解説系 or 訴求 or ブリッジ","seconds":0,"chars":0,"script":"","memo":""}]}
-
-JSONのみ返してください。`;
-
+async function loadCases() {
   try {
-    const res = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 6000,
-        system: sys,
-        messages: [{ role: 'user', content: `出演者名：${name}\n撮影日：${date}\n撮影場所：${place}\n目標尺：${dur}分\n\n${tx}` }]
-      })
-    });
-    clearInterval(t); bar.style.width = '100%'; msg.textContent = '完成！';
-    const data = await res.json();
-    const raw = data.content.map(b => b.text || '').join('');
-    const result = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    renderScript(result);
-    setTimeout(() => document.getElementById('sc-progress').classList.remove('show'), 600);
-  } catch(e) {
-    clearInterval(t); msg.textContent = 'エラー: ' + e.message; bar.style.width = '0%';
-    showToast('台本生成に失敗しました');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> 台本を生成';
-  }
+    const snap = await db.collection('script_cases').orderBy('order').get();
+    for (const doc of snap.docs) {
+      const d = doc.data();
+      addCaseDOM(doc.id, d.name||'案件', d);
+    }
+    if (cases.length > 0) switchCase(cases[0].id);
+  } catch(e) { console.error(e); }
 }
 
-function renderScript(d) {
-  // 尺バッジ
-  const tot = d.total_seconds || d.rows.reduce((s,r) => s+(r.seconds||0), 0);
-  const m = Math.floor(tot/60), s = tot%60;
-  document.getElementById('sc-dur-badge').textContent = `${m}分${s>0?s+'秒':''}`;
-
-  // タイトル
-  const ta = document.getElementById('sc-titles');
-  if (d.titles?.length) {
-    ta.innerHTML = `<div class="sc-title-card">
-      <div class="sc-title-card-label">タイトル案</div>
-      ${d.titles.map((t,i) => `<div class="sc-title-row"><span class="sc-title-num">案${i+1}</span><span>${esc(t)}</span></div>`).join('')}
-    </div>`;
-  }
-
-  // テーブル
-  const tbody = document.getElementById('sc-tbody');
-  tbody.innerHTML = '';
-  const cm = {'インサート':'sc-type-insert','VLOG':'sc-type-vlog','解説系':'sc-type-kaisetsu','訴求':'sc-type-sokyu','ブリッジ':'sc-type-bridge'};
-  d.rows.forEach(r => {
-    const dm = Math.floor((r.seconds||0)/60), ds = (r.seconds||0)%60;
-    const ds2 = dm>0 ? `${dm}分${ds>0?ds+'秒':''}` : `${ds}秒`;
-    const tr = document.createElement('tr');
-    tr.className = cm[r.type] || '';
-    tr.innerHTML = `<td>${esc(r.time||'')}</td><td>${esc(r.scene||'')}</td><td>${esc(r.type||'')}</td>
-      <td style="text-align:center">${r.seconds||''}</td>
-      <td style="text-align:center">${ds2}</td>
-      <td style="text-align:center">${r.chars||''}</td>
-      <td>${esc(r.script||'')}</td>
-      <td>${esc(r.memo||'')}</td>`;
-    tbody.appendChild(tr);
-  });
-  const tc = d.rows.reduce((s,r) => s+(r.chars||0), 0);
-  const tr2 = document.createElement('tr'); tr2.className = 'sc-type-total';
-  tr2.innerHTML = `<td colspan="3">TOTAL</td><td>${tot}</td><td>${m}分${s>0?s+'秒':''}</td><td>${tc}</td><td colspan="2"></td>`;
-  tbody.appendChild(tr2);
-
-  document.getElementById('sc-output').classList.add('show');
-  document.getElementById('sc-output').scrollIntoView({ behavior: 'smooth' });
+async function addCase() {
+  const snap = await db.collection('script_cases').orderBy('order').get();
+  const name = `案件 ${snap.size + 1}`;
+  const defaultData = {
+    name, order: snap.size,
+    talent:'', date:'', place:'', duration:'25',
+    titles:'', thumbnail:'',
+    rows: [
+      {time:'朝',scene:'自宅',type:'インサート',seconds:5,chars:0,script:'',memo:'冒頭の映像'},
+      {time:'午前',scene:'',type:'VLOG',seconds:30,chars:0,script:'',memo:''},
+      {time:'昼',scene:'',type:'解説系',seconds:60,chars:0,script:'',memo:''},
+      {time:'午後',scene:'',type:'訴求',seconds:180,chars:0,script:'',memo:''},
+      {time:'夜',scene:'',type:'ブリッジ',seconds:10,chars:0,script:'',memo:''},
+    ],
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  const ref = await db.collection('script_cases').add(defaultData);
+  addCaseDOM(ref.id, name, defaultData);
+  switchCase(ref.id);
 }
 
+function addCaseDOM(id, name, data) {
+  cases.push({ id, name, data });
+  const tabbar = document.getElementById('caseTabbar');
+  const addBtn = tabbar.querySelector('.add-case-btn');
+  const btn = document.createElement('button');
+  btn.className = 'case-tab';
+  btn.id = 'ctab-' + id;
+  btn.dataset.caseId = id;
+  btn.innerHTML = `<input class="case-tab-name" value="${esc(name)}" onclick="event.stopPropagation()" onchange="renameCaseTab('${id}',this.value)" title="クリックして名前変更"><button class="case-tab-del" onclick="event.stopPropagation();delCase('${id}')" title="削除">✕</button>`;
+  btn.addEventListener('click', (e) => { if(e.target.tagName!=='INPUT'&&e.target.tagName!=='BUTTON') switchCase(id); else if(e.target.tagName!=='BUTTON') switchCase(id); });
+  tabbar.insertBefore(btn, addBtn);
+}
+
+function switchCase(id) {
+  activeCaseId = id;
+  document.querySelectorAll('.case-tab').forEach(t => t.classList.toggle('active', t.dataset.caseId === id));
+  renderCaseContent(id);
+}
+
+function renderCaseContent(id) {
+  const caseObj = cases.find(c => c.id === id);
+  if (!caseObj) return;
+  const d = caseObj.data;
+  const container = document.getElementById('caseContent');
+
+  const TYPE_CLASSES = { 'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge' };
+  const TYPES = ['インサート','VLOG','解説系','訴求','ブリッジ'];
+
+  let rowsHTML = (d.rows||[]).map((r,i) => {
+    const cls = TYPE_CLASSES[r.type]||'';
+    const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;
+    const timeStr=dm>0?`${dm}分${ds>0?ds+'秒':''}`:`${ds}秒`;
+    const charCount = (r.script||'').replace(/\s/g,'').length;
+    return `<tr class="${cls}" id="scrow-${id}-${i}" data-case-id="${id}" data-row-idx="${i}">
+      <td><textarea class="editable" rows="1" onchange="updateScRow('${id}',${i},'time',this.value)" oninput="autoResize(this);scheduleScSave('${id}')">${esc(r.time||'')}</textarea></td>
+      <td><textarea class="editable" rows="1" onchange="updateScRow('${id}',${i},'scene',this.value)" oninput="autoResize(this);scheduleScSave('${id}')">${esc(r.scene||'')}</textarea></td>
+      <td><select class="editable" onchange="updateScRow('${id}',${i},'type',this.value);scheduleScSave('${id}');updateRowClass(this,'${id}',${i})">${TYPES.map(t=>`<option value="${t}"${t===r.type?' selected':''}>${t}</option>`).join('')}</select></td>
+      <td><input class="editable" type="number" value="${r.seconds||0}" style="min-height:36px" onchange="updateScRow('${id}',${i},'seconds',parseInt(this.value)||0);scheduleScSave('${id}');updateFooter('${id}')"></td>
+      <td style="text-align:center;padding:8px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${timeStr}</td>
+      <td style="text-align:center;padding:8px;font-size:11px;font-family:'DM Mono',monospace" id="chars-${id}-${i}">${charCount}</td>
+      <td><textarea class="editable" rows="3" onchange="updateScRow('${id}',${i},'script',this.value)" oninput="autoResize(this);updateChars('${id}',${i},this.value);scheduleScSave('${id}')">${esc(r.script||'')}</textarea></td>
+      <td><textarea class="editable" rows="1" onchange="updateScRow('${id}',${i},'memo',this.value)" oninput="autoResize(this);scheduleScSave('${id}')">${esc(r.memo||'')}</textarea></td>
+      <td><div class="sc-row-ctrl"><button class="sc-row-btn" onclick="insertScRow('${id}',${i})" title="上に行追加">＋</button><button class="sc-row-btn del" onclick="delScRow('${id}',${i})" title="削除">✕</button></div></td>
+    </tr>`;
+  }).join('');
+
+  const totalSec = (d.rows||[]).reduce((s,r)=>s+(r.seconds||0),0);
+  const totalChars = (d.rows||[]).reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0);
+  const tm=Math.floor(totalSec/60),ts=totalSec%60;
+
+  container.innerHTML = `
+    <div class="case-header">
+      <div class="case-header-field">
+        <span class="case-header-label">出演者名</span>
+        <input class="case-header-input" value="${esc(d.talent||'')}" placeholder="例：宮本さん" onchange="updateCaseField('${id}','talent',this.value)">
+      </div>
+      <div class="case-header-field">
+        <span class="case-header-label">撮影日</span>
+        <input class="case-header-input" value="${esc(d.date||'')}" placeholder="例：4月9日（木）" onchange="updateCaseField('${id}','date',this.value)">
+      </div>
+      <div class="case-header-field">
+        <span class="case-header-label">撮影場所</span>
+        <input class="case-header-input" value="${esc(d.place||'')}" placeholder="例：東京本社・自宅" onchange="updateCaseField('${id}','place',this.value)">
+      </div>
+      <div class="case-header-field">
+        <span class="case-header-label">目標尺（分）</span>
+        <input class="case-header-input" type="number" value="${d.duration||25}" style="width:80px" onchange="updateCaseField('${id}','duration',this.value)">
+      </div>
+    </div>
+
+    <div class="case-info-grid">
+      <div class="case-info-card">
+        <div class="case-info-label">タイトル案</div>
+        <textarea class="case-info-ta" placeholder="案①&#10;案②&#10;案③" onchange="updateCaseField('${id}','titles',this.value)">${esc(d.titles||'')}</textarea>
+      </div>
+      <div class="case-info-card">
+        <div class="case-info-label">サムネイル案</div>
+        <textarea class="case-info-ta" placeholder="左上：&#10;右：&#10;下：" onchange="updateCaseField('${id}','thumbnail',this.value)">${esc(d.thumbnail||'')}</textarea>
+      </div>
+    </div>
+
+    <div class="sc-legend">
+      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#c8e6c9;border:1px solid #4caf50"></div>インサート（3〜5秒）</div>
+      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#fff9c4;border:1px solid #f5a623"></div>VLOG（15〜30秒）</div>
+      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#bbdefb;border:1px solid #2196f3"></div>解説系（30秒〜1分）</div>
+      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#ffe0b2;border:1px solid #ff9800"></div>訴求（2〜3分）</div>
+      <div class="sc-legend-item"><div class="sc-legend-dot" style="background:#e1bee7;border:1px solid #9c27b0"></div>ブリッジ（5〜10秒）</div>
+    </div>
+
+    <div class="sc-tbl-wrap">
+      <table class="sc-tbl" id="sc-tbl-${id}">
+        <thead><tr>
+          <th style="width:70px">時間帯</th>
+          <th style="width:120px">シーン</th>
+          <th style="width:100px">セクション</th>
+          <th style="width:50px">秒数</th>
+          <th style="width:65px">所要時間</th>
+          <th style="width:50px">文字数</th>
+          <th>原稿</th>
+          <th style="width:120px">メモ</th>
+          <th style="width:40px"></th>
+        </tr></thead>
+        <tbody id="sc-tbody-${id}">${rowsHTML}</tbody>
+      </table>
+    </div>
+
+    <div class="add-row-area">
+      <span style="font-size:11px;color:var(--muted);align-self:center">行を追加：</span>
+      ${['インサート','VLOG','解説系','訴求','ブリッジ'].map(t=>`<button class="add-row-type-btn" onclick="appendScRow('${id}','${t}')">${t}</button>`).join('')}
+    </div>
+
+    <div class="sc-footer" id="sc-footer-${id}">
+      <span>合計</span>
+      <span class="sc-footer-val" id="sc-total-sec-${id}">${totalSec}秒</span>
+      <span style="color:rgba(255,255,255,0.3)">|</span>
+      <span class="sc-footer-val" id="sc-total-time-${id}">${tm}分${ts>0?ts+'秒':''}</span>
+      <span style="color:rgba(255,255,255,0.3)">|</span>
+      <span>文字数</span>
+      <span class="sc-footer-val" id="sc-total-chars-${id}">${totalChars}</span>
+    </div>
+  `;
+
+  // textareaの高さ調整
+  setTimeout(() => container.querySelectorAll('textarea.editable').forEach(autoResize), 50);
+}
+
+function updateScRow(id, idx, key, val) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  if (!c.data.rows[idx]) c.data.rows[idx] = {};
+  c.data.rows[idx][key] = key==='seconds'?parseInt(val)||0:val;
+  if (key==='seconds') updateFooter(id);
+}
+
+function updateCaseField(id, key, val) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  c.data[key] = val;
+  if (key==='name') { document.querySelector(`#ctab-${id} .case-tab-name`).value = val; }
+  scheduleScSave(id);
+}
+
+function updateRowClass(select, id, idx) {
+  const TYPE_CLASSES = {'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge'};
+  const tr = document.getElementById(`scrow-${id}-${idx}`);
+  if (!tr) return;
+  tr.className = TYPE_CLASSES[select.value] || '';
+  updateScRow(id, idx, 'type', select.value);
+}
+
+function updateChars(id, idx, val) {
+  const charCount = val.replace(/\s/g,'').length;
+  const el = document.getElementById(`chars-${id}-${idx}`);
+  if (el) el.textContent = charCount;
+  const c = cases.find(c=>c.id===id); if(c&&c.data.rows[idx]) c.data.rows[idx].chars = charCount;
+  updateFooter(id);
+}
+
+function updateFooter(id) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  const totalSec = (c.data.rows||[]).reduce((s,r)=>s+(r.seconds||0),0);
+  const totalChars = (c.data.rows||[]).reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0);
+  const tm=Math.floor(totalSec/60),ts=totalSec%60;
+  const elSec=document.getElementById(`sc-total-sec-${id}`); if(elSec) elSec.textContent=`${totalSec}秒`;
+  const elTime=document.getElementById(`sc-total-time-${id}`); if(elTime) elTime.textContent=`${tm}分${ts>0?ts+'秒':''}`;
+  const elChars=document.getElementById(`sc-total-chars-${id}`); if(elChars) elChars.textContent=totalChars;
+}
+
+function appendScRow(id, type) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  c.data.rows.push({ time:'', scene:'', type, seconds: type==='インサート'?5:type==='VLOG'?30:type==='ブリッジ'?10:60, chars:0, script:'', memo:'' });
+  renderCaseContent(id); scheduleScSave(id);
+}
+
+function insertScRow(id, beforeIdx) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  c.data.rows.splice(beforeIdx, 0, { time:'', scene:'', type:'VLOG', seconds:30, chars:0, script:'', memo:'' });
+  renderCaseContent(id); scheduleScSave(id);
+}
+
+function delScRow(id, idx) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  if (c.data.rows.length <= 1) { showToast('最低1行必要です'); return; }
+  c.data.rows.splice(idx, 1);
+  renderCaseContent(id); scheduleScSave(id);
+}
+
+function scheduleScSave(id) {
+  clearTimeout(caseSaveTmr[id]);
+  caseSaveTmr[id] = setTimeout(() => saveCase(id), 1500);
+}
+
+async function saveCase(id) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  try { await db.collection('script_cases').doc(id).update({ name:c.data.name||'案件', talent:c.data.talent||'', date:c.data.date||'', place:c.data.place||'', duration:c.data.duration||'25', titles:c.data.titles||'', thumbnail:c.data.thumbnail||'', rows:c.data.rows||[] }); }
+  catch(e) { console.error('save error', e); }
+}
+
+async function renameCaseTab(id, name) {
+  const c = cases.find(c=>c.id===id); if(!c) return;
+  c.data.name = name; c.name = name;
+  scheduleScSave(id);
+}
+
+async function delCase(id) {
+  if (cases.length <= 1) { showToast('最低1案件必要です'); return; }
+  if (!confirm('この案件を削除しますか？')) return;
+  await db.collection('script_cases').doc(id).delete();
+  cases = cases.filter(c=>c.id!==id);
+  document.getElementById('ctab-'+id)?.remove();
+  if (activeCaseId === id) { switchCase(cases[0].id); }
+  showToast('案件を削除しました');
+}
+
+// 共有
+function openScriptShare() {
+  if (!activeCaseId) return;
+  const c = cases.find(c=>c.id===activeCaseId); if(!c) return;
+  document.getElementById('modalTitle').textContent = '🔗 台本を共有';
+  document.getElementById('modalSub').textContent = `「${(c.data.name||'案件').slice(0,20)}」の共有リンク`;
+  document.getElementById('modalUrl').value = `${location.origin}${location.pathname}?share=${activeCaseId}&type=script`;
+  document.getElementById('modalCopyBtn').textContent='コピー'; document.getElementById('modalCopyBtn').classList.remove('copied');
+  document.getElementById('modalBg').classList.add('open');
+}
+
+async function loadShareScript(id) {
+  try {
+    const doc = await db.collection('script_cases').doc(id).get();
+    if (!doc.exists) { document.getElementById('shareViewTitle').textContent='台本が見つかりません'; return; }
+    const d = doc.data();
+    document.getElementById('shareViewTitle').textContent = d.talent ? `${d.talent} 台本` : (d.name||'台本');
+    cases.push({ id, name: d.name||'', data: d });
+    activeCaseId = id;
+    renderCaseContentReadOnly(id, d);
+  } catch(e) { showToast('読み込みに失敗しました'); }
+}
+
+function renderCaseContentReadOnly(id, d) {
+  const TYPE_CLASSES = {'インサート':'sc-insert','VLOG':'sc-vlog','解説系':'sc-kaisetsu','訴求':'sc-sokyu','ブリッジ':'sc-bridge'};
+  const rows = d.rows||[];
+  const totalSec = rows.reduce((s,r)=>s+(r.seconds||0),0);
+  const tm=Math.floor(totalSec/60),ts=totalSec%60;
+
+  document.getElementById('caseContent').innerHTML = `
+    <div class="case-header">
+      <div class="case-header-field"><span class="case-header-label">出演者</span><div style="color:#fff;font-size:13px;font-weight:600;padding:6px 0">${esc(d.talent||'—')}</div></div>
+      <div class="case-header-field"><span class="case-header-label">撮影日</span><div style="color:rgba(255,255,255,0.7);font-size:12px;padding:6px 0">${esc(d.date||'未定')}</div></div>
+      <div class="case-header-field"><span class="case-header-label">撮影場所</span><div style="color:rgba(255,255,255,0.7);font-size:12px;padding:6px 0">${esc(d.place||'未定')}</div></div>
+      <div class="case-header-field"><span class="case-header-label">目標尺</span><div style="color:var(--green-xl);font-family:'DM Mono',monospace;font-size:13px;font-weight:600;padding:6px 0">${d.duration||25}分</div></div>
+    </div>
+    ${d.titles ? `<div class="case-info-grid"><div class="case-info-card"><div class="case-info-label">タイトル案</div><div style="font-size:11.5px;line-height:1.8;white-space:pre-wrap;color:var(--text2)">${esc(d.titles)}</div></div>${d.thumbnail?`<div class="case-info-card"><div class="case-info-label">サムネイル案</div><div style="font-size:11.5px;line-height:1.8;white-space:pre-wrap;color:var(--text2)">${esc(d.thumbnail)}</div></div>`:'<div></div>'}</div>` : ''}
+    <div class="sc-tbl-wrap"><table class="sc-tbl"><thead><tr>
+      <th style="width:70px">時間帯</th><th style="width:120px">シーン</th><th style="width:100px">セクション</th>
+      <th style="width:50px">秒数</th><th style="width:65px">所要時間</th><th style="width:50px">文字数</th>
+      <th>原稿</th><th style="width:120px">メモ</th>
+    </tr></thead><tbody>
+    ${rows.map(r=>{const cls=TYPE_CLASSES[r.type]||'';const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;return `<tr class="${cls}"><td style="padding:8px">${esc(r.time||'')}</td><td style="padding:8px">${esc(r.scene||'')}</td><td style="padding:8px">${esc(r.type||'')}</td><td style="padding:8px;text-align:center">${r.seconds||''}</td><td style="padding:8px;text-align:center">${dm>0?dm+'分':''}${ds>0?ds+'秒':''}</td><td style="padding:8px;text-align:center">${(r.script||'').replace(/\s/g,'').length}</td><td style="padding:8px;white-space:pre-wrap;line-height:1.7">${esc(r.script||'')}</td><td style="padding:8px">${esc(r.memo||'')}</td></tr>`;}).join('')}
+    <tr class="sc-total"><td colspan="3" style="padding:8px;text-align:center">TOTAL</td><td style="padding:8px;text-align:center">${totalSec}</td><td style="padding:8px;text-align:center">${tm}分${ts>0?ts+'秒':''}</td><td style="padding:8px;text-align:center">${rows.reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0)}</td><td colspan="2" style="padding:8px"></td></tr>
+    </tbody></table></div>`;
+}
+
+// HTML出力
 function dlScriptHTML() {
-  const name = document.getElementById('sc-name').value || '出演者';
-  const badge = document.getElementById('sc-dur-badge').textContent;
-  const tblH = document.getElementById('sc-tbl').outerHTML;
-  const titH = document.getElementById('sc-titles').innerHTML;
-  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<title>【台本】${name}</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans JP',sans-serif;font-size:12px;background:#fff;color:#0d1b2a;padding:40px;}
-h1{font-size:20px;font-weight:700;margin-bottom:16px;}
-.badge{display:inline-block;background:#0a3d22;color:#4ade80;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;margin-left:8px;}
-.tbl-wrap{overflow-x:auto;border:1px solid #e2f0e6;border-radius:8px;margin-top:16px;}
-table{width:100%;border-collapse:collapse;min-width:900px;font-size:11.5px;}
-thead tr{background:#0a3d22;}
-th{color:#4ade80;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 8px;text-align:center;border:1px solid rgba(255,255,255,.06);white-space:nowrap;}
-td{border:1px solid #e2f0e6;padding:8px 10px;vertical-align:top;white-space:pre-wrap;line-height:1.7;}
-.sc-type-insert td{background:#f0faf0;}.sc-type-vlog td{background:#fefce8;}
-.sc-type-kaisetsu td{background:#f0f6ff;}.sc-type-sokyu td{background:#fff8f0;}
-.sc-type-bridge td{background:#faf0ff;}
-.sc-type-total td{background:#0a3d22;color:#4ade80;font-weight:700;text-align:center;font-family:'DM Mono',monospace;}
-</style></head><body>
-<h1>台本：${name} <span class="badge">${badge}</span></h1>
-${titH}
-<div class="tbl-wrap">${tblH}</div>
+  if (!activeCaseId) return;
+  const c = cases.find(c=>c.id===activeCaseId); if(!c) return;
+  const d = c.data;
+  const TYPE_CLASSES = {'インサート':'type-insert','VLOG':'type-vlog','解説系':'type-kaisetsu','訴求':'type-sokyu','ブリッジ':'type-bridge'};
+  const rows = d.rows||[];
+  const totalSec = rows.reduce((s,r)=>s+(r.seconds||0),0);
+  const tm=Math.floor(totalSec/60),ts=totalSec%60;
+  const totalChars = rows.reduce((s,r)=>s+(r.script||'').replace(/\s/g,'').length,0);
+  const rowsHTML = rows.map(r=>{const cls=TYPE_CLASSES[r.type]||'';const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;return `<tr class="${cls}"><td>${esc(r.time||'')}</td><td>${esc(r.scene||'')}</td><td>${esc(r.type||'')}</td><td style="text-align:center">${r.seconds||''}</td><td style="text-align:center">${dm>0?dm+'分':''}${ds>0?ds+'秒':''}</td><td style="text-align:center">${(r.script||'').replace(/\s/g,'').length}</td><td>${esc(r.script||'')}</td><td>${esc(r.memo||'')}</td><td></td></tr>`;}).join('');
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"><title>【台本】${esc(d.talent||d.name||'')}</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Noto Sans JP',sans-serif;font-size:12px;background:#fff;color:#0d1b2a;padding:40px;}.doc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;padding-bottom:18px;border-bottom:2px solid #0d1b2a;}.doc-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}.doc-title span{color:#16a34a;}.doc-meta{font-size:11px;color:#8898aa;text-align:right;line-height:1.8;}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}.info-card{border:1px solid #e8ecf2;border-radius:6px;padding:12px 14px;}.info-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#16a34a;margin-bottom:8px;}.info-body{font-size:11.5px;line-height:1.8;white-space:pre-wrap;color:#374151;}.tbl-wrap{overflow-x:auto;border:1px solid #e8ecf2;border-radius:6px;margin-top:16px;}.sc{width:100%;border-collapse:collapse;min-width:1000px;font-size:11.5px;}thead tr{background:#0a3d22;}th{color:#4ade80;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px 8px;text-align:center;border:1px solid rgba(255,255,255,.06);white-space:nowrap;}td{border:1px solid #e8ecf2;padding:8px 9px;vertical-align:top;white-space:pre-wrap;line-height:1.7;}.type-insert td{background:#f0faf0;}.type-vlog td{background:#fefce8;}.type-kaisetsu td{background:#f0f6ff;}.type-sokyu td{background:#fff8f0;}.type-bridge td{background:#faf0ff;}.type-total td{background:#0a3d22;color:#4ade80;font-weight:700;text-align:center;font-family:'Syne',sans-serif;}.caution{background:#fffbeb;border:1px solid rgba(245,166,35,.3);border-radius:5px;padding:9px 12px;font-size:11px;color:#92400e;margin-bottom:14px;}</style></head><body>
+<div class="doc-header"><div><div class="doc-title">【台本】<span>${esc(d.talent||d.name||'')}</span></div><div style="font-size:11px;color:#8898aa;margin-top:4px">${esc(d.place||'')}　目標尺：${d.duration||25}分</div></div><div class="doc-meta">撮影日：${esc(d.date||'未定')}<br>合計：${tm}分${ts>0?ts+'秒':''}</div></div>
+${(d.titles||d.thumbnail)?`<div class="info-grid">${d.titles?`<div class="info-card"><div class="info-label">タイトル案</div><div class="info-body">${esc(d.titles)}</div></div>`:'<div></div>'}${d.thumbnail?`<div class="info-card"><div class="info-label">サムネイル案</div><div class="info-body">${esc(d.thumbnail)}</div></div>`:''}</div>`:''}
+<div class="caution">⚠️ <strong>白い箇所に原稿を打ち込んでください。</strong></div>
+<div class="tbl-wrap"><table class="sc"><thead><tr><th style="width:65px">時間帯</th><th style="width:110px">シーン</th><th style="width:95px">セクション</th><th style="width:46px">秒数</th><th style="width:60px">所要時間</th><th style="width:46px">文字数</th><th>原稿</th><th style="width:120px">メモ</th><th style="width:130px">コメント欄</th></tr></thead><tbody>${rowsHTML}<tr class="type-total"><td colspan="3">TOTAL</td><td style="text-align:center">${totalSec}</td><td style="text-align:center">${tm}分${ts>0?ts+'秒':''}</td><td style="text-align:center">${totalChars}</td><td colspan="3">※白い箇所に原稿を打ち込んでください</td></tr></tbody></table></div>
 </body></html>`;
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([html], {type:'text/html;charset=utf-8'}));
-  a.download = `${name}_台本.html`; a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));a.download=`${d.talent||d.name||'台本'}_構成.html`;a.click();
 }
 
 function copyTSV() {
-  let t = '時間帯\tシーン\t種別\t秒数\t所要時間\t文字数\t原稿\tメモ\n';
-  document.querySelectorAll('#sc-tbody tr').forEach(r => {
-    t += Array.from(r.querySelectorAll('td')).map(c => c.textContent.replace(/\n/g,' ')).join('\t') + '\n';
-  });
-  navigator.clipboard.writeText(t).then(() => showToast('TSVをコピーしました！スプレッドシートに貼り付けできます'));
+  if (!activeCaseId) return;
+  const c = cases.find(c=>c.id===activeCaseId); if(!c) return;
+  let t = '時間帯\tシーン\tセクション\t秒数\t所要時間\t文字数\t原稿\tメモ\n';
+  (c.data.rows||[]).forEach(r=>{const dm=Math.floor((r.seconds||0)/60),ds=(r.seconds||0)%60;t+=`${r.time||''}\t${r.scene||''}\t${r.type||''}\t${r.seconds||0}\t${dm>0?dm+'分':''}${ds>0?ds+'秒':''}\t${(r.script||'').replace(/\s/g,'').length}\t${(r.script||'').replace(/\n/g,' ')}\t${r.memo||''}\n`;});
+  navigator.clipboard.writeText(t).then(()=>showToast('TSVをコピーしました！'));
 }
 
-// START
+// ══ UTILS ══
+function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+function copyUrl() { const u=document.getElementById('modalUrl').value; navigator.clipboard.writeText(u).then(()=>{ const b=document.getElementById('modalCopyBtn');b.textContent='コピー済 ✓';b.classList.add('copied'); showToast('コピーしました！'); }); }
+function fmt(n){ if(!n&&n!==0)return'—';if(n>=1e8)return(n/1e8).toFixed(1)+'億';if(n>=1e4)return(n/1e4).toFixed(1)+'万';return Number(n).toLocaleString(); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function showToast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500); }
+
 init();
 </script>
 </body>
