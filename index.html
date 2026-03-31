@@ -102,7 +102,7 @@ body {
 /* ── SHEET WRAPPER ── */
 .sheet-outer {
   overflow-x: auto;
-  padding: 16px;
+  padding: 0;
 }
 .sheet-outer::-webkit-scrollbar { height: 5px; }
 .sheet-outer::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
@@ -110,12 +110,10 @@ body {
 /* ── TABLE ── */
 .sheet {
   border-collapse: collapse;
-  min-width: max-content;
+  width: 100%;
+  min-width: 900px;
   background: var(--white);
-  border: 1px solid var(--border-dark);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border-top: 1px solid var(--border-dark);
   table-layout: fixed;
 }
 
@@ -418,23 +416,23 @@ td.ref-cell:last-child { border-right: none; }
 <div class="sheet-outer">
   <table class="sheet" id="sheet">
     <colgroup>
-      <col style="width:var(--col-num)">
-      <col style="width:var(--col-plan)">
-      <col style="width:var(--col-ref)">
-      <col style="width:var(--col-ref)">
-      <col style="width:var(--col-ref)">
-      <col style="width:var(--col-ref)">
-      <col style="width:var(--col-ref)">
+      <col style="width:36px">
+      <col style="width:18%">
+      <col>
+      <col>
+      <col>
+      <col>
+      <col>
     </colgroup>
     <thead>
       <tr>
         <th><div class="th-inner" style="justify-content:center">#</div></th>
         <th><div class="th-inner plan">企画タイトル / 文言</div></th>
-        <th><div class="th-inner"><span class="th-ref-num">1</span>元素材</div></th>
-        <th><div class="th-inner"><span class="th-ref-num">2</span>元素材</div></th>
-        <th><div class="th-inner"><span class="th-ref-num">3</span>元素材</div></th>
-        <th><div class="th-inner"><span class="th-ref-num">4</span>元素材</div></th>
-        <th><div class="th-inner"><span class="th-ref-num">5</span>元素材</div></th>
+        <th><div class="th-inner"><span class="th-ref-num">1</span>参考サムネ</div></th>
+        <th><div class="th-inner"><span class="th-ref-num">2</span>参考サムネ</div></th>
+        <th><div class="th-inner"><span class="th-ref-num">3</span>参考サムネ</div></th>
+        <th><div class="th-inner"><span class="th-ref-num">4</span>参考サムネ</div></th>
+        <th><div class="th-inner"><span class="th-ref-num">5</span>参考サムネ</div></th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
