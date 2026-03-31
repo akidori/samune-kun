@@ -65,96 +65,71 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
 .page { display: none; }
 .page.active { display: block; }
 
-/* ══ THUMB LAYOUTER ══ */
-.layout-wrap {
-  margin-bottom: 8px;
-  border: 1px solid var(--border2);
-  border-radius: 6px;
-  overflow: hidden;
-  background: #fff;
+/* ══ KEYWORD AREA ══ */
+.kw-area {
+  min-height: 36px;
+  padding: 6px 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: flex-start;
 }
-.layout-bar {
+.kw-hint {
+  font-size: 10px;
+  color: var(--muted2);
+  line-height: 1.5;
+}
+.kw-loading {
+  font-size: 10px;
+  color: var(--green);
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 3px 6px;
-  background: var(--green-bg);
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
+  gap: 4px;
 }
-.lbtn {
-  height: 20px;
-  padding: 0 6px;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  background: transparent;
-  cursor: pointer;
+.kw-spin {
+  width: 10px; height: 10px;
+  border: 1.5px solid var(--border2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: kwspin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes kwspin { to { transform: rotate(360deg); } }
+.kw-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
   font-size: 10px;
-  color: var(--muted);
-  transition: all 0.12s;
-  white-space: nowrap;
-  font-family: 'Noto Sans JP', sans-serif;
-  display: flex; align-items: center;
-}
-.lbtn:hover { background: var(--border2); color: var(--green); }
-.lbtn.active { background: var(--green); color: #fff; }
-.lbtn-icon { font-size: 11px; }
-.lcolor {
-  width: 20px; height: 20px;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  cursor: pointer;
-  padding: 1px;
-  background: transparent;
-}
-.lsize {
-  height: 20px;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: var(--white);
-  font-size: 9px;
-  color: var(--text);
-  padding: 0 3px;
-  outline: none;
-}
-.ltxt-input {
-  height: 20px;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: var(--white);
-  font-size: 10px;
-  color: var(--text);
-  padding: 0 5px;
-  outline: none;
-  width: 80px;
-  font-family: 'Noto Sans JP', sans-serif;
-}
-.ltxt-input:focus { border-color: var(--green); }
-.layout-stage {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: #111;
-  overflow: hidden;
+  font-weight: 500;
   cursor: default;
+  border: 1px solid;
 }
-.lel {
-  position: absolute;
-  cursor: move;
-  user-select: none;
-  touch-action: none;
+.kw-tag.type-key {
+  background: var(--green-bg2);
+  color: var(--hdr2);
+  border-color: var(--border2);
 }
-.lel.sel { outline: 1.5px solid #22c55e; outline-offset: 1px; }
-.lel-text { white-space: pre; line-height: 1.2; }
-.lel-img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block; }
-.lresize {
-  position: absolute;
-  bottom: -4px; right: -4px;
-  width: 8px; height: 8px;
-  background: #22c55e;
-  border-radius: 1px;
-  cursor: se-resize;
+.kw-tag.type-pattern {
+  background: #fff7ed;
+  color: #92400e;
+  border-color: #fcd34d;
 }
+.kw-tag.type-num {
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: #93c5fd;
+}
+.kw-section-label {
+  width: 100%;
+  font-size: 9px;
+  color: var(--muted2);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
 td.plan-td { min-width: 200px; }
 
 /* ══ SAMUNE PAGE ══ */
@@ -658,154 +633,79 @@ function switchMainTab(tab, force) {
 }
 
 // ══════════════════════════════
-// THUMB LAYOUTER（配置型）
+// キーワード抽出
 // ══════════════════════════════
-const lState = {}; // rid → {els:[], sel:null, hist:[], drag, resize}
+const kwTimers = {};
 
-function lInit(rid) {
-  lState[rid] = { els: [], sel: null, hist: [], drag: null, resize: null, elId: 0 };
+function scheduleKwExtract(rid) {
+  clearTimeout(kwTimers[rid]);
+  kwTimers[rid] = setTimeout(() => extractKeywords(rid), 800);
 }
 
-function lSetDir(rid, d, btn) {
-  document.getElementById('ldir-h-'+rid).classList.toggle('active', d==='h');
-  document.getElementById('ldir-v-'+rid).classList.toggle('active', d==='v');
-  btn.dataset.dir = d;
-  lState[rid].dir = d;
-}
-
-function lSetBg(rid, val) {
-  const stage = document.getElementById('ls-'+rid);
-  if (stage) stage.style.background = val;
-}
-
-function lSaveHist(rid) {
-  const s = lState[rid]; if (!s) return;
-  const snap = s.els.map(e => ({ id:e.id, type:e.type, left:e.el.style.left, top:e.el.style.top, width:e.el.style.width, height:e.el.style.height }));
-  s.hist.push(snap);
-  if (s.hist.length > 20) s.hist.shift();
-}
-
-function lGetPos(e, rid) {
-  const stage = document.getElementById('ls-'+rid);
-  const r = stage.getBoundingClientRect();
-  return { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 };
-}
-
-function lAddText(rid) {
-  const s = lState[rid]; if (!s) return;
-  const txt = document.getElementById('ltxt-'+rid).value.trim() || 'テキスト';
-  const color = document.getElementById('lclr-'+rid).value;
-  const size = document.getElementById('lsz-'+rid).value;
-  const isV = s.dir === 'v';
-  lSaveHist(rid);
-
-  const id = ++s.elId;
-  const el = document.createElement('div');
-  el.className = 'lel lel-text sel';
-  el.id = `lel-${rid}-${id}`;
-  el.style.cssText = `left:10%;top:10%;color:${color};font-size:${size}px;font-weight:700;writing-mode:${isV?'vertical-rl':'horizontal-tb'};line-height:1.2;white-space:pre;`;
-  el.textContent = txt;
-  el.addEventListener('dblclick', () => {
-    const nv = prompt('テキストを編集', el.textContent);
-    if (nv !== null) { lSaveHist(rid); el.textContent = nv; }
-  });
-  lAttach(el, rid, id);
-  document.getElementById('ls-'+rid).appendChild(el);
-  s.els.push({ id, type:'text', el });
-  lSelect(rid, id);
-}
-
-function lAddImg(rid, input) {
-  const file = input.files[0]; if (!file) return;
-  const s = lState[rid]; if (!s) return;
-  const url = URL.createObjectURL(file);
-  lSaveHist(rid);
-
-  const id = ++s.elId;
-  const wrap = document.createElement('div');
-  wrap.className = 'lel sel';
-  wrap.id = `lel-${rid}-${id}`;
-  wrap.style.cssText = 'left:5%;top:5%;width:40%;height:85%;';
-  const img = document.createElement('img');
-  img.src = url; img.className = 'lel-img';
-  wrap.appendChild(img);
-  lAttach(wrap, rid, id);
-  document.getElementById('ls-'+rid).appendChild(wrap);
-  s.els.push({ id, type:'img', el: wrap });
-  lSelect(rid, id);
-  input.value = '';
-}
-
-function lAttach(el, rid, id) {
-  const rh = document.createElement('div');
-  rh.className = 'lresize';
-  rh.addEventListener('mousedown', e => {
-    e.stopPropagation();
-    const s = lState[rid]; if (!s) return;
-    const r = el.getBoundingClientRect();
-    const sr = document.getElementById('ls-'+rid).getBoundingClientRect();
-    s.resize = { id, el, ox: e.clientX, oy: e.clientY, w: r.width/sr.width*100, h: r.height/sr.height*100 };
-    lSelect(rid, id);
-  });
-  el.appendChild(rh);
-
-  el.addEventListener('mousedown', e => {
-    if (e.target.classList.contains('lresize')) return;
-    e.stopPropagation();
-    const s = lState[rid]; if (!s) return;
-    const sr = document.getElementById('ls-'+rid).getBoundingClientRect();
-    const er = el.getBoundingClientRect();
-    s.drag = { id, el, ox: (e.clientX - er.left)/sr.width*100, oy: (e.clientY - er.top)/sr.height*100 };
-    lSelect(rid, id);
-  });
-}
-
-function lStageClick(e, rid) {
-  if (e.target.id === 'ls-'+rid) lSelect(rid, null);
-}
-
-function lMove(e, rid) {
-  const s = lState[rid]; if (!s) return;
-  const sr = document.getElementById('ls-'+rid).getBoundingClientRect();
-  if (s.drag) {
-    const x = (e.clientX - sr.left)/sr.width*100 - s.drag.ox;
-    const y = (e.clientY - sr.top)/sr.height*100 - s.drag.oy;
-    s.drag.el.style.left = Math.max(0, Math.min(x, 90)) + '%';
-    s.drag.el.style.top = Math.max(0, Math.min(y, 90)) + '%';
+async function extractKeywords(rid) {
+  // その行の参考サムネタイトルを収集
+  const titles = [];
+  for (let i = 0; i < 5; i++) {
+    const card = document.getElementById(`c${rid}r${i}-card`);
+    if (!card?.classList.contains('loaded')) continue;
+    const titleEl = card.querySelector('.v-title');
+    if (titleEl?.textContent?.trim()) titles.push(titleEl.textContent.trim());
   }
-  if (s.resize) {
-    const dx = (e.clientX - s.resize.ox)/sr.width*100;
-    const dy = (e.clientY - s.resize.oy)/sr.height*100;
-    s.resize.el.style.width = Math.max(5, s.resize.w + dx) + '%';
-    s.resize.el.style.height = Math.max(5, s.resize.h + dy) + '%';
+  if (titles.length === 0) return;
+
+  const kwArea = document.getElementById('kw-'+rid);
+  if (!kwArea) return;
+
+  kwArea.innerHTML = `<div class="kw-loading"><div class="kw-spin"></div>抽出中…</div>`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        messages: [{
+          role: 'user',
+          content: `以下のYouTubeサムネタイトル群から、サムネに使えるキーワードと共通文言パターンを抽出してください。
+
+タイトル一覧：
+${titles.map((t,i)=>`${i+1}. ${t}`).join('\n')}
+
+以下のJSON形式のみで返してください（説明不要）：
+{
+  "keywords": ["キーワード1","キーワード2",...],
+  "patterns": ["文言パターン1","文言パターン2",...],
+  "numbers": ["数字表現1","数字表現2",...]
+}
+
+keywordsは感情・行動・状態を表す単語（最大8個）
+patternsはサムネによく使われる文言パターン（最大4個、例：「〇〇の理由」「〇〇した結果」）
+numbersは数字を使った表現（最大4個、例：「3つの方法」「100万円」）`
+        }]
+      })
+    });
+    const data = await res.json();
+    const txt = data.content[0].text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(txt);
+
+    let html = '';
+    if (result.keywords?.length) {
+      html += `<div class="kw-section-label">キーワード</div>`;
+      html += result.keywords.map(k => `<span class="kw-tag type-key">${esc(k)}</span>`).join('');
+    }
+    if (result.patterns?.length) {
+      html += `<div class="kw-section-label">文言パターン</div>`;
+      html += result.patterns.map(p => `<span class="kw-tag type-pattern">${esc(p)}</span>`).join('');
+    }
+    if (result.numbers?.length) {
+      html += `<div class="kw-section-label">数字表現</div>`;
+      html += result.numbers.map(n => `<span class="kw-tag type-num">${esc(n)}</span>`).join('');
+    }
+    kwArea.innerHTML = html || `<div class="kw-hint">抽出結果なし</div>`;
+  } catch(e) {
+    kwArea.innerHTML = `<div class="kw-hint">抽出に失敗しました</div>`;
   }
-}
-
-function lUp(rid) {
-  const s = lState[rid]; if (!s) return;
-  s.drag = null; s.resize = null;
-}
-
-function lSelect(rid, id) {
-  const s = lState[rid]; if (!s) return;
-  s.sel = id;
-  document.querySelectorAll(`#ls-${rid} .lel`).forEach(e => e.classList.toggle('sel', e.id === `lel-${rid}-${id}`));
-}
-
-function lDel(rid) {
-  const s = lState[rid]; if (!s || s.sel === null) return;
-  lSaveHist(rid);
-  document.getElementById(`lel-${rid}-${s.sel}`)?.remove();
-  s.els = s.els.filter(e => e.id !== s.sel);
-  s.sel = null;
-}
-
-function lUndo(rid) {
-  const s = lState[rid]; if (!s || !s.hist.length) return;
-  const stage = document.getElementById('ls-'+rid); if (!stage) return;
-  stage.querySelectorAll('.lel').forEach(e => e.remove());
-  s.els = [];
-  s.hist.pop();
 }
 
 // ══════════════════════════════
@@ -845,27 +745,14 @@ function createSamuneRow(docId, planText, refs, readOnly) {
   } else {
     tdPlan.innerHTML = `
       <textarea class="plan-ta" rows="2" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
-      <div class="layout-wrap" id="lw-${rid}">
-        <div class="layout-bar">
-          <input class="ltxt-input" id="ltxt-${rid}" placeholder="テキスト" value="">
-          <button class="lbtn active" id="ldir-h-${rid}" onclick="lSetDir(${rid},'h',this)">横</button>
-          <button class="lbtn" id="ldir-v-${rid}" onclick="lSetDir(${rid},'v',this)">縦</button>
-          <input type="color" class="lcolor" id="lclr-${rid}" value="#ffffff" title="文字色">
-          <select class="lsize" id="lsz-${rid}"><option value="11">S</option><option value="16" selected>M</option><option value="22">L</option><option value="30">XL</option></select>
-          <button class="lbtn" onclick="lAddText(${rid})" style="background:var(--green);color:#fff">+ T</button>
-          <label class="lbtn" style="cursor:pointer">📷 <input type="file" accept="image/*" style="display:none" onchange="lAddImg(${rid},this)"></label>
-          <input type="color" class="lcolor" id="lbg-${rid}" value="#111111" oninput="lSetBg(${rid},this.value)" title="背景色">
-          <button class="lbtn" onclick="lUndo(${rid})" title="Undo">↩</button>
-          <button class="lbtn" onclick="lDel(${rid})" style="color:#dc2626" title="選択削除">✕</button>
-        </div>
-        <div class="layout-stage" id="ls-${rid}" onmousedown="lStageClick(event,${rid})" onmousemove="lMove(event,${rid})" onmouseup="lUp(${rid})" onmouseleave="lUp(${rid})"></div>
+      <div class="kw-area" id="kw-${rid}">
+        <div class="kw-hint">参考サムネのURLを入力すると<br>キーワードを自動抽出します</div>
       </div>
       <div class="plan-actions">
         <button class="share-btn" onclick="openSamuneShare('${docId}',this)">🔗 共有</button>
         <button class="del-btn" onclick="delSamuneRow('${docId}',${rid})">✕</button>
       </div>`;
     tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSamuneSave(docId, rid));
-    setTimeout(() => lInit(rid), 10);
   }
   tr.appendChild(tdPlan);
   for (let i = 0; i < 5; i++) {
@@ -937,7 +824,12 @@ function renderCard(cid,vid,info,readOnly){
   el.dataset.refdata=JSON.stringify(info);
   el.innerHTML=`<div class="score-badge ${sc.grade}">${sc.label}</div><div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div><a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener"><img src="${thumb}" alt=""><div class="thumb-ov"><div class="thumb-play"></div></div><span class="thumb-dur">${esc(info.duration)}</span></a><div class="v-ch">${esc(info.channel)}</div><div class="v-title">${esc(info.title)}</div><div class="v-stats"><div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div><div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div><div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span><span class="v-stat-sub">${info.uploadDate}</span></div></div><div class="v-ratio ${rCls}">再生/登録 = ${rStr}</div>`;
   el.classList.add('loaded');
-  if(!readOnly) document.getElementById(cid+'-clear')?.classList.add('show');
+  if(!readOnly) {
+    document.getElementById(cid+'-clear')?.classList.add('show');
+    // ridを抽出してキーワード再抽出をスケジュール
+    const rid = parseInt(cid.replace(/c(\d+)r\d+/, '$1'));
+    scheduleKwExtract(rid);
+  }
 }
 function calcScore(info){
   const days=(Date.now()-new Date(info.uploadDate))/86400000;
