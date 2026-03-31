@@ -569,8 +569,82 @@ td.ref-td:last-child { border-right: none; }
   font-family: 'DM Mono', monospace;
   letter-spacing: 0.08em;
 }
+/* ── タブ ── */
+.hdr-tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 3px;
+}
+.hdr-tab {
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.hdr-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
+.hdr-tab:hover:not(.active) { color: rgba(255,255,255,0.75); }
+
+/* ── 台本ページ ── */
+#page-script { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
+#page-script.active { display: block; }
+#page-samune.hidden { display: none; }
+
+.sc-grid { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-bottom: 20px; }
+.sc-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.sc-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+.sc-input, .sc-ta {
+  width: 100%; background: var(--green-bg); border: 1px solid var(--border);
+  border-radius: 5px; padding: 8px 10px; font-size: 12px; color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif; outline: none; margin-bottom: 10px;
+  transition: border-color 0.15s;
+}
+.sc-input:focus, .sc-ta:focus { border-color: var(--green); background: #fff; }
+.sc-ta { resize: vertical; min-height: 200px; line-height: 1.7; }
+.sc-gen-btn {
+  width: 100%; padding: 11px; background: var(--green); border: none; border-radius: 6px;
+  color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.sc-gen-btn:hover { background: var(--green-l); }
+.sc-gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.sc-progress { display: none; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.sc-progress.show { display: block; }
+.sc-prog-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+.sc-prog-bar { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
+.sc-prog-msg { font-size: 11px; color: var(--muted); }
+.sc-output { display: none; }
+.sc-output.show { display: block; }
+.sc-titles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.sc-title-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.sc-title-card-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+.sc-title-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; line-height: 1.5; margin-bottom: 5px; }
+.sc-title-num { flex-shrink: 0; background: var(--green); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-top: 2px; font-family: 'DM Mono', monospace; }
+.sc-tbl-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+.sc-tbl { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 11.5px; }
+.sc-tbl thead tr { background: var(--hdr2); }
+.sc-tbl th { color: var(--green-xl); font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); white-space: nowrap; }
+.sc-tbl td { border: 1px solid var(--border); padding: 8px 10px; vertical-align: top; white-space: pre-wrap; line-height: 1.7; }
+.sc-tbl tr:hover td { filter: brightness(0.97); }
+.sc-type-insert td { background: #f0faf0; }
+.sc-type-vlog td { background: #fefce8; }
+.sc-type-kaisetsu td { background: #f0f6ff; }
+.sc-type-sokyu td { background: #fff8f0; }
+.sc-type-bridge td { background: #faf0ff; }
+.sc-type-total td { background: var(--hdr2); color: var(--green-xl); font-weight: 700; text-align: center; font-family: 'DM Mono', monospace; font-size: 11px; }
+.sc-dur-badge { display: inline-block; background: var(--green); color: #fff; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; }
+.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
-</head>
 <body>
 
 <!-- HEADER -->
@@ -579,23 +653,37 @@ td.ref-td:last-child { border-right: none; }
     <div class="hdr-icon">🎬</div>
     <div>
       <div class="hdr-name">さむね君</div>
-      <div class="hdr-sub">サムネ企画リサーチシート</div>
+      <div class="hdr-sub">BirdFlip 企画ツール</div>
     </div>
   </div>
   <div class="hdr-sep"></div>
-  <div class="hdr-spacer"></div>
-  <div class="legend">
-    <div class="legend-item"><span class="ldot" style="background:#16a34a"></span>S (5倍+)</div>
-    <div class="legend-item"><span class="ldot" style="background:#22c55e"></span>A (3〜5倍)</div>
-    <div class="legend-item"><span class="ldot" style="background:#3b82f6"></span>B (1〜3倍)</div>
-    <div class="legend-item"><span class="ldot" style="background:#f59e0b"></span>C (3倍未満)</div>
-    <div class="legend-item"><span class="ldot" style="background:#ef4444"></span>× 1年超</div>
+  <!-- タブ -->
+  <div class="hdr-tabs">
+    <button class="hdr-tab active" id="tab-samune" onclick="switchMainTab('samune')">🖼 サムネ</button>
+    <button class="hdr-tab" id="tab-script" onclick="switchMainTab('script')">📜 台本</button>
   </div>
   <div class="hdr-sep"></div>
-  <button class="hdr-btn add" onclick="addRow()">
-    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-    企画を追加
-  </button>
+  <div class="hdr-spacer"></div>
+  <!-- サムネタブ用コントロール -->
+  <div id="ctrl-samune" style="display:flex;align-items:center;gap:12px">
+    <div class="legend">
+      <div class="legend-item"><span class="ldot" style="background:#16a34a"></span>S (5倍+)</div>
+      <div class="legend-item"><span class="ldot" style="background:#22c55e"></span>A (3〜5倍)</div>
+      <div class="legend-item"><span class="ldot" style="background:#3b82f6"></span>B (1〜3倍)</div>
+      <div class="legend-item"><span class="ldot" style="background:#f59e0b"></span>C (3倍未満)</div>
+      <div class="legend-item"><span class="ldot" style="background:#ef4444"></span>× 1年超</div>
+    </div>
+    <div class="hdr-sep"></div>
+    <button class="hdr-btn add" onclick="addRow()">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      企画を追加
+    </button>
+  </div>
+  <!-- 台本タブ用コントロール -->
+  <div id="ctrl-script" style="display:none;align-items:center;gap:8px">
+    <button class="hdr-btn" style="background:rgba(255,255,255,0.1);color:#fff" onclick="dlScriptHTML()">⬇ HTML出力</button>
+    <button class="hdr-btn" style="background:rgba(255,255,255,0.1);color:#fff" onclick="copyTSV()">📋 TSVコピー</button>
+  </div>
 </div>
 
 <!-- SHARE VIEW HEADER (共有モードのみ表示) -->
@@ -608,6 +696,8 @@ td.ref-td:last-child { border-right: none; }
   <span class="readonly-badge">READ ONLY</span>
 </div>
 
+<!-- サムネページ -->
+<div id="page-samune">
 <!-- TABLE -->
 <div class="sheet-wrap">
   <table class="sheet" id="sheet">
@@ -629,6 +719,68 @@ td.ref-td:last-child { border-right: none; }
     </thead>
     <tbody id="tbody"></tbody>
   </table>
+</div>
+</div><!-- /page-samune -->
+
+<!-- 台本ページ -->
+<div id="page-script">
+  <div class="sc-grid">
+    <!-- 左：入力フォーム -->
+    <div>
+      <div class="sc-card" style="margin-bottom:12px">
+        <div class="sc-label">出演者名</div>
+        <input class="sc-input" id="sc-name" type="text" placeholder="例：松田 健太">
+        <div class="sc-label">目標尺（分）</div>
+        <input class="sc-input" id="sc-dur" type="number" value="25" min="5" max="60">
+        <div class="sc-label">撮影日</div>
+        <input class="sc-input" id="sc-date" type="text" placeholder="例：4月9日（木）東京本社">
+        <div class="sc-label">撮影場所</div>
+        <input class="sc-input" id="sc-place" type="text" placeholder="例：東京本社">
+      </div>
+      <button class="sc-gen-btn" id="sc-gen-btn" onclick="generateScript()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        台本を生成
+      </button>
+    </div>
+    <!-- 右：文字起こし入力 -->
+    <div class="sc-card">
+      <div class="sc-label">文字起こし（そのまま貼り付け）</div>
+      <textarea class="sc-ta" id="sc-transcript" placeholder="ここにヒアリングの文字起こしをそのまま貼り付けてください。
+
+【注意】このツールは文字起こしにある情報だけを使います。情報を勝手に上乗せしません（ハレーション防止）。"></textarea>
+    </div>
+  </div>
+
+  <!-- プログレス -->
+  <div class="sc-progress" id="sc-progress">
+    <div class="sc-prog-bar-wrap"><div class="sc-prog-bar" id="sc-prog-bar" style="width:0%"></div></div>
+    <div class="sc-prog-msg" id="sc-prog-msg">生成中…</div>
+  </div>
+
+  <!-- 出力エリア -->
+  <div class="sc-output" id="sc-output">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div class="sc-dur-badge" id="sc-dur-badge">-- 分</div>
+    </div>
+    <div class="sc-titles-grid" id="sc-titles"></div>
+    <div class="sc-tbl-wrap">
+      <table class="sc-tbl" id="sc-tbl">
+        <thead>
+          <tr>
+            <th style="width:80px">時間帯</th>
+            <th style="width:120px">シーン</th>
+            <th style="width:80px">種別</th>
+            <th style="width:50px">秒数</th>
+            <th style="width:70px">所要時間</th>
+            <th style="width:50px">文字数</th>
+            <th>原稿</th>
+            <th style="width:120px">メモ</th>
+          </tr>
+        </thead>
+        <tbody id="sc-tbody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- SHARE MODAL -->
@@ -1102,6 +1254,176 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════
+// TAB SWITCH
+// ══════════════════════════════
+function switchMainTab(tab) {
+  const isSamune = tab === 'samune';
+  document.getElementById('page-samune').classList.toggle('hidden', !isSamune);
+  document.getElementById('page-script').classList.toggle('active', !isSamune);
+  document.getElementById('tab-samune').classList.toggle('active', isSamune);
+  document.getElementById('tab-script').classList.toggle('active', !isSamune);
+  document.getElementById('ctrl-samune').style.display = isSamune ? 'flex' : 'none';
+  document.getElementById('ctrl-script').style.display = isSamune ? 'none' : 'flex';
+}
+
+// ══════════════════════════════
+// 台本生成
+// ══════════════════════════════
+const WORKER_URL = 'https://script-maker-api.aki-surf89315.workers.dev/';
+
+async function generateScript() {
+  const tx = document.getElementById('sc-transcript').value.trim();
+  if (!tx) { showToast('文字起こしを入力してください'); return; }
+  const name  = document.getElementById('sc-name').value || '出演者';
+  const dur   = parseInt(document.getElementById('sc-dur').value) || 25;
+  const date  = document.getElementById('sc-date').value  || '未定';
+  const place = document.getElementById('sc-place').value || '未定';
+
+  const btn = document.getElementById('sc-gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> 生成中…';
+  document.getElementById('sc-progress').classList.add('show');
+  document.getElementById('sc-output').classList.remove('show');
+
+  const bar = document.getElementById('sc-prog-bar');
+  const msg = document.getElementById('sc-prog-msg');
+  const steps = [
+    {m:'文字起こしを解析しています…', p:15},
+    {m:'話題の流れを整理しています…', p:35},
+    {m:'セクション構成を設計しています…', p:55},
+    {m:'各シーンの原稿を生成しています…', p:75},
+    {m:'秒数・尺を計算しています…', p:92},
+  ];
+  let si = 0;
+  const t = setInterval(() => {
+    if (si < steps.length) { msg.textContent = steps[si].m; bar.style.width = steps[si].p + '%'; si++; }
+  }, 2000);
+
+  const sys = `あなたはYouTube動画の台本作成の専門家です。
+ヒアリング文字起こしから台本をJSON形式で出力してください。
+
+【絶対ルール】
+- 文字起こしにある情報のみを使う。情報の上乗せ・創作・推測は禁止（ハレーション防止）
+- フィラー（えー、あのー、言い直し）は整理して読みやすくする
+- 目標動画尺：${dur}分（合計秒数が${dur*60}秒前後になるよう設計）
+- 訴求セクションは積極的に2〜3分（120〜180秒）使う
+- 秒数目安：インサート3〜5秒、ブリッジ5〜10秒、VLOG15〜30秒、解説系30〜60秒、訴求120〜180秒
+
+【JSON形式】
+{"talent":"","shoot_date":"","shoot_place":"","total_seconds":0,
+"titles":["","",""],
+"rows":[{"time":"","scene":"","type":"インサート or VLOG or 解説系 or 訴求 or ブリッジ","seconds":0,"chars":0,"script":"","memo":""}]}
+
+JSONのみ返してください。`;
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 6000,
+        system: sys,
+        messages: [{ role: 'user', content: `出演者名：${name}\n撮影日：${date}\n撮影場所：${place}\n目標尺：${dur}分\n\n${tx}` }]
+      })
+    });
+    clearInterval(t); bar.style.width = '100%'; msg.textContent = '完成！';
+    const data = await res.json();
+    const raw = data.content.map(b => b.text || '').join('');
+    const result = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    renderScript(result);
+    setTimeout(() => document.getElementById('sc-progress').classList.remove('show'), 600);
+  } catch(e) {
+    clearInterval(t); msg.textContent = 'エラー: ' + e.message; bar.style.width = '0%';
+    showToast('台本生成に失敗しました');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> 台本を生成';
+  }
+}
+
+function renderScript(d) {
+  // 尺バッジ
+  const tot = d.total_seconds || d.rows.reduce((s,r) => s+(r.seconds||0), 0);
+  const m = Math.floor(tot/60), s = tot%60;
+  document.getElementById('sc-dur-badge').textContent = `${m}分${s>0?s+'秒':''}`;
+
+  // タイトル
+  const ta = document.getElementById('sc-titles');
+  if (d.titles?.length) {
+    ta.innerHTML = `<div class="sc-title-card">
+      <div class="sc-title-card-label">タイトル案</div>
+      ${d.titles.map((t,i) => `<div class="sc-title-row"><span class="sc-title-num">案${i+1}</span><span>${esc(t)}</span></div>`).join('')}
+    </div>`;
+  }
+
+  // テーブル
+  const tbody = document.getElementById('sc-tbody');
+  tbody.innerHTML = '';
+  const cm = {'インサート':'sc-type-insert','VLOG':'sc-type-vlog','解説系':'sc-type-kaisetsu','訴求':'sc-type-sokyu','ブリッジ':'sc-type-bridge'};
+  d.rows.forEach(r => {
+    const dm = Math.floor((r.seconds||0)/60), ds = (r.seconds||0)%60;
+    const ds2 = dm>0 ? `${dm}分${ds>0?ds+'秒':''}` : `${ds}秒`;
+    const tr = document.createElement('tr');
+    tr.className = cm[r.type] || '';
+    tr.innerHTML = `<td>${esc(r.time||'')}</td><td>${esc(r.scene||'')}</td><td>${esc(r.type||'')}</td>
+      <td style="text-align:center">${r.seconds||''}</td>
+      <td style="text-align:center">${ds2}</td>
+      <td style="text-align:center">${r.chars||''}</td>
+      <td>${esc(r.script||'')}</td>
+      <td>${esc(r.memo||'')}</td>`;
+    tbody.appendChild(tr);
+  });
+  const tc = d.rows.reduce((s,r) => s+(r.chars||0), 0);
+  const tr2 = document.createElement('tr'); tr2.className = 'sc-type-total';
+  tr2.innerHTML = `<td colspan="3">TOTAL</td><td>${tot}</td><td>${m}分${s>0?s+'秒':''}</td><td>${tc}</td><td colspan="2"></td>`;
+  tbody.appendChild(tr2);
+
+  document.getElementById('sc-output').classList.add('show');
+  document.getElementById('sc-output').scrollIntoView({ behavior: 'smooth' });
+}
+
+function dlScriptHTML() {
+  const name = document.getElementById('sc-name').value || '出演者';
+  const badge = document.getElementById('sc-dur-badge').textContent;
+  const tblH = document.getElementById('sc-tbl').outerHTML;
+  const titH = document.getElementById('sc-titles').innerHTML;
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>【台本】${name}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;font-size:12px;background:#fff;color:#0d1b2a;padding:40px;}
+h1{font-size:20px;font-weight:700;margin-bottom:16px;}
+.badge{display:inline-block;background:#0a3d22;color:#4ade80;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;margin-left:8px;}
+.tbl-wrap{overflow-x:auto;border:1px solid #e2f0e6;border-radius:8px;margin-top:16px;}
+table{width:100%;border-collapse:collapse;min-width:900px;font-size:11.5px;}
+thead tr{background:#0a3d22;}
+th{color:#4ade80;font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 8px;text-align:center;border:1px solid rgba(255,255,255,.06);white-space:nowrap;}
+td{border:1px solid #e2f0e6;padding:8px 10px;vertical-align:top;white-space:pre-wrap;line-height:1.7;}
+.sc-type-insert td{background:#f0faf0;}.sc-type-vlog td{background:#fefce8;}
+.sc-type-kaisetsu td{background:#f0f6ff;}.sc-type-sokyu td{background:#fff8f0;}
+.sc-type-bridge td{background:#faf0ff;}
+.sc-type-total td{background:#0a3d22;color:#4ade80;font-weight:700;text-align:center;font-family:'DM Mono',monospace;}
+</style></head><body>
+<h1>台本：${name} <span class="badge">${badge}</span></h1>
+${titH}
+<div class="tbl-wrap">${tblH}</div>
+</body></html>`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([html], {type:'text/html;charset=utf-8'}));
+  a.download = `${name}_台本.html`; a.click();
+}
+
+function copyTSV() {
+  let t = '時間帯\tシーン\t種別\t秒数\t所要時間\t文字数\t原稿\tメモ\n';
+  document.querySelectorAll('#sc-tbody tr').forEach(r => {
+    t += Array.from(r.querySelectorAll('td')).map(c => c.textContent.replace(/\n/g,' ')).join('\t') + '\n';
+  });
+  navigator.clipboard.writeText(t).then(() => showToast('TSVをコピーしました！スプレッドシートに貼り付けできます'));
 }
 
 // START
