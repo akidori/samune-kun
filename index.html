@@ -103,6 +103,7 @@ body {
 .sheet-outer {
   overflow-x: auto;
   padding: 0;
+  margin-top: 0;
 }
 .sheet-outer::-webkit-scrollbar { height: 5px; }
 .sheet-outer::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
@@ -117,6 +118,10 @@ body {
   table-layout: fixed;
 }
 
+html {
+  scroll-padding-top: 90px;
+}
+
 /* COLUMN HEADERS */
 .sheet thead tr th {
   background: var(--col-header-bg);
@@ -124,7 +129,7 @@ body {
   border-bottom: 2px solid #0f4723;
   padding: 0;
   position: sticky;
-  top: 44px;
+  top: 46px;
   z-index: 100;
 }
 .sheet thead tr th:last-child { border-right: none; }
