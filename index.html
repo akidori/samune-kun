@@ -65,69 +65,97 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
 .page { display: none; }
 .page.active { display: block; }
 
-/* ══ ROUGH CANVAS ══ */
-.rough-wrap {
+/* ══ THUMB LAYOUTER ══ */
+.layout-wrap {
   margin-bottom: 8px;
   border: 1px solid var(--border2);
   border-radius: 6px;
   overflow: hidden;
   background: #fff;
 }
-.rough-toolbar {
+.layout-bar {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 6px;
+  gap: 3px;
+  padding: 3px 6px;
   background: var(--green-bg);
   border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
 }
-.rough-tool {
-  width: 24px; height: 24px;
+.lbtn {
+  height: 20px;
+  padding: 0 6px;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 3px;
   background: transparent;
   cursor: pointer;
-  font-size: 12px;
-  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
   color: var(--muted);
-  transition: all 0.15s;
-  padding: 0;
-  font-family: 'DM Mono', monospace;
-  font-weight: 500;
+  transition: all 0.12s;
+  white-space: nowrap;
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex; align-items: center;
 }
-.rough-tool:hover { background: var(--border2); color: var(--green); }
-.rough-tool.active { background: var(--green); color: #fff; border-color: var(--green); }
-.rough-color {
-  width: 24px; height: 24px;
+.lbtn:hover { background: var(--border2); color: var(--green); }
+.lbtn.active { background: var(--green); color: #fff; }
+.lbtn-icon { font-size: 11px; }
+.lcolor {
+  width: 20px; height: 20px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
   padding: 1px;
   background: transparent;
 }
-.rough-size {
-  height: 24px;
+.lsize {
+  height: 20px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
+  background: var(--white);
+  font-size: 9px;
+  color: var(--text);
+  padding: 0 3px;
+  outline: none;
+}
+.ltxt-input {
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
   background: var(--white);
   font-size: 10px;
   color: var(--text);
-  padding: 0 4px;
-  cursor: pointer;
+  padding: 0 5px;
   outline: none;
+  width: 80px;
+  font-family: 'Noto Sans JP', sans-serif;
 }
-.rough-canvas {
-  display: block;
+.ltxt-input:focus { border-color: var(--green); }
+.layout-stage {
+  position: relative;
   width: 100%;
-  height: auto;
-  cursor: crosshair;
+  aspect-ratio: 16/9;
+  background: #111;
+  overflow: hidden;
+  cursor: default;
+}
+.lel {
+  position: absolute;
+  cursor: move;
+  user-select: none;
   touch-action: none;
 }
-.rough-canvas.text-mode { cursor: text; }
-
-td.plan-td {
-  min-width: 220px;
+.lel.sel { outline: 1.5px solid #22c55e; outline-offset: 1px; }
+.lel-text { white-space: pre; line-height: 1.2; }
+.lel-img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block; }
+.lresize {
+  position: absolute;
+  bottom: -4px; right: -4px;
+  width: 8px; height: 8px;
+  background: #22c55e;
+  border-radius: 1px;
+  cursor: se-resize;
 }
+td.plan-td { min-width: 200px; }
 
 /* ══ SAMUNE PAGE ══ */
 .sheet-wrap {
@@ -630,155 +658,154 @@ function switchMainTab(tab, force) {
 }
 
 // ══════════════════════════════
-// ROUGH CANVAS
+// THUMB LAYOUTER（配置型）
 // ══════════════════════════════
-const roughState = {}; // {rid: {tool, history, current, drawing}}
+const lState = {}; // rid → {els:[], sel:null, hist:[], drag, resize}
 
-function initRoughCanvas(rid, docId) {
-  const canvas = document.getElementById(`rough-canvas-${rid}`);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+function lInit(rid) {
+  lState[rid] = { els: [], sel: null, hist: [], drag: null, resize: null, elId: 0 };
+}
 
-  // 白背景
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+function lSetDir(rid, d, btn) {
+  document.getElementById('ldir-h-'+rid).classList.toggle('active', d==='h');
+  document.getElementById('ldir-v-'+rid).classList.toggle('active', d==='v');
+  btn.dataset.dir = d;
+  lState[rid].dir = d;
+}
 
-  roughState[rid] = { tool: 'pen', history: [], drawing: false, docId };
+function lSetBg(rid, val) {
+  const stage = document.getElementById('ls-'+rid);
+  if (stage) stage.style.background = val;
+}
 
-  // スケール計算（表示サイズ vs 実際のcanvasサイズ）
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+function lSaveHist(rid) {
+  const s = lState[rid]; if (!s) return;
+  const snap = s.els.map(e => ({ id:e.id, type:e.type, left:e.el.style.left, top:e.el.style.top, width:e.el.style.width, height:e.el.style.height }));
+  s.hist.push(snap);
+  if (s.hist.length > 20) s.hist.shift();
+}
+
+function lGetPos(e, rid) {
+  const stage = document.getElementById('ls-'+rid);
+  const r = stage.getBoundingClientRect();
+  return { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 };
+}
+
+function lAddText(rid) {
+  const s = lState[rid]; if (!s) return;
+  const txt = document.getElementById('ltxt-'+rid).value.trim() || 'テキスト';
+  const color = document.getElementById('lclr-'+rid).value;
+  const size = document.getElementById('lsz-'+rid).value;
+  const isV = s.dir === 'v';
+  lSaveHist(rid);
+
+  const id = ++s.elId;
+  const el = document.createElement('div');
+  el.className = 'lel lel-text sel';
+  el.id = `lel-${rid}-${id}`;
+  el.style.cssText = `left:10%;top:10%;color:${color};font-size:${size}px;font-weight:700;writing-mode:${isV?'vertical-rl':'horizontal-tb'};line-height:1.2;white-space:pre;`;
+  el.textContent = txt;
+  el.addEventListener('dblclick', () => {
+    const nv = prompt('テキストを編集', el.textContent);
+    if (nv !== null) { lSaveHist(rid); el.textContent = nv; }
+  });
+  lAttach(el, rid, id);
+  document.getElementById('ls-'+rid).appendChild(el);
+  s.els.push({ id, type:'text', el });
+  lSelect(rid, id);
+}
+
+function lAddImg(rid, input) {
+  const file = input.files[0]; if (!file) return;
+  const s = lState[rid]; if (!s) return;
+  const url = URL.createObjectURL(file);
+  lSaveHist(rid);
+
+  const id = ++s.elId;
+  const wrap = document.createElement('div');
+  wrap.className = 'lel sel';
+  wrap.id = `lel-${rid}-${id}`;
+  wrap.style.cssText = 'left:5%;top:5%;width:40%;height:85%;';
+  const img = document.createElement('img');
+  img.src = url; img.className = 'lel-img';
+  wrap.appendChild(img);
+  lAttach(wrap, rid, id);
+  document.getElementById('ls-'+rid).appendChild(wrap);
+  s.els.push({ id, type:'img', el: wrap });
+  lSelect(rid, id);
+  input.value = '';
+}
+
+function lAttach(el, rid, id) {
+  const rh = document.createElement('div');
+  rh.className = 'lresize';
+  rh.addEventListener('mousedown', e => {
+    e.stopPropagation();
+    const s = lState[rid]; if (!s) return;
+    const r = el.getBoundingClientRect();
+    const sr = document.getElementById('ls-'+rid).getBoundingClientRect();
+    s.resize = { id, el, ox: e.clientX, oy: e.clientY, w: r.width/sr.width*100, h: r.height/sr.height*100 };
+    lSelect(rid, id);
+  });
+  el.appendChild(rh);
+
+  el.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('lresize')) return;
+    e.stopPropagation();
+    const s = lState[rid]; if (!s) return;
+    const sr = document.getElementById('ls-'+rid).getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    s.drag = { id, el, ox: (e.clientX - er.left)/sr.width*100, oy: (e.clientY - er.top)/sr.height*100 };
+    lSelect(rid, id);
+  });
+}
+
+function lStageClick(e, rid) {
+  if (e.target.id === 'ls-'+rid) lSelect(rid, null);
+}
+
+function lMove(e, rid) {
+  const s = lState[rid]; if (!s) return;
+  const sr = document.getElementById('ls-'+rid).getBoundingClientRect();
+  if (s.drag) {
+    const x = (e.clientX - sr.left)/sr.width*100 - s.drag.ox;
+    const y = (e.clientY - sr.top)/sr.height*100 - s.drag.oy;
+    s.drag.el.style.left = Math.max(0, Math.min(x, 90)) + '%';
+    s.drag.el.style.top = Math.max(0, Math.min(y, 90)) + '%';
   }
-
-  function getColor() { return document.getElementById(`rough-color-${rid}`).value; }
-  function getSize() { return parseInt(document.getElementById(`rough-size-${rid}`).value); }
-
-  function saveHistory() {
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    roughState[rid].history.push(imageData);
-    if (roughState[rid].history.length > 30) roughState[rid].history.shift();
+  if (s.resize) {
+    const dx = (e.clientX - s.resize.ox)/sr.width*100;
+    const dy = (e.clientY - s.resize.oy)/sr.height*100;
+    s.resize.el.style.width = Math.max(5, s.resize.w + dx) + '%';
+    s.resize.el.style.height = Math.max(5, s.resize.h + dy) + '%';
   }
-
-  // ── ペンモード ──
-  canvas.addEventListener('pointerdown', e => {
-    if (roughState[rid].tool !== 'pen') return;
-    e.preventDefault();
-    saveHistory();
-    roughState[rid].drawing = true;
-    const pos = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-    ctx.strokeStyle = getColor();
-    ctx.lineWidth = getSize();
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  });
-
-  canvas.addEventListener('pointermove', e => {
-    if (!roughState[rid].drawing || roughState[rid].tool !== 'pen') return;
-    e.preventDefault();
-    const pos = getPos(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-  });
-
-  canvas.addEventListener('pointerup', e => {
-    if (roughState[rid].tool !== 'pen') return;
-    roughState[rid].drawing = false;
-    ctx.closePath();
-    scheduleRoughSave(rid, docId, canvas);
-  });
-
-  // ── テキストモード ──
-  canvas.addEventListener('click', e => {
-    if (roughState[rid].tool !== 'text') return;
-    const pos = getPos(e);
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'テキストを入力…';
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = rect.width / canvas.width;
-    const scaleY = rect.height / canvas.height;
-    Object.assign(input.style, {
-      position: 'fixed',
-      left: (rect.left + pos.x * scaleX) + 'px',
-      top: (rect.top + pos.y * scaleY - 12) + 'px',
-      background: 'rgba(255,255,255,0.9)',
-      border: '1px solid var(--green)',
-      borderRadius: '3px',
-      padding: '2px 6px',
-      fontSize: (getSize() * 3 + 10) + 'px',
-      color: getColor(),
-      zIndex: 9999,
-      outline: 'none',
-      minWidth: '80px',
-    });
-    document.body.appendChild(input);
-    input.focus();
-
-    function commitText() {
-      if (input.value.trim()) {
-        saveHistory();
-        ctx.font = `bold ${getSize() * 3 + 10}px 'Noto Sans JP', sans-serif`;
-        ctx.fillStyle = getColor();
-        ctx.fillText(input.value, pos.x, pos.y);
-        scheduleRoughSave(rid, docId, canvas);
-      }
-      input.remove();
-    }
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') commitText(); if (e.key === 'Escape') input.remove(); });
-    input.addEventListener('blur', commitText);
-  });
 }
 
-function setTool(rid, tool, btn) {
-  if (!roughState[rid]) return;
-  roughState[rid].tool = tool;
-  document.querySelectorAll(`#rough-${rid} .rough-tool[data-tool]`).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const canvas = document.getElementById(`rough-canvas-${rid}`);
-  if (canvas) canvas.className = `rough-canvas${tool === 'text' ? ' text-mode' : ''}`;
+function lUp(rid) {
+  const s = lState[rid]; if (!s) return;
+  s.drag = null; s.resize = null;
 }
 
-function undoRough(rid) {
-  const state = roughState[rid]; if (!state || !state.history.length) return;
-  const canvas = document.getElementById(`rough-canvas-${rid}`); if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const prev = state.history.pop();
-  ctx.putImageData(prev, 0, 0);
-  scheduleRoughSave(rid, state.docId, canvas);
+function lSelect(rid, id) {
+  const s = lState[rid]; if (!s) return;
+  s.sel = id;
+  document.querySelectorAll(`#ls-${rid} .lel`).forEach(e => e.classList.toggle('sel', e.id === `lel-${rid}-${id}`));
 }
 
-function clearRough(rid) {
-  const canvas = document.getElementById(`rough-canvas-${rid}`); if (!canvas) return;
-  const state = roughState[rid]; if (!state) return;
-  const ctx = canvas.getContext('2d');
-  saveHistoryForRid(rid);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  scheduleRoughSave(rid, state.docId, canvas);
+function lDel(rid) {
+  const s = lState[rid]; if (!s || s.sel === null) return;
+  lSaveHist(rid);
+  document.getElementById(`lel-${rid}-${s.sel}`)?.remove();
+  s.els = s.els.filter(e => e.id !== s.sel);
+  s.sel = null;
 }
 
-function saveHistoryForRid(rid) {
-  const canvas = document.getElementById(`rough-canvas-${rid}`); if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  if (roughState[rid]) roughState[rid].history.push(imageData);
-}
-
-const roughSaveTmr = {};
-function scheduleRoughSave(rid, docId, canvas) {
-  clearTimeout(roughSaveTmr[rid]);
-  roughSaveTmr[rid] = setTimeout(() => {
-    const dataUrl = canvas.toDataURL('image/png');
-    // Firestoreに保存（rowのdocIdに紐付け）
-    db.collection('samune_plans').doc(docId).update({ roughDataUrl: dataUrl }).catch(() => {});
-  }, 1500);
+function lUndo(rid) {
+  const s = lState[rid]; if (!s || !s.hist.length) return;
+  const stage = document.getElementById('ls-'+rid); if (!stage) return;
+  stage.querySelectorAll('.lel').forEach(e => e.remove());
+  s.els = [];
+  s.hist.pop();
 }
 
 // ══════════════════════════════
@@ -790,25 +817,8 @@ async function loadSamuneRows() {
     for (const doc of snap.docs) {
       const d = doc.data();
       createSamuneRow(doc.id, d.planText||'', d.refs||[], false);
-      // ラフ画像を復元
-      if (d.roughDataUrl) {
-        setTimeout(() => restoreRough(doc.id, d.roughDataUrl), 100);
-      }
     }
   } catch(e) { console.error(e); }
-}
-
-function restoreRough(docId, dataUrl) {
-  // docIdからridを逆引き
-  const tr = document.querySelector(`[data-doc-id="${docId}"]`);
-  if (!tr) return;
-  const rid = parseInt(tr.id.replace('row-', ''));
-  const canvas = document.getElementById(`rough-canvas-${rid}`);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const img = new Image();
-  img.onload = () => ctx.drawImage(img, 0, 0);
-  img.src = dataUrl;
 }
 
 async function addSamuneRow() {
@@ -834,31 +844,28 @@ function createSamuneRow(docId, planText, refs, readOnly) {
     tdPlan.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:4px 6px;line-height:1.6">${esc(planText)||'（タイトルなし）'}</div>`;
   } else {
     tdPlan.innerHTML = `
-      <!-- ラフキャンバス -->
-      <div class="rough-wrap" id="rough-${rid}">
-        <div class="rough-toolbar">
-          <button class="rough-tool active" data-tool="pen" onclick="setTool(${rid},'pen',this)" title="ペン">✏️</button>
-          <button class="rough-tool" data-tool="text" onclick="setTool(${rid},'text',this)" title="テキスト">T</button>
-          <input type="color" class="rough-color" id="rough-color-${rid}" value="#1a1a1a" title="色">
-          <select class="rough-size" id="rough-size-${rid}" title="サイズ">
-            <option value="2">細</option>
-            <option value="4" selected>中</option>
-            <option value="8">太</option>
-          </select>
-          <button class="rough-tool" onclick="undoRough(${rid})" title="元に戻す">↩</button>
-          <button class="rough-tool" onclick="clearRough(${rid})" title="全消去" style="color:#dc2626">✕</button>
-        </div>
-        <canvas class="rough-canvas" id="rough-canvas-${rid}" width="220" height="124"></canvas>
-      </div>
-      <!-- テキスト入力 -->
       <textarea class="plan-ta" rows="2" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
+      <div class="layout-wrap" id="lw-${rid}">
+        <div class="layout-bar">
+          <input class="ltxt-input" id="ltxt-${rid}" placeholder="テキスト" value="">
+          <button class="lbtn active" id="ldir-h-${rid}" onclick="lSetDir(${rid},'h',this)">横</button>
+          <button class="lbtn" id="ldir-v-${rid}" onclick="lSetDir(${rid},'v',this)">縦</button>
+          <input type="color" class="lcolor" id="lclr-${rid}" value="#ffffff" title="文字色">
+          <select class="lsize" id="lsz-${rid}"><option value="11">S</option><option value="16" selected>M</option><option value="22">L</option><option value="30">XL</option></select>
+          <button class="lbtn" onclick="lAddText(${rid})" style="background:var(--green);color:#fff">+ T</button>
+          <label class="lbtn" style="cursor:pointer">📷 <input type="file" accept="image/*" style="display:none" onchange="lAddImg(${rid},this)"></label>
+          <input type="color" class="lcolor" id="lbg-${rid}" value="#111111" oninput="lSetBg(${rid},this.value)" title="背景色">
+          <button class="lbtn" onclick="lUndo(${rid})" title="Undo">↩</button>
+          <button class="lbtn" onclick="lDel(${rid})" style="color:#dc2626" title="選択削除">✕</button>
+        </div>
+        <div class="layout-stage" id="ls-${rid}" onmousedown="lStageClick(event,${rid})" onmousemove="lMove(event,${rid})" onmouseup="lUp(${rid})" onmouseleave="lUp(${rid})"></div>
+      </div>
       <div class="plan-actions">
         <button class="share-btn" onclick="openSamuneShare('${docId}',this)">🔗 共有</button>
         <button class="del-btn" onclick="delSamuneRow('${docId}',${rid})">✕</button>
       </div>`;
     tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSamuneSave(docId, rid));
-    // キャンバス初期化（DOMが揃ってから）
-    setTimeout(() => initRoughCanvas(rid, docId), 50);
+    setTimeout(() => lInit(rid), 10);
   }
   tr.appendChild(tdPlan);
   for (let i = 0; i < 5; i++) {
