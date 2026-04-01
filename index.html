@@ -419,13 +419,18 @@ async function loadCaseRows(caseId) {
   document.getElementById('tbody').innerHTML = '';
   rowCount = 0;
   try {
-    // caseIdで絞り込み
-    let snap = await db.collection('samune_plans')
+    const snap = await db.collection('samune_plans')
       .where('caseId', '==', caseId)
       .get();
-
-    // orderはクライアント側でソート
     const docs = snap.docs.sort((a,b) => (a.data().order||0) - (b.data().order||0));
+    if (docs.length === 0) {
+      await addRow(); await addRow(); await addRow();
+    } else {
+      for (const doc of docs) {
+        const d = doc.data();
+        createRow(doc.id, d.planText||'', d.refs||[], false);
+      }
+    }
   } catch(e) {
     console.error(e);
     await addRow(); await addRow(); await addRow();
