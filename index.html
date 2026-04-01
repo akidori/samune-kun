@@ -422,33 +422,10 @@ async function loadCaseRows(caseId) {
     // caseIdで絞り込み
     let snap = await db.collection('samune_plans')
       .where('caseId', '==', caseId)
-      .orderBy('order').get();
+      .get();
 
-    // データがない場合、caseIdなしのデータも拾う（移行用）
-    if (snap.empty && cases.length === 1) {
-      const oldSnap = await db.collection('samune_plans')
-        .orderBy('order').get();
-      const noCase = oldSnap.docs.filter(d => !d.data().caseId);
-      if (noCase.length > 0) {
-        // 古いデータにcaseIdを付与して移行
-        const batch = db.batch();
-        noCase.forEach(d => batch.update(d.ref, { caseId }));
-        await batch.commit();
-        // 移行後に再取得
-        snap = await db.collection('samune_plans')
-          .where('caseId', '==', caseId)
-          .orderBy('order').get();
-      }
-    }
-
-    if (snap.empty) {
-      await addRow(); await addRow(); await addRow();
-    } else {
-      for (const doc of snap.docs) {
-        const d = doc.data();
-        createRow(doc.id, d.planText||'', d.refs||[], false);
-      }
-    }
+    // orderはクライアント側でソート
+    const docs = snap.docs.sort((a,b) => (a.data().order||0) - (b.data().order||0));
   } catch(e) {
     console.error(e);
     await addRow(); await addRow(); await addRow();
