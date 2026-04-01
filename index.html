@@ -370,7 +370,10 @@ async function loadCases() {
     for (const doc of snap.docs) {
       addCaseTab(doc.id, doc.data().name || '案件');
     }
-    if (cases.length > 0) await switchCase(cases[0].id, false);
+    if (cases.length > 0) {
+      await switchCase(cases[0].id, false);
+      await loadCaseRows(cases[0].id);
+    }
   } catch(e) { console.error(e); }
 }
 
@@ -394,7 +397,15 @@ function addCaseTab(id, name) {
   btn.id = 'ctab-' + id;
   btn.dataset.caseId = id;
   btn.innerHTML = `<input class="case-tab-name" value="${esc(name)}" onclick="event.stopPropagation()" onchange="renameCase('${id}',this.value)" title="クリックで名前変更"><button class="case-tab-del" onclick="event.stopPropagation();delCase('${id}')" title="削除">✕</button>`;
-  btn.addEventListener('click', e => { if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') switchCase(id, true); else if(e.target.tagName !== 'BUTTON') switchCase(id, true); });
+  btn.addEventListener('click', e => {
+    if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+      switchCase(id, false);
+      loadCaseRows(id);
+    } else if(e.target.tagName !== 'BUTTON') {
+      switchCase(id, false);
+      loadCaseRows(id);
+    }
+  });
   tabbar.insertBefore(btn, addBtn);
 }
 
@@ -405,15 +416,32 @@ async function switchCase(id, loadRows) {
 }
 
 async function loadCaseRows(caseId) {
-  // テーブルをクリア
   document.getElementById('tbody').innerHTML = '';
   rowCount = 0;
   try {
-    const snap = await db.collection('samune_plans')
+    // caseIdで絞り込み
+    let snap = await db.collection('samune_plans')
       .where('caseId', '==', caseId)
       .orderBy('order').get();
+
+    // データがない場合、caseIdなしのデータも拾う（移行用）
+    if (snap.empty && cases.length === 1) {
+      const oldSnap = await db.collection('samune_plans')
+        .orderBy('order').get();
+      const noCase = oldSnap.docs.filter(d => !d.data().caseId);
+      if (noCase.length > 0) {
+        // 古いデータにcaseIdを付与して移行
+        const batch = db.batch();
+        noCase.forEach(d => batch.update(d.ref, { caseId }));
+        await batch.commit();
+        // 移行後に再取得
+        snap = await db.collection('samune_plans')
+          .where('caseId', '==', caseId)
+          .orderBy('order').get();
+      }
+    }
+
     if (snap.empty) {
-      // 新規案件は3行追加
       await addRow(); await addRow(); await addRow();
     } else {
       for (const doc of snap.docs) {
