@@ -366,15 +366,16 @@ async function init() {
 // ══ 案件管理 ══
 async function loadCases() {
   try {
-    const snap = await db.collection('samune_cases').orderBy('order').get();
-    for (const doc of snap.docs) {
+    const snap = await db.collection('samune_cases').get();
+    const sorted = snap.docs.sort((a,b) => (a.data().order||0) - (b.data().order||0));
+    for (const doc of sorted) {
       addCaseTab(doc.id, doc.data().name || '案件');
     }
     if (cases.length > 0) {
       await switchCase(cases[0].id, false);
       await loadCaseRows(cases[0].id);
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('loadCases error:', e); }
 }
 
 async function addCase() {
@@ -680,12 +681,12 @@ async function loadShareCase(caseId) {
 
     const snap = await db.collection('samune_plans')
       .where('caseId','==',caseId)
-      .orderBy('order').get();
-
-    if (snap.empty) {
+      .get();
+    const sorted = snap.docs.sort((a,b) => (a.data().order||0) - (b.data().order||0));
+    if (sorted.length === 0) {
       document.getElementById('tbody').innerHTML = '<tr><td colspan="7" style="padding:32px;text-align:center;color:#9ca3af;font-size:12px">企画が登録されていません</td></tr>';
     } else {
-      for (const doc of snap.docs) {
+      for (const doc of sorted) {
         const d = doc.data();
         createRow(doc.id, d.planText||'', d.refs||[], true);
       }
