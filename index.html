@@ -227,6 +227,20 @@ td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .invite-add-btn { padding: 7px 14px; background: var(--green); border: none; border-radius: 5px; color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; transition: background 0.15s; }
 .invite-add-btn:hover { background: var(--green-l); }
 
+/* ドラッグ並び替え */
+.drag-handle {
+  display: flex; align-items: center; justify-content: center;
+  width: 16px; height: 100%;
+  color: var(--border2); cursor: grab; font-size: 12px;
+  position: absolute; left: -2px; top: 0;
+  opacity: 0; transition: opacity 0.15s;
+  user-select: none;
+}
+table.sheet tbody tr:hover .drag-handle { opacity: 1; }
+.drag-handle:active { cursor: grabbing; }
+table.sheet tbody tr.drag-over { border-top: 2px solid var(--green); }
+table.sheet tbody tr.dragging { opacity: 0.4; }
+
 /* TOAST */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--hdr2); color: #fff; font-size: 12px; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 600; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
@@ -571,6 +585,14 @@ function createRow(docId, planText, titleText, refs, readOnly) {
   const rid = rowCount;
   const tr = document.createElement('tr');
   tr.id = 'row-'+rid; tr.dataset.docId = docId;
+  if (!readOnly) {
+    tr.draggable = true;
+    tr.addEventListener('dragstart', e => onDragStart(e, rid));
+    tr.addEventListener('dragover',  e => onDragOver(e, rid));
+    tr.addEventListener('dragleave', e => onDragLeave(e, rid));
+    tr.addEventListener('drop',      e => onDrop(e, rid));
+    tr.addEventListener('dragend',   e => onDragEnd(e));
+  }
 
   const tdNum = document.createElement('td');
   tdNum.className = 'rn'; tdNum.textContent = rid;
@@ -587,6 +609,7 @@ function createRow(docId, planText, titleText, refs, readOnly) {
       <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(titleText)||'—'}</div>`;
   } else {
     tdPlan.innerHTML = `
+      <div class="drag-handle" draggable="false" title="ドラッグして並び替え">⠿</div>
       <div class="plan-label">タイトル案 ①</div>
       <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-a-${rid}">${esc(planText)}</textarea>
       <hr class="plan-divider">
@@ -750,6 +773,61 @@ async function loadShareCase(caseId) {
       for(const doc of docs){const d=doc.data();createRow(doc.id,d.planText||'',d.titleText||'',d.refs||[],true);}
     }
   } catch(e){showToast('読み込みに失敗しました');}
+}
+
+// ══ ドラッグ&ドロップ並び替え ══
+let dragSrcRid = null;
+
+function onDragStart(e, rid) {
+  dragSrcRid = rid;
+  e.dataTransfer.effectAllowed = 'move';
+  document.getElementById('row-'+rid).classList.add('dragging');
+}
+function onDragOver(e, rid) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if (rid === dragSrcRid) return;
+  document.querySelectorAll('#tbody tr').forEach(r => r.classList.remove('drag-over'));
+  document.getElementById('row-'+rid)?.classList.add('drag-over');
+}
+function onDragLeave(e, rid) {
+  document.getElementById('row-'+rid)?.classList.remove('drag-over');
+}
+function onDragEnd(e) {
+  document.querySelectorAll('#tbody tr').forEach(r => {
+    r.classList.remove('dragging', 'drag-over');
+  });
+  dragSrcRid = null;
+}
+async function onDrop(e, targetRid) {
+  e.preventDefault();
+  if (dragSrcRid === null || dragSrcRid === targetRid) return;
+  document.querySelectorAll('#tbody tr').forEach(r => r.classList.remove('drag-over'));
+
+  const tbody = document.getElementById('tbody');
+  const srcRow = document.getElementById('row-'+dragSrcRid);
+  const tgtRow = document.getElementById('row-'+targetRid);
+  if (!srcRow || !tgtRow) return;
+
+  // DOM上で並び替え
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const srcIdx = rows.indexOf(srcRow);
+  const tgtIdx = rows.indexOf(tgtRow);
+  if (srcIdx < tgtIdx) {
+    tbody.insertBefore(srcRow, tgtRow.nextSibling);
+  } else {
+    tbody.insertBefore(srcRow, tgtRow);
+  }
+  renum();
+
+  // Firestoreのorder値を更新
+  const newRows = Array.from(tbody.querySelectorAll('tr'));
+  const batch = db.batch();
+  newRows.forEach((row, i) => {
+    const docId = row.dataset.docId;
+    if (docId) batch.update(db.collection('samune_plans').doc(docId), { order: i });
+  });
+  try { await batch.commit(); } catch(e) { console.error(e); }
 }
 
 // ══ UTILS ══
