@@ -632,11 +632,6 @@ function createRow(docId, planText, titleText, refs, readOnly) {
       td.innerHTML = `<div id="${cid}-skel" style="display:none"></div><div class="err-box" id="${cid}-err"></div><div class="vc" id="${cid}-card"></div><button class="clear-lnk" id="${cid}-clear" style="display:none"></button>`;
     } else {
       td.innerHTML = `
-        <div class="url-row">
-          <input class="url-in" id="${cid}-url" type="text" value="${esc(ref.url||'')}" placeholder="YouTube URL を貼り付け"
-            onpaste="onPaste(event,'${cid}','${docId}',${i})" oninput="onInput('${cid}','${docId}',${i})">
-          <button class="go-btn" onclick="fetchVideo('${cid}','${docId}',${i})">→</button>
-        </div>
         <div id="${cid}-skel" style="display:none">
           <div class="skel skel-thumb"></div>
           <div class="skel skel-line" style="width:90%"></div>
@@ -644,6 +639,11 @@ function createRow(docId, planText, titleText, refs, readOnly) {
         </div>
         <div class="err-box" id="${cid}-err"></div>
         <div class="vc" id="${cid}-card"></div>
+        <div class="url-row">
+          <input class="url-in" id="${cid}-url" type="text" value="${esc(ref.url||'')}" placeholder="YouTube URL を貼り付け"
+            onpaste="onPaste(event,'${cid}','${docId}',${i})" oninput="onInput('${cid}','${docId}',${i})">
+          <button class="go-btn" onclick="fetchVideo('${cid}','${docId}',${i})">→</button>
+        </div>
         <button class="clear-lnk" id="${cid}-clear" onclick="clearCell('${cid}','${docId}',${i})">✕ クリア</button>`;
     }
     tr.appendChild(td);
