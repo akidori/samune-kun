@@ -167,9 +167,11 @@ table.sheet tbody tr:hover td { background: #f6fef8; }
 table.sheet tbody tr:hover td.plan-td { background: #e8faf0; }
 td.rn { width: 36px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green-l); background: var(--green-bg); border-right: 1px solid var(--border2); vertical-align: top; padding-top: 14px; user-select: none; }
 td.plan-td { width: 18%; background: var(--green-bg); border-right: 2px solid var(--border2); vertical-align: top; padding: 10px 12px; position: relative; min-width: 180px; }
-.plan-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 12px; font-weight: 600; color: var(--hdr2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.65; min-height: 56px; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
+.plan-label { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); font-family: 'DM Mono', monospace; margin-bottom: 3px; }
+.plan-ta { width: 100%; background: transparent; border: none; outline: none; font-size: 12px; font-weight: 600; color: var(--hdr2); font-family: 'Noto Sans JP', sans-serif; resize: none; line-height: 1.65; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
 .plan-ta:focus { background: rgba(22,163,74,0.06); }
 .plan-ta::placeholder { color: var(--border2); font-weight: 300; font-size: 11px; }
+.plan-divider { border: none; border-top: 1px dashed var(--border2); margin: 6px 0; }
 .plan-actions { display: flex; align-items: center; gap: 6px; margin-top: 6px; opacity: 0; transition: opacity 0.15s; }
 table.sheet tbody tr:hover .plan-actions { opacity: 1; }
 .del-row-btn { width: 20px; height: 20px; background: none; border: none; color: var(--muted2); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; font-size: 12px; transition: all 0.12s; margin-left: auto; }
@@ -429,7 +431,7 @@ async function loadCaseRows(caseId) {
     } else {
       for (const doc of docs) {
         const d = doc.data();
-        createRow(doc.id, d.planText||'', d.refs||[], false);
+        createRow(doc.id, d.planText||'', d.titleText||'', d.refs||[], false);
       }
     }
   } catch(e) {
@@ -469,10 +471,10 @@ async function addRow() {
     order: snap.size,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  createRow(ref.id, '', [{},{},{},{},{}], false);
+  createRow(ref.id, '', '', [{},{},{},{},{}], false);
 }
 
-function createRow(docId, planText, refs, readOnly) {
+function createRow(docId, planText, titleText, refs, readOnly) {
   rowCount++;
   const rid = rowCount;
   const tr = document.createElement('tr');
@@ -486,14 +488,24 @@ function createRow(docId, planText, refs, readOnly) {
   const tdPlan = document.createElement('td');
   tdPlan.className = 'plan-td';
   if (readOnly) {
-    tdPlan.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:4px 6px;line-height:1.65">${esc(planText)||'（タイトルなし）'}</div>`;
+    tdPlan.innerHTML = `
+      <div class="plan-label">サムネ文言</div>
+      <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:24px">${esc(planText)||'—'}</div>
+      <hr class="plan-divider">
+      <div class="plan-label">動画タイトル</div>
+      <div style="font-size:11px;color:var(--text2);padding:2px 6px;line-height:1.65;min-height:24px">${esc(titleText)||'—'}</div>`;
   } else {
     tdPlan.innerHTML = `
-      <textarea class="plan-ta" rows="3" placeholder="企画タイトル・サムネ文言">${esc(planText)}</textarea>
+      <div class="plan-label">サムネ文言</div>
+      <textarea class="plan-ta" rows="2" placeholder="サムネに載せる文言" id="plan-samune-${rid}">${esc(planText)}</textarea>
+      <hr class="plan-divider">
+      <div class="plan-label">動画タイトル</div>
+      <textarea class="plan-ta" rows="2" placeholder="動画タイトル案" id="plan-title-${rid}" style="font-weight:400;font-size:11px">${esc(titleText)}</textarea>
       <div class="plan-actions">
         <button class="del-row-btn" onclick="delRow('${docId}',${rid})" title="削除">✕ 削除</button>
       </div>`;
-    tdPlan.querySelector('.plan-ta').addEventListener('input', () => scheduleSave(docId, rid));
+    tdPlan.querySelector('#plan-samune-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
+    tdPlan.querySelector('#plan-title-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
   }
   tr.appendChild(tdPlan);
 
@@ -540,14 +552,15 @@ function scheduleSave(docId, rid) {
 
 async function saveRow(docId, rid) {
   const tr = document.getElementById('row-'+rid); if (!tr) return;
-  const planText = tr.querySelector('.plan-ta')?.value || '';
+  const planText = tr.querySelector('#plan-samune-'+rid)?.value || '';
+  const titleText = tr.querySelector('#plan-title-'+rid)?.value || '';
   const refs = [];
   for (let i = 0; i < 5; i++) {
     const cid = `c${rid}r${i}`;
     const card = document.getElementById(cid+'-card');
     refs.push(card?.dataset?.refdata ? JSON.parse(card.dataset.refdata) : { url: document.getElementById(cid+'-url')?.value||'' });
   }
-  try { await db.collection('samune_plans').doc(docId).update({ planText, refs }); } catch(e) {}
+  try { await db.collection('samune_plans').doc(docId).update({ planText, titleText, refs }); } catch(e) {}
 }
 
 async function delRow(docId, rid) {
@@ -688,7 +701,7 @@ async function loadShareCase(caseId) {
     } else {
       for (const doc of sorted) {
         const d = doc.data();
-        createRow(doc.id, d.planText||'', d.refs||[], true);
+        createRow(doc.id, d.planText||'', d.titleText||'', d.refs||[], true);
       }
     }
   } catch(e) { showToast('読み込みに失敗しました'); }
