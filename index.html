@@ -489,18 +489,18 @@ function createRow(docId, planText, titleText, refs, readOnly) {
   tdPlan.className = 'plan-td';
   if (readOnly) {
     tdPlan.innerHTML = `
-      <div class="plan-label">サムネ文言</div>
+      <div class="plan-label">タイトル案 ①</div>
       <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:24px">${esc(planText)||'—'}</div>
       <hr class="plan-divider">
-      <div class="plan-label">動画タイトル</div>
-      <div style="font-size:11px;color:var(--text2);padding:2px 6px;line-height:1.65;min-height:24px">${esc(titleText)||'—'}</div>`;
+      <div class="plan-label">タイトル案 ②</div>
+      <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:24px">${esc(titleText)||'—'}</div>`;
   } else {
     tdPlan.innerHTML = `
-      <div class="plan-label">サムネ文言</div>
-      <textarea class="plan-ta" rows="2" placeholder="サムネに載せる文言" id="plan-samune-${rid}">${esc(planText)}</textarea>
+      <div class="plan-label">タイトル案 ①</div>
+      <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-samune-${rid}">${esc(planText)}</textarea>
       <hr class="plan-divider">
-      <div class="plan-label">動画タイトル</div>
-      <textarea class="plan-ta" rows="2" placeholder="動画タイトル案" id="plan-title-${rid}" style="font-weight:400;font-size:11px">${esc(titleText)}</textarea>
+      <div class="plan-label">タイトル案 ②</div>
+      <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-title-${rid}">${esc(titleText)}</textarea>
       <div class="plan-actions">
         <button class="del-row-btn" onclick="delRow('${docId}',${rid})" title="削除">✕ 削除</button>
       </div>`;
