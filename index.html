@@ -742,7 +742,8 @@ function addCaseTab(id, name) {
   btn.dataset.caseId = id;
   btn.innerHTML = `<input class="case-tab-name" value="${esc(name)}" onclick="event.stopPropagation()" onchange="renameCase('${id}',this.value)" title="クリックで名前変更"><button class="case-tab-del" onclick="event.stopPropagation();delCase('${id}')" title="削除">✕</button>`;
   btn.addEventListener('click', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+    if (e.target.classList.contains('case-tab-name')) return;
+    if (e.target.classList.contains('case-tab-del')) return;
     switchCase(id);
   });
   tabbar.insertBefore(btn, addBtn);
