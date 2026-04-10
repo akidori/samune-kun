@@ -675,7 +675,7 @@ async function addRow() {
   const ref = await db.collection('samune_plans').add({
     planText: '', titleText: '', refs:[{},{},{},{},{}],
     caseId: activeCaseId, order: snap.size,
-    detail: { audience: '', rationale: '', keywords: [], avgViews: '' },
+    detail: { rationale: '', keywords: [] },
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
   createRow(ref.id, '', '', [{},{},{},{},{}], false, {});
@@ -708,8 +708,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
     const kwHtml = (det.keywords||[]).length > 0
       ? (det.keywords||[]).map(k=>`<span class="tag-chip" style="pointer-events:none">${esc(k)}</span>`).join('')
       : '<span style="color:var(--muted2);font-size:10px">—</span>';
-    const avgViewsDisplay = det.avgViews ? `<span class="avg-views-calc">${fmt(parseInt(det.avgViews)||0)} 回</span>` : '<span style="color:var(--muted2);font-size:10px">—</span>';
-    const hasDetail = det.audience || det.rationale || (det.keywords||[]).length > 0 || det.avgViews;
+    const hasDetail = det.rationale || (det.keywords||[]).length > 0;
 
     tdPlan.innerHTML = `
       <div class="plan-label">タイトル案 ①</div>
@@ -723,20 +722,12 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
       </button>
       <div class="accordion-body">
         <div class="acc-field">
-          <div class="acc-label">🎯 ターゲット視聴者</div>
-          <div class="acc-value">${esc(det.audience)||'—'}</div>
-        </div>
-        <div class="acc-field">
           <div class="acc-label">💡 企画根拠</div>
           <div class="acc-value">${esc(det.rationale)||'—'}</div>
         </div>
         <div class="acc-field">
           <div class="acc-label">🔑 メインワード</div>
           <div style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 0">${kwHtml}</div>
-        </div>
-        <div class="acc-field">
-          <div class="acc-label">📊 平均再生数</div>
-          <div>${avgViewsDisplay}</div>
         </div>
       </div>` : ''}`;
   } else {
@@ -755,10 +746,6 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
       </button>
       <div class="accordion-body" id="acc-${rid}">
         <div class="acc-field">
-          <div class="acc-label">🎯 ターゲット視聴者</div>
-          <textarea class="acc-ta" rows="2" placeholder="例：30代男性・副業に興味あり・YouTube初心者" id="acc-audience-${rid}">${esc(det.audience||'')}</textarea>
-        </div>
-        <div class="acc-field">
           <div class="acc-label">💡 企画根拠</div>
           <textarea class="acc-ta" rows="2" placeholder="例：検索ボリュームが多く競合が少ない。脳×努力系のトレンドに乗れる。" id="acc-rationale-${rid}">${esc(det.rationale||'')}</textarea>
         </div>
@@ -770,16 +757,6 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
               onkeydown="onTagKeydown(event,'${docId}',${rid})">
           </div>
         </div>
-        <div class="acc-field">
-          <div class="acc-label">📊 平均再生数（メインワード）</div>
-          <div class="avg-views-row">
-            <input class="avg-views-in" type="number" id="acc-avgviews-${rid}"
-              placeholder="例：50000" value="${esc(det.avgViews||'')}"
-              oninput="scheduleSave('${docId}',${rid})">
-            <span class="avg-views-unit">回 / 動画</span>
-            ${det.avgViews ? `<span class="avg-views-calc" id="avg-disp-${rid}">${fmt(parseInt(det.avgViews)||0)}</span>` : `<span class="avg-views-calc" id="avg-disp-${rid}" style="display:none"></span>`}
-          </div>
-        </div>
       </div>
 
       <div class="plan-actions">
@@ -788,15 +765,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
 
     tdPlan.querySelector('#plan-a-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
     tdPlan.querySelector('#plan-b-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
-    tdPlan.querySelector('#acc-audience-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
     tdPlan.querySelector('#acc-rationale-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
-    tdPlan.querySelector('#acc-avgviews-'+rid).addEventListener('input', () => {
-      const v = parseInt(document.getElementById('acc-avgviews-'+rid).value)||0;
-      const disp = document.getElementById('avg-disp-'+rid);
-      if (v > 0) { disp.textContent = fmt(v); disp.style.display = ''; }
-      else { disp.style.display = 'none'; }
-      scheduleSave(docId, rid);
-    });
   }
   tr.appendChild(tdPlan);
 
@@ -898,10 +867,8 @@ async function saveRow(docId, rid) {
     refs.push(card?.dataset?.refdata ? JSON.parse(card.dataset.refdata) : { url: document.getElementById(cid+'-url')?.value||'' });
   }
   const detail = {
-    audience:  tr.querySelector('#acc-audience-'+rid)?.value  || '',
     rationale: tr.querySelector('#acc-rationale-'+rid)?.value || '',
     keywords:  getTagsForRow(rid),
-    avgViews:  tr.querySelector('#acc-avgviews-'+rid)?.value  || ''
   };
   try { await db.collection('samune_plans').doc(docId).update({ planText, titleText, refs, detail }); } catch(e) {}
 }
