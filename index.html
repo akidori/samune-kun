@@ -242,6 +242,16 @@ table.sheet tbody tr:hover .drag-handle { opacity: 1; }
 table.sheet tbody tr.drag-over { border-top: 2px solid var(--green); }
 table.sheet tbody tr.dragging { opacity: 0.4; }
 
+.add-title-btn {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: none; border: 1px dashed var(--border2);
+  border-radius: 4px; padding: 4px 8px; margin-top: 6px;
+  font-size: 10px; font-weight: 600; color: var(--muted);
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s;
+}
+.add-title-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+
 /* TOAST */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--hdr2); color: #fff; font-size: 12px; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 600; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
@@ -712,21 +722,24 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
     tdPlan.innerHTML = `
       <div class="plan-label">タイトル案 ①</div>
       <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(planText)||'—'}</div>
-      <hr class="plan-divider">
-      <div class="plan-label">タイトル案 ②</div>
-      <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(titleText)||'—'}</div>
+      ${titleText ? `<hr class="plan-divider"><div class="plan-label">タイトル案 ②</div><div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(titleText)}</div>` : ''}
       ${det.rationale ? `<hr class="plan-divider"><div class="acc-label">💡 企画根拠</div><div class="acc-value">${esc(det.rationale)}</div>` : ''}
       ${(det.keywords||[]).length > 0 ? `<div class="acc-label" style="margin-top:8px">🔑 メインワード</div><div style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 0">${kwHtml}</div>` : ''}`;
   } else {
     // 編集可能
     const kwChipsHtml = (det.keywords||[]).map(k => makeChipHtml(k, docId, rid)).join('');
+    const hasTitleB = !!titleText;
     tdPlan.innerHTML = `
       <div class="drag-handle" draggable="false" title="ドラッグして並び替え">⠿</div>
       <div class="plan-label">タイトル案 ①</div>
       <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-a-${rid}">${esc(planText)}</textarea>
-      <hr class="plan-divider">
-      <div class="plan-label">タイトル案 ②</div>
-      <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-b-${rid}">${esc(titleText)}</textarea>
+
+      <div id="plan-b-wrap-${rid}" style="${hasTitleB ? '' : 'display:none'}">
+        <hr class="plan-divider">
+        <div class="plan-label">タイトル案 ②</div>
+        <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-b-${rid}">${esc(titleText)}</textarea>
+      </div>
+      ${!hasTitleB ? `<button class="add-title-btn" id="add-title-btn-${rid}" onclick="showTitleB('${rid}','${docId}')">＋ タイトル案②を追加</button>` : ''}
 
       <hr class="plan-divider">
       <div class="acc-field">
@@ -747,7 +760,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
       </div>`;
 
     tdPlan.querySelector('#plan-a-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
-    tdPlan.querySelector('#plan-b-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
+    if (hasTitleB) tdPlan.querySelector('#plan-b-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
     tdPlan.querySelector('#acc-rationale-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
   }
   tr.appendChild(tdPlan);
@@ -781,6 +794,16 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
   document.getElementById('tbody').appendChild(tr);
   if (!readOnly && !planText) tr.querySelector('.plan-ta')?.focus();
   renum();
+}
+
+// ══ タイトル案② 表示 ══
+function showTitleB(rid, docId) {
+  document.getElementById('plan-b-wrap-'+rid).style.display = '';
+  const btn = document.getElementById('add-title-btn-'+rid);
+  if (btn) btn.remove();
+  const ta = document.getElementById('plan-b-'+rid);
+  ta.addEventListener('input', () => scheduleSave(docId, parseInt(rid)));
+  ta.focus();
 }
 
 // ══ アコーディオン ══
