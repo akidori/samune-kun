@@ -1379,7 +1379,7 @@ ${relatedTitles.slice(0,10).map((t,i) => (i+1)+'. '+t).join('\n')}
 }`
     });
 
-    const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const apiRes = await fetch('https://autumn-thunder-498esamune-proxy.aki-surf89315.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
