@@ -244,6 +244,109 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
 /* TOAST */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--hdr2); color: #fff; font-size: 12px; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 600; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ══ アコーディオン（企画詳細） ══ */
+.accordion-toggle {
+  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; cursor: pointer;
+  font-size: 9px; font-weight: 600; color: var(--muted);
+  font-family: 'DM Mono', monospace; letter-spacing: 0.06em;
+  padding: 3px 0; margin-top: 8px;
+  transition: color 0.15s;
+}
+.accordion-toggle:hover { color: var(--green); }
+.accordion-toggle .acc-arrow {
+  font-size: 8px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.accordion-toggle.open .acc-arrow { transform: rotate(90deg); }
+
+.accordion-body {
+  display: none;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border2);
+  animation: accFadeIn 0.15s ease;
+}
+.accordion-body.open { display: block; }
+@keyframes accFadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+.acc-field { margin-bottom: 10px; }
+.acc-label {
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--green); font-family: 'DM Mono', monospace;
+  margin-bottom: 4px; display: flex; align-items: center; gap: 4px;
+}
+.acc-ta {
+  width: 100%; background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 8px; font-size: 11px;
+  color: var(--text2); font-family: 'Noto Sans JP', sans-serif;
+  resize: none; outline: none; line-height: 1.6;
+  transition: border-color 0.15s, background 0.15s;
+}
+.acc-ta:focus { border-color: var(--green); background: #fff; }
+.acc-ta::placeholder { color: var(--muted2); font-size: 10px; }
+
+/* タグ入力 */
+.tag-wrap {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  background: rgba(255,255,255,0.7); border: 1px solid var(--border);
+  border-radius: 4px; padding: 5px 6px; min-height: 32px;
+  cursor: text; transition: border-color 0.15s;
+}
+.tag-wrap:focus-within { border-color: var(--green); background: #fff; }
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: var(--green-bg2); border: 1px solid var(--border2);
+  color: var(--hdr2); font-size: 10px; font-weight: 600;
+  padding: 2px 7px; border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+}
+.tag-chip-del {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 10px; padding: 0;
+  line-height: 1; transition: color 0.12s;
+}
+.tag-chip-del:hover { color: #dc2626; }
+.tag-input {
+  border: none; outline: none; background: transparent;
+  font-size: 11px; font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text); min-width: 80px; flex: 1;
+}
+.tag-input::placeholder { color: var(--muted2); font-size: 10px; }
+
+/* 平均再生数 */
+.avg-views-row {
+  display: flex; align-items: center; gap: 6px;
+}
+.avg-views-in {
+  flex: 1; background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 5px 8px; font-size: 11px;
+  color: var(--text2); font-family: 'DM Mono', monospace;
+  outline: none; transition: border-color 0.15s;
+}
+.avg-views-in:focus { border-color: var(--green); background: #fff; }
+.avg-views-in::placeholder { color: var(--muted2); font-family: 'Noto Sans JP', sans-serif; font-size: 10px; }
+.avg-views-unit {
+  font-size: 10px; color: var(--muted);
+  font-family: 'DM Mono', monospace; white-space: nowrap;
+}
+.avg-views-calc {
+  font-size: 10px; font-weight: 600; color: var(--green);
+  font-family: 'DM Mono', monospace; white-space: nowrap;
+  background: var(--green-bg); border: 1px solid var(--border2);
+  padding: 2px 7px; border-radius: 3px;
+}
+
+/* 読み取り専用アコーディオン */
+.acc-value {
+  font-size: 11px; color: var(--text2); line-height: 1.6;
+  padding: 4px 6px; min-height: 20px;
+}
 </style>
 </head>
 <body>
@@ -394,7 +497,6 @@ auth.onAuthStateChanged(async user => {
   const caseShareId = params.get('case');
 
   if (caseShareId) {
-    // 共有URLモード：ログイン不要
     isShare = true;
     document.getElementById('mainHdr').style.display = 'none';
     document.getElementById('readonlyBar').classList.add('visible');
@@ -407,11 +509,9 @@ auth.onAuthStateChanged(async user => {
     return;
   }
 
-  // ログイン済み
   currentUser = user;
   document.getElementById('loginScreen').classList.remove('visible');
 
-  // ヘッダーにユーザー表示
   const userArea = document.getElementById('userArea');
   userArea.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px">
@@ -426,7 +526,6 @@ auth.onAuthStateChanged(async user => {
 // ══ 案件管理 ══
 async function loadCases() {
   try {
-    // オーナーまたは招待されている案件を取得
     const snap = await db.collection('samune_cases').get();
     const myCases = snap.docs.filter(doc => {
       const d = doc.data();
@@ -491,7 +590,7 @@ async function loadCaseRows(caseId) {
     } else {
       for (const doc of docs) {
         const d = doc.data();
-        createRow(doc.id, d.planText||'', d.titleText||'', d.refs||[], false);
+        createRow(doc.id, d.planText||'', d.titleText||'', d.refs||[], false, d.detail||{});
       }
     }
   } catch(e) {
@@ -575,14 +674,16 @@ async function addRow() {
   const ref = await db.collection('samune_plans').add({
     planText: '', titleText: '', refs:[{},{},{},{},{}],
     caseId: activeCaseId, order: snap.size,
+    detail: { audience: '', rationale: '', keywords: [], avgViews: '' },
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  createRow(ref.id, '', '', [{},{},{},{},{}], false);
+  createRow(ref.id, '', '', [{},{},{},{},{}], false, {});
 }
 
-function createRow(docId, planText, titleText, refs, readOnly) {
+function createRow(docId, planText, titleText, refs, readOnly, detail) {
   rowCount++;
   const rid = rowCount;
+  const det = detail || {};
   const tr = document.createElement('tr');
   tr.id = 'row-'+rid; tr.dataset.docId = docId;
   if (!readOnly) {
@@ -600,14 +701,46 @@ function createRow(docId, planText, titleText, refs, readOnly) {
 
   const tdPlan = document.createElement('td');
   tdPlan.className = 'plan-td';
+
   if (readOnly) {
+    // 読み取り専用
+    const kwHtml = (det.keywords||[]).length > 0
+      ? (det.keywords||[]).map(k=>`<span class="tag-chip" style="pointer-events:none">${esc(k)}</span>`).join('')
+      : '<span style="color:var(--muted2);font-size:10px">—</span>';
+    const avgViewsDisplay = det.avgViews ? `<span class="avg-views-calc">${fmt(parseInt(det.avgViews)||0)} 回</span>` : '<span style="color:var(--muted2);font-size:10px">—</span>';
+    const hasDetail = det.audience || det.rationale || (det.keywords||[]).length > 0 || det.avgViews;
+
     tdPlan.innerHTML = `
       <div class="plan-label">タイトル案 ①</div>
       <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(planText)||'—'}</div>
       <hr class="plan-divider">
       <div class="plan-label">タイトル案 ②</div>
-      <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(titleText)||'—'}</div>`;
+      <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(titleText)||'—'}</div>
+      ${hasDetail ? `
+      <button class="accordion-toggle" onclick="toggleAcc(this)">
+        <span class="acc-arrow">▶</span> 企画詳細
+      </button>
+      <div class="accordion-body">
+        <div class="acc-field">
+          <div class="acc-label">🎯 ターゲット視聴者</div>
+          <div class="acc-value">${esc(det.audience)||'—'}</div>
+        </div>
+        <div class="acc-field">
+          <div class="acc-label">💡 企画根拠</div>
+          <div class="acc-value">${esc(det.rationale)||'—'}</div>
+        </div>
+        <div class="acc-field">
+          <div class="acc-label">🔑 メインワード</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 0">${kwHtml}</div>
+        </div>
+        <div class="acc-field">
+          <div class="acc-label">📊 平均再生数</div>
+          <div>${avgViewsDisplay}</div>
+        </div>
+      </div>` : ''}`;
   } else {
+    // 編集可能
+    const kwChipsHtml = (det.keywords||[]).map(k => makeChipHtml(k, docId, rid)).join('');
     tdPlan.innerHTML = `
       <div class="drag-handle" draggable="false" title="ドラッグして並び替え">⠿</div>
       <div class="plan-label">タイトル案 ①</div>
@@ -615,11 +748,54 @@ function createRow(docId, planText, titleText, refs, readOnly) {
       <hr class="plan-divider">
       <div class="plan-label">タイトル案 ②</div>
       <textarea class="plan-ta" rows="2" placeholder="タイトル案を入力" id="plan-b-${rid}">${esc(titleText)}</textarea>
+
+      <button class="accordion-toggle" onclick="toggleAcc(this)">
+        <span class="acc-arrow">▶</span> 企画詳細
+      </button>
+      <div class="accordion-body" id="acc-${rid}">
+        <div class="acc-field">
+          <div class="acc-label">🎯 ターゲット視聴者</div>
+          <textarea class="acc-ta" rows="2" placeholder="例：30代男性・副業に興味あり・YouTube初心者" id="acc-audience-${rid}">${esc(det.audience||'')}</textarea>
+        </div>
+        <div class="acc-field">
+          <div class="acc-label">💡 企画根拠</div>
+          <textarea class="acc-ta" rows="2" placeholder="例：検索ボリュームが多く競合が少ない。脳×努力系のトレンドに乗れる。" id="acc-rationale-${rid}">${esc(det.rationale||'')}</textarea>
+        </div>
+        <div class="acc-field">
+          <div class="acc-label">🔑 メインワード</div>
+          <div class="tag-wrap" id="tag-wrap-${rid}" onclick="document.getElementById('tag-in-${rid}').focus()">
+            <span id="tag-chips-${rid}">${kwChipsHtml}</span>
+            <input class="tag-input" id="tag-in-${rid}" placeholder="ワードを入力してEnter"
+              onkeydown="onTagKeydown(event,'${docId}',${rid})">
+          </div>
+        </div>
+        <div class="acc-field">
+          <div class="acc-label">📊 平均再生数（メインワード）</div>
+          <div class="avg-views-row">
+            <input class="avg-views-in" type="number" id="acc-avgviews-${rid}"
+              placeholder="例：50000" value="${esc(det.avgViews||'')}"
+              oninput="scheduleSave('${docId}',${rid})">
+            <span class="avg-views-unit">回 / 動画</span>
+            ${det.avgViews ? `<span class="avg-views-calc" id="avg-disp-${rid}">${fmt(parseInt(det.avgViews)||0)}</span>` : `<span class="avg-views-calc" id="avg-disp-${rid}" style="display:none"></span>`}
+          </div>
+        </div>
+      </div>
+
       <div class="plan-actions">
         <button class="del-row-btn" onclick="delRow('${docId}',${rid})">✕ 削除</button>
       </div>`;
+
     tdPlan.querySelector('#plan-a-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
     tdPlan.querySelector('#plan-b-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
+    tdPlan.querySelector('#acc-audience-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
+    tdPlan.querySelector('#acc-rationale-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
+    tdPlan.querySelector('#acc-avgviews-'+rid).addEventListener('input', () => {
+      const v = parseInt(document.getElementById('acc-avgviews-'+rid).value)||0;
+      const disp = document.getElementById('avg-disp-'+rid);
+      if (v > 0) { disp.textContent = fmt(v); disp.style.display = ''; }
+      else { disp.style.display = 'none'; }
+      scheduleSave(docId, rid);
+    });
   }
   tr.appendChild(tdPlan);
 
@@ -654,6 +830,53 @@ function createRow(docId, planText, titleText, refs, readOnly) {
   renum();
 }
 
+// ══ アコーディオン ══
+function toggleAcc(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ══ タグ（メインワード） ══
+function makeChipHtml(word, docId, rid) {
+  return `<span class="tag-chip">${esc(word)}<button class="tag-chip-del" onclick="removeTag('${esc(word)}','${docId}',${rid})" tabindex="-1">×</button></span>`;
+}
+
+function getTagsForRow(rid) {
+  const chips = document.getElementById('tag-chips-'+rid);
+  if (!chips) return [];
+  return Array.from(chips.querySelectorAll('.tag-chip')).map(c => c.textContent.replace('×','').trim());
+}
+
+function onTagKeydown(e, docId, rid) {
+  const inp = e.target;
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const word = inp.value.trim().replace(/,/g,'');
+    if (!word) return;
+    const chips = document.getElementById('tag-chips-'+rid);
+    const existing = getTagsForRow(rid);
+    if (existing.includes(word)) { inp.value=''; return; }
+    chips.insertAdjacentHTML('beforeend', makeChipHtml(word, docId, rid));
+    inp.value = '';
+    scheduleSave(docId, rid);
+  } else if (e.key === 'Backspace' && inp.value === '') {
+    const chips = document.getElementById('tag-chips-'+rid);
+    const lastChip = chips.querySelector('.tag-chip:last-child');
+    if (lastChip) { lastChip.remove(); scheduleSave(docId, rid); }
+  }
+}
+
+function removeTag(word, docId, rid) {
+  const chips = document.getElementById('tag-chips-'+rid);
+  if (!chips) return;
+  Array.from(chips.querySelectorAll('.tag-chip')).forEach(c => {
+    if (c.textContent.replace('×','').trim() === word) c.remove();
+  });
+  scheduleSave(docId, rid);
+}
+
+// ══ 行保存 ══
 function renum() {
   document.querySelectorAll('#tbody tr').forEach((r,i) => r.querySelector('.rn').textContent = i+1);
 }
@@ -673,7 +896,13 @@ async function saveRow(docId, rid) {
     const card = document.getElementById(cid+'-card');
     refs.push(card?.dataset?.refdata ? JSON.parse(card.dataset.refdata) : { url: document.getElementById(cid+'-url')?.value||'' });
   }
-  try { await db.collection('samune_plans').doc(docId).update({ planText, titleText, refs }); } catch(e) {}
+  const detail = {
+    audience:  tr.querySelector('#acc-audience-'+rid)?.value  || '',
+    rationale: tr.querySelector('#acc-rationale-'+rid)?.value || '',
+    keywords:  getTagsForRow(rid),
+    avgViews:  tr.querySelector('#acc-avgviews-'+rid)?.value  || ''
+  };
+  try { await db.collection('samune_plans').doc(docId).update({ planText, titleText, refs, detail }); } catch(e) {}
 }
 
 async function delRow(docId, rid) {
@@ -770,7 +999,7 @@ async function loadShareCase(caseId) {
     if(docs.length===0){
       document.getElementById('tbody').innerHTML='<tr><td colspan="7" style="padding:32px;text-align:center;color:#9ca3af;font-size:12px">企画が登録されていません</td></tr>';
     } else {
-      for(const doc of docs){const d=doc.data();createRow(doc.id,d.planText||'',d.titleText||'',d.refs||[],true);}
+      for(const doc of docs){const d=doc.data();createRow(doc.id,d.planText||'',d.titleText||'',d.refs||[],true,d.detail||{});}
     }
   } catch(e){showToast('読み込みに失敗しました');}
 }
@@ -809,7 +1038,6 @@ async function onDrop(e, targetRid) {
   const tgtRow = document.getElementById('row-'+targetRid);
   if (!srcRow || !tgtRow) return;
 
-  // DOM上で並び替え
   const rows = Array.from(tbody.querySelectorAll('tr'));
   const srcIdx = rows.indexOf(srcRow);
   const tgtIdx = rows.indexOf(tgtRow);
@@ -820,7 +1048,6 @@ async function onDrop(e, targetRid) {
   }
   renum();
 
-  // Firestoreのorder値を更新
   const newRows = Array.from(tbody.querySelectorAll('tr'));
   const batch = db.batch();
   newRows.forEach((row, i) => {
