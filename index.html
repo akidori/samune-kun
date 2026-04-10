@@ -258,6 +258,33 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
 }
 .del-title-b-btn:hover { background: #fee2e2; color: #dc2626; }
 
+
+/* ══ 設定ボタン ══ */
+.tab-settings-btn { height: 26px; padding: 0 10px; border: 1px solid var(--border2); border-radius: 5px; background: var(--green-bg); font-size: 10px; font-weight: 600; color: var(--green); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 4px; transition: all 0.12s; white-space: nowrap; }
+.tab-settings-btn:hover { background: var(--green-bg2); }
+
+/* ══ 分析ボタン ══ */
+.analyze-btn { display: inline-flex; align-items: center; gap: 4px; background: var(--hdr2); border: none; border-radius: 4px; padding: 4px 10px; margin-top: 8px; font-size: 10px; font-weight: 700; color: #fff; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s; }
+.analyze-btn:hover { background: var(--green); }
+
+/* ══ カラープリセット ══ */
+.color-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.color-preset { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.15s; }
+.color-preset.active { border-color: var(--text); transform: scale(1.15); }
+.color-preset:hover { transform: scale(1.1); }
+
+/* ══ 分析ローディング ══ */
+.analysis-loading { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+.analysis-spinner { width: 36px; height: 36px; border: 3px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══ 分析結果 ══ */
+.analysis-section { margin-bottom: 20px; }
+.analysis-section-title { font-size: 12px; font-weight: 700; color: var(--hdr2); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--border2); display: flex; align-items: center; gap: 6px; }
+.analysis-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.analysis-tag { background: var(--green-bg); border: 1px solid var(--border2); color: var(--hdr2); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+.analysis-tag.highlight { background: var(--green-bg2); border-color: var(--green); color: var(--green); }
+
 /* TOAST */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--hdr2); color: #fff; font-size: 12px; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 600; transition: transform 0.3s; pointer-events: none; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
@@ -418,6 +445,7 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
   <button class="case-tab-add" onclick="addCase()">＋ 案件を追加</button>
   <div class="case-tabbar-right">
     <button class="tab-invite-btn" onclick="openInviteModal()" id="inviteBtn">👥 メンバーを招待</button>
+    <button class="tab-settings-btn" onclick="openSettingsModal()">⚙️ 設定</button>
     <button class="tab-share-btn" onclick="openShareModal()">🔗 クライアントに共有</button>
     <button class="tab-add-row-btn" onclick="addRow()">＋ 企画を追加</button>
   </div>
@@ -469,6 +497,41 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
       <button class="invite-add-btn" onclick="addInvite()">追加</button>
     </div>
     <button class="modal-close" onclick="closeModal('inviteBg')">閉じる</button>
+  </div>
+</div>
+
+
+<!-- 設定モーダル -->
+<div class="modal-bg" id="settingsBg" onclick="if(event.target===this)closeModal('settingsBg')">
+  <div class="modal" style="width:480px">
+    <div class="modal-title">⚙️ 設定</div>
+    <div class="modal-sub">API・UIの設定</div>
+    <div class="modal-section">Claude API キー</div>
+    <div style="display:flex;gap:6px;margin-bottom:6px">
+      <input type="password" class="invite-input" id="claudeApiKeyInput" placeholder="sk-ant-..." style="font-family:'DM Mono',monospace;font-size:11px">
+      <button class="invite-add-btn" onclick="saveClaudeApiKey()">保存</button>
+    </div>
+    <div style="font-size:10px;color:var(--muted2);margin-bottom:16px">※ ブラウザのlocalStorageに保存されます。分析機能で使用します。</div>
+    <div class="modal-section">UIカラー（案件テーマ）</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">現在の案件のテーマカラーを変更できます</div>
+    <div class="color-presets" id="colorPresets"></div>
+    <button class="modal-close" onclick="closeModal('settingsBg')">閉じる</button>
+  </div>
+</div>
+
+<!-- 分析ポップアップ -->
+<div class="modal-bg" id="analysisBg" onclick="if(event.target===this)closeModal('analysisBg')">
+  <div class="modal" style="width:560px;max-height:80vh;overflow-y:auto">
+    <div class="modal-title">🔍 サムネ分析</div>
+    <div class="modal-sub" id="analysisSubTitle"></div>
+    <div id="analysisContent">
+      <div class="analysis-loading" id="analysisLoading">
+        <div class="analysis-spinner"></div>
+        <div id="analysisLoadingMsg" style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center">分析中...</div>
+      </div>
+      <div id="analysisResult" style="display:none"></div>
+    </div>
+    <button class="modal-close" onclick="closeModal('analysisBg')" style="margin-top:16px">閉じる</button>
   </div>
 </div>
 
@@ -590,11 +653,7 @@ function addCaseTab(id, name) {
   tabbar.insertBefore(btn, addBtn);
 }
 
-async function switchCase(id) {
-  activeCaseId = id;
-  document.querySelectorAll('.case-tab').forEach(t => t.classList.toggle('active', t.dataset.caseId === id));
-  await loadCaseRows(id);
-}
+
 
 async function loadCaseRows(caseId) {
   document.getElementById('tbody').innerHTML = '';
@@ -765,6 +824,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
       </div>
 
       <div class="plan-actions">
+        <button class="analyze-btn" onclick="openAnalysis('${docId}',${rid})">🔍 分析</button>
         <button class="del-row-btn" onclick="delRow('${docId}',${rid})">✕ 削除</button>
       </div>`;
 
@@ -1053,6 +1113,215 @@ async function onDrop(e, targetRid) {
     if (docId) batch.update(db.collection('samune_plans').doc(docId), { order: i });
   });
   try { await batch.commit(); } catch(e) { console.error(e); }
+}
+
+
+// ══ 設定 ══
+const COLOR_THEMES = [
+  { name: 'グリーン（デフォルト）', hdr: '#0f4c2a', hdr2: '#0a3d22', green: '#16a34a', greenL: '#22c55e', greenXL: '#4ade80', greenBg: '#f0fdf4', greenBg2: '#dcfce7', border: '#e2f0e6', border2: '#bbf7d0' },
+  { name: 'ブルー', hdr: '#1e3a5f', hdr2: '#162d4a', green: '#2563eb', greenL: '#3b82f6', greenXL: '#60a5fa', greenBg: '#eff6ff', greenBg2: '#dbeafe', border: '#dbeafe', border2: '#93c5fd' },
+  { name: 'パープル', hdr: '#3b1f6e', hdr2: '#2d1854', green: '#7c3aed', greenL: '#8b5cf6', greenXL: '#a78bfa', greenBg: '#f5f3ff', greenBg2: '#ede9fe', border: '#ede9fe', border2: '#c4b5fd' },
+  { name: 'オレンジ', hdr: '#7c2d12', hdr2: '#5c1e08', green: '#ea580c', greenL: '#f97316', greenXL: '#fb923c', greenBg: '#fff7ed', greenBg2: '#ffedd5', border: '#fed7aa', border2: '#fdba74' },
+  { name: 'ローズ', hdr: '#881337', hdr2: '#6b0e2b', green: '#e11d48', greenL: '#f43f5e', greenXL: '#fb7185', greenBg: '#fff1f2', greenBg2: '#ffe4e6', border: '#fecdd3', border2: '#fda4af' },
+  { name: 'ティール', hdr: '#134e4a', hdr2: '#0f3d3a', green: '#0d9488', greenL: '#14b8a6', greenXL: '#2dd4bf', greenBg: '#f0fdfa', greenBg2: '#ccfbf1', border: '#99f6e4', border2: '#5eead4' },
+];
+
+function openSettingsModal() {
+  // APIキー表示
+  const saved = localStorage.getItem('claude_api_key') || '';
+  const inp = document.getElementById('claudeApiKeyInput');
+  if (saved) inp.placeholder = '保存済み（変更する場合は入力）';
+  
+  // カラープリセット描画
+  const caseTheme = activeCaseId ? (JSON.parse(localStorage.getItem('case_theme_' + activeCaseId) || 'null') || 0) : 0;
+  const presets = document.getElementById('colorPresets');
+  presets.innerHTML = COLOR_THEMES.map((t, i) => `
+    <div class="color-preset ${i === caseTheme ? 'active' : ''}" 
+      style="background:${t.green}" title="${t.name}"
+      onclick="setTheme(${i})"></div>`).join('');
+  
+  document.getElementById('settingsBg').classList.add('open');
+}
+
+function saveClaudeApiKey() {
+  const val = document.getElementById('claudeApiKeyInput').value.trim();
+  if (!val) { showToast('APIキーを入力してください'); return; }
+  localStorage.setItem('claude_api_key', val);
+  document.getElementById('claudeApiKeyInput').value = '';
+  document.getElementById('claudeApiKeyInput').placeholder = '保存済み（変更する場合は入力）';
+  showToast('APIキーを保存しました');
+}
+
+function setTheme(idx) {
+  if (!activeCaseId) return;
+  localStorage.setItem('case_theme_' + activeCaseId, idx);
+  applyTheme(idx);
+  // プリセットのactive更新
+  document.querySelectorAll('.color-preset').forEach((el, i) => el.classList.toggle('active', i === idx));
+  showToast(COLOR_THEMES[idx].name + ' テーマに変更しました');
+}
+
+function applyTheme(idx) {
+  const t = COLOR_THEMES[idx] || COLOR_THEMES[0];
+  const r = document.documentElement.style;
+  r.setProperty('--hdr', t.hdr);
+  r.setProperty('--hdr2', t.hdr2);
+  r.setProperty('--green', t.green);
+  r.setProperty('--green-l', t.greenL);
+  r.setProperty('--green-xl', t.greenXL);
+  r.setProperty('--green-bg', t.greenBg);
+  r.setProperty('--green-bg2', t.greenBg2);
+  r.setProperty('--border', t.border);
+  r.setProperty('--border2', t.border2);
+}
+
+// 案件切り替え時にテーマを適用
+async function switchCase(id) {
+  activeCaseId = id;
+  document.querySelectorAll('.case-tab').forEach(t => t.classList.toggle('active', t.dataset.caseId === id));
+  // テーマ適用
+  const themeIdx = parseInt(localStorage.getItem('case_theme_' + id) || '0');
+  applyTheme(themeIdx);
+  await loadCaseRows(id);
+}
+
+// ══ 分析 ══
+async function openAnalysis(docId, rid) {
+  const apiKey = localStorage.getItem('claude_api_key');
+  if (!apiKey) {
+    showToast('設定からClaude APIキーを登録してください');
+    openSettingsModal();
+    return;
+  }
+
+  const tr = document.getElementById('row-' + rid);
+  if (!tr) return;
+
+  // 行のデータ収集
+  const refs = [];
+  for (let i = 0; i < 5; i++) {
+    const cid = 'c' + rid + 'r' + i;
+    const card = document.getElementById(cid + '-card');
+    if (card && card.dataset.refdata) {
+      refs.push(JSON.parse(card.dataset.refdata));
+    }
+  }
+
+  if (refs.length === 0) {
+    showToast('分析する参考サムネがありません');
+    return;
+  }
+
+  document.getElementById('analysisSubTitle').textContent = refs.length + '本の参考サムネを分析中…';
+  document.getElementById('analysisLoading').style.display = 'flex';
+  document.getElementById('analysisResult').style.display = 'none';
+  document.getElementById('analysisBg').classList.add('open');
+
+  try {
+    // ステップ1: タイトル分析 + 関連動画取得
+    document.getElementById('analysisLoadingMsg').textContent = 'タイトルと関連動画を分析中…';
+    const titles = refs.map(r => r.title || '').filter(Boolean);
+    const vids = refs.map(r => r.vid).filter(Boolean);
+
+    // 関連動画取得
+    const relatedTitles = [];
+    for (const vid of vids.slice(0, 3)) {
+      try {
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${vid}&type=video&maxResults=5&key=${YT_KEY}`);
+        const data = await res.json();
+        (data.items || []).forEach(item => {
+          if (item.snippet?.title) relatedTitles.push(item.snippet.title);
+        });
+      } catch(e) {}
+    }
+
+    // ステップ2: サムネ画像取得（base64）
+    document.getElementById('analysisLoadingMsg').textContent = 'サムネ画像を読み込み中…';
+    const thumbImages = [];
+    for (const ref of refs) {
+      if (!ref.vid) continue;
+      try {
+        const imgUrl = 'https://img.youtube.com/vi/' + ref.vid + '/mqdefault.jpg';
+        const res = await fetch(imgUrl);
+        const blob = await res.blob();
+        const b64 = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.readAsDataURL(blob);
+        });
+        thumbImages.push({ b64, title: ref.title });
+      } catch(e) {}
+    }
+
+    // ステップ3: Claude API呼び出し
+    document.getElementById('analysisLoadingMsg').textContent = 'AIが分析中…';
+
+    const msgContent = [];
+
+    // サムネ画像を追加
+    for (const img of thumbImages) {
+      msgContent.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: img.b64 } });
+      msgContent.push({ type: 'text', text: '↑ 動画タイトル：' + img.title });
+    }
+
+    msgContent.push({
+      type: 'text',
+      text: `上記${thumbImages.length}枚のYouTubeサムネイル画像と、以下の情報を分析してください。
+
+【動画タイトル一覧】
+${titles.map((t,i) => (i+1)+'. '+t).join('\n')}
+
+【関連動画タイトル（YouTube APIより）】
+${relatedTitles.slice(0,10).map((t,i) => (i+1)+'. '+t).join('\n')}
+
+以下の3点をJSON形式のみで返してください（他のテキスト不要）：
+{
+  "thumbKeywords": ["サムネに共通するキーワード/テキスト（5〜8個）"],
+  "titleKeywords": ["タイトルに共通するキーワード（5〜8個）"],
+  "relatedKeywords": ["関連動画から見える視聴者が検索するキーワード（5〜8個）"]
+}`
+    });
+
+    const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: msgContent }]
+      })
+    });
+
+    const apiData = await apiRes.json();
+    const rawText = (apiData.content || []).map(c => c.text || '').join('');
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('JSONが返りませんでした');
+    const result = JSON.parse(jsonMatch[0]);
+
+    // 結果表示
+    document.getElementById('analysisLoading').style.display = 'none';
+    const resultEl = document.getElementById('analysisResult');
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = `
+      <div class="analysis-section">
+        <div class="analysis-section-title">🖼️ サムネに共通するキーワード</div>
+        <div class="analysis-tags">${(result.thumbKeywords||[]).map((k,i) => `<span class="analysis-tag ${i<3?'highlight':''}">${esc(k)}</span>`).join('')}</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-section-title">📝 タイトルに共通するキーワード</div>
+        <div class="analysis-tags">${(result.titleKeywords||[]).map((k,i) => `<span class="analysis-tag ${i<3?'highlight':''}">${esc(k)}</span>`).join('')}</div>
+      </div>
+      <div class="analysis-section">
+        <div class="analysis-section-title">🔎 関連動画から見える検索キーワード</div>
+        <div class="analysis-tags">${(result.relatedKeywords||[]).map((k,i) => `<span class="analysis-tag ${i<3?'highlight':''}">${esc(k)}</span>`).join('')}</div>
+      </div>`;
+
+  } catch(e) {
+    document.getElementById('analysisLoading').style.display = 'none';
+    const resultEl = document.getElementById('analysisResult');
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = `<div class="err-box show">分析に失敗しました: ${esc(e.message)}</div>`;
+  }
 }
 
 // ══ UTILS ══
