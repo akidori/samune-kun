@@ -259,6 +259,81 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
 .del-title-b-btn:hover { background: #fee2e2; color: #dc2626; }
 
 
+
+/* ══ ツールバー ══ */
+.toolbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 7px 16px; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  position: sticky; top: 92px; z-index: 150;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.toolbar-left { display: flex; align-items: center; gap: 10px; }
+.toolbar-right { display: flex; align-items: center; gap: 8px; }
+
+.toolbar-search-wrap {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--green-bg); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 10px; transition: border-color 0.15s;
+}
+.toolbar-search-wrap:focus-within { border-color: var(--green); background: #fff; }
+.toolbar-search-icon { font-size: 11px; }
+.toolbar-search {
+  border: none; outline: none; background: transparent;
+  font-size: 12px; font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text); width: 180px;
+}
+.toolbar-search::placeholder { color: var(--muted2); }
+.toolbar-search-clear {
+  background: none; border: none; cursor: pointer;
+  font-size: 11px; color: var(--muted2); padding: 0;
+  transition: color 0.12s; line-height: 1;
+}
+.toolbar-search-clear:hover { color: var(--text); }
+
+.toolbar-jump-wrap {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--green-bg); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 10px;
+}
+.toolbar-jump {
+  border: none; outline: none; background: transparent;
+  font-size: 12px; font-family: 'DM Mono', monospace;
+  color: var(--text); width: 56px;
+}
+.toolbar-jump::-webkit-inner-spin-button,
+.toolbar-jump::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.toolbar-count {
+  font-size: 10px; color: var(--muted);
+  font-family: 'DM Mono', monospace; white-space: nowrap;
+}
+.toolbar-sort-btn {
+  height: 26px; padding: 0 10px;
+  border: 1px solid var(--border); border-radius: 20px;
+  background: transparent; font-size: 10px; font-weight: 600;
+  color: var(--muted); cursor: pointer;
+  font-family: 'DM Mono', monospace; transition: all 0.15s;
+  white-space: nowrap;
+}
+.toolbar-sort-btn.active {
+  background: var(--green); border-color: var(--green);
+  color: #fff;
+}
+.toolbar-sort-btn:not(.active):hover {
+  border-color: var(--green); color: var(--green);
+}
+
+/* 検索ハイライト */
+.search-highlight { background: #fef08a; border-radius: 2px; padding: 0 1px; }
+tr.search-match td { background: #fffbeb !important; }
+tr.search-no-match { display: none; }
+tr.jump-target td { animation: jumpFlash 1s ease; }
+@keyframes jumpFlash {
+  0%,100% { background-color: inherit; }
+  30% { background-color: #bbf7d0 !important; }
+}
+
 /* ══ 設定ボタン ══ */
 .tab-settings-btn { height: 26px; padding: 0 10px; border: 1px solid var(--border2); border-radius: 5px; background: var(--green-bg); font-size: 10px; font-weight: 600; color: var(--green); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 4px; transition: all 0.12s; white-space: nowrap; }
 .tab-settings-btn:hover { background: var(--green-bg2); }
@@ -448,6 +523,26 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
     <button class="tab-settings-btn" onclick="openSettingsModal()">⚙️ 設定</button>
     <button class="tab-share-btn" onclick="openShareModal()">🔗 クライアントに共有</button>
     <button class="tab-add-row-btn" onclick="addRow()">＋ 企画を追加</button>
+  </div>
+</div>
+
+<!-- 検索・ジャンプ・並び替えバー -->
+<div class="toolbar" id="toolbar" style="display:none">
+  <div class="toolbar-left">
+    <div class="toolbar-search-wrap">
+      <span class="toolbar-search-icon">🔍</span>
+      <input class="toolbar-search" id="toolbarSearch" type="text" placeholder="キーワード検索…" oninput="onSearch(this.value)">
+      <button class="toolbar-search-clear" id="searchClear" onclick="clearSearch()" style="display:none">✕</button>
+    </div>
+    <div class="toolbar-jump-wrap">
+      <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">#</span>
+      <input class="toolbar-jump" id="toolbarJump" type="number" min="1" placeholder="行番号" oninput="onJump(this.value)">
+    </div>
+  </div>
+  <div class="toolbar-right">
+    <span class="toolbar-count" id="toolbarCount"></span>
+    <button class="toolbar-sort-btn active" id="sortAsc" onclick="setSort('asc')" title="古い順（#昇順）">↑ 古い順</button>
+    <button class="toolbar-sort-btn" id="sortDesc" onclick="setSort('desc')" title="新しい順（#降順）">↓ 新しい順</button>
   </div>
 </div>
 
@@ -669,9 +764,11 @@ async function loadCaseRows(caseId) {
         createRow(doc.id, d.planText||'', d.titleText||'', d.refs||[], false, d.detail||{});
       }
     }
+    showToolbar();
   } catch(e) {
     console.error(e);
     await addRow(); await addRow(); await addRow();
+    showToolbar();
   }
 }
 
@@ -1323,6 +1420,112 @@ ${relatedTitles.slice(0,10).map((t,i) => (i+1)+'. '+t).join('\n')}
     resultEl.innerHTML = `<div class="err-box show">分析に失敗しました: ${esc(e.message)}</div>`;
   }
 }
+
+
+// ══ ツールバー（検索・ジャンプ・並び替え） ══
+let currentSort = 'asc';
+let searchTimer = null;
+
+function showToolbar() {
+  const tb = document.getElementById('toolbar');
+  if (tb) tb.style.display = 'flex';
+  updateRowCount();
+}
+
+function updateRowCount() {
+  const rows = document.querySelectorAll('#tbody tr');
+  const visible = Array.from(rows).filter(r => !r.classList.contains('search-no-match'));
+  const el = document.getElementById('toolbarCount');
+  if (el) el.textContent = visible.length + ' / ' + rows.length + ' 件';
+}
+
+function onSearch(val) {
+  const clear = document.getElementById('searchClear');
+  if (clear) clear.style.display = val ? 'block' : 'none';
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => applySearch(val.trim()), 200);
+}
+
+function clearSearch() {
+  const inp = document.getElementById('toolbarSearch');
+  if (inp) inp.value = '';
+  document.getElementById('searchClear').style.display = 'none';
+  applySearch('');
+}
+
+function applySearch(query) {
+  const rows = document.querySelectorAll('#tbody tr');
+  if (!query) {
+    rows.forEach(r => {
+      r.classList.remove('search-no-match', 'search-match');
+      // ハイライト解除
+      r.querySelectorAll('.search-highlight').forEach(el => {
+        el.replaceWith(document.createTextNode(el.textContent));
+      });
+    });
+    updateRowCount();
+    return;
+  }
+
+  const q = query.toLowerCase();
+  rows.forEach(r => {
+    // 検索対象テキスト収集
+    const rid = r.id.replace('row-', '');
+    const texts = [
+      document.getElementById('plan-a-' + rid)?.value || '',
+      document.getElementById('plan-b-' + rid)?.value || '',
+      document.getElementById('acc-rationale-' + rid)?.value || '',
+      ...(Array.from(document.querySelectorAll('#tag-chips-' + rid + ' .tag-chip') || []).map(c => c.textContent.replace('×','').trim()))
+    ].join(' ').toLowerCase();
+
+    if (texts.includes(q)) {
+      r.classList.add('search-match');
+      r.classList.remove('search-no-match');
+    } else {
+      r.classList.remove('search-match');
+      r.classList.add('search-no-match');
+    }
+  });
+  updateRowCount();
+}
+
+function onJump(val) {
+  const n = parseInt(val);
+  if (!n || n < 1) return;
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    const rows = Array.from(document.querySelectorAll('#tbody tr')).filter(r => !r.classList.contains('search-no-match'));
+    const target = rows[n - 1];
+    if (!target) { showToast('#' + n + ' は見つかりません'); return; }
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.add('jump-target');
+    setTimeout(() => target.classList.remove('jump-target'), 1000);
+  }, 400);
+}
+
+function setSort(dir) {
+  currentSort = dir;
+  document.getElementById('sortAsc').classList.toggle('active', dir === 'asc');
+  document.getElementById('sortDesc').classList.toggle('active', dir === 'desc');
+
+  const tbody = document.getElementById('tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  if (dir === 'desc') {
+    rows.reverse().forEach(r => tbody.appendChild(r));
+  } else {
+    rows.reverse().forEach(r => tbody.appendChild(r));
+  }
+  // renum は表示番号のみ更新（Firestoreのorderは変えない）
+  renumDisplay();
+}
+
+function renumDisplay() {
+  // 表示上の番号だけ更新（DOM順で1から）
+  document.querySelectorAll('#tbody tr').forEach((r, i) => {
+    r.querySelector('.rn').textContent = i + 1;
+  });
+}
+
 
 // ══ UTILS ══
 function closeModal(id){document.getElementById(id).classList.remove('open');}
