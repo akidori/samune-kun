@@ -260,6 +260,21 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
 
 
 
+
+/* ══ チャンネル動画リスト ══ */
+.channel-video-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--border); margin-bottom: 6px;
+  transition: background 0.12s; background: var(--white);
+}
+.channel-video-item:hover { background: var(--green-bg); }
+.channel-video-check { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--green); cursor: pointer; }
+.channel-video-thumb { width: 80px; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.channel-video-info { flex: 1; min-width: 0; }
+.channel-video-title { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.channel-video-meta { display: flex; gap: 10px; font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
 /* ══ ツールバー ══ */
 .toolbar {
   background: var(--white); border-bottom: 1px solid var(--border);
@@ -520,6 +535,7 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   <button class="case-tab-add" onclick="addCase()">＋ 案件を追加</button>
   <div class="case-tabbar-right">
     <button class="tab-invite-btn" onclick="openInviteModal()" id="inviteBtn">👥 メンバーを招待</button>
+    <button class="tab-settings-btn" onclick="openChannelModal()" style="background:var(--green-bg2)">📺 チャンネル分析</button>
     <button class="tab-settings-btn" onclick="openSettingsModal()">⚙️ 設定</button>
     <button class="tab-share-btn" onclick="openShareModal()">🔗 クライアントに共有</button>
     <button class="tab-add-row-btn" onclick="addRow()">＋ 企画を追加</button>
@@ -595,6 +611,47 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   </div>
 </div>
 
+
+
+<!-- チャンネル分析モーダル -->
+<div class="modal-bg" id="channelBg" onclick="if(event.target===this)closeModal('channelBg')">
+  <div class="modal" style="width:600px;max-height:85vh;display:flex;flex-direction:column">
+    <div class="modal-title">📺 チャンネル分析</div>
+    <div class="modal-sub">チャンネルURLを貼ると最高・最低再生数の動画を抽出します</div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <input type="text" class="invite-input" id="channelUrlInput"
+        placeholder="https://www.youtube.com/@channel または /channel/UC..."
+        style="flex:1;font-size:11px;font-family:'DM Mono',monospace"
+        onkeydown="if(event.key==='Enter')fetchChannelVideos()">
+      <button class="invite-add-btn" onclick="fetchChannelVideos()" id="channelFetchBtn">分析する</button>
+    </div>
+
+    <div id="channelLoading" style="display:none;text-align:center;padding:30px">
+      <div class="analysis-spinner" style="margin:0 auto 10px"></div>
+      <div style="font-size:12px;color:var(--muted)" id="channelLoadingMsg">読み込み中...</div>
+    </div>
+
+    <div id="channelResult" style="display:none;overflow-y:auto;flex:1">
+      <div style="margin-bottom:12px">
+        <div class="analysis-section-title">🏆 最高再生数 TOP5</div>
+        <div id="channelTopList"></div>
+      </div>
+      <div>
+        <div class="analysis-section-title">📉 最低再生数 BOTTOM5</div>
+        <div id="channelBottomList"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px" id="channelActions" style="display:none">
+      <button class="tab-add-row-btn" style="flex:1" onclick="addSelectedToCase()" id="addSelectedBtn">
+        選択した動画を企画に追加
+      </button>
+      <button class="modal-close" style="flex:1;margin-top:0" onclick="closeModal('channelBg')">閉じる</button>
+    </div>
+    <button class="modal-close" id="channelCloseOnly" onclick="closeModal('channelBg')" style="margin-top:12px">閉じる</button>
+  </div>
+</div>
 
 <!-- 設定モーダル -->
 <div class="modal-bg" id="settingsBg" onclick="if(event.target===this)closeModal('settingsBg')">
@@ -1382,7 +1439,11 @@ ${relatedTitles.slice(0,10).map((t,i) => (i+1)+'. '+t).join('\n')}
 
     const apiRes = await fetch('https://autumn-thunder-498esamune-proxy.aki-surf89315.workers.dev', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -1525,6 +1586,161 @@ function renumDisplay() {
   document.querySelectorAll('#tbody tr').forEach((r, i) => {
     r.querySelector('.rn').textContent = i + 1;
   });
+}
+
+
+
+// ══ チャンネル分析 ══
+let channelVideos = [];
+
+function openChannelModal() {
+  document.getElementById('channelUrlInput').value = '';
+  document.getElementById('channelLoading').style.display = 'none';
+  document.getElementById('channelResult').style.display = 'none';
+  document.getElementById('channelActions').style.display = 'none';
+  document.getElementById('channelCloseOnly').style.display = 'block';
+  document.getElementById('channelBg').classList.add('open');
+}
+
+async function fetchChannelVideos() {
+  const url = document.getElementById('channelUrlInput').value.trim();
+  if (!url) { showToast('URLを入力してください'); return; }
+
+  document.getElementById('channelLoading').style.display = 'block';
+  document.getElementById('channelResult').style.display = 'none';
+  document.getElementById('channelActions').style.display = 'none';
+  document.getElementById('channelCloseOnly').style.display = 'none';
+  document.getElementById('channelLoadingMsg').textContent = 'チャンネル情報を取得中...';
+
+  try {
+    // チャンネルID取得
+    let channelId = extractChannelId(url);
+    if (!channelId) {
+      // @handle形式の場合はsearch APIで解決
+      document.getElementById('channelLoadingMsg').textContent = 'チャンネルを検索中...';
+      const handle = url.match(/@([\w.-]+)/)?.[1];
+      if (!handle) throw new Error('チャンネルURLの形式が不正です');
+      const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(handle)}&type=channel&maxResults=1&key=${YT_KEY}`);
+      const searchData = await searchRes.json();
+      channelId = searchData.items?.[0]?.id?.channelId;
+      if (!channelId) throw new Error('チャンネルが見つかりませんでした');
+    }
+
+    // uploads playlistId取得
+    document.getElementById('channelLoadingMsg').textContent = '動画リストを取得中...';
+    const chRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&id=${channelId}&key=${YT_KEY}`);
+    const chData = await chRes.json();
+    const uploadsId = chData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    const chName = chData.items?.[0]?.snippet?.title || '';
+    if (!uploadsId) throw new Error('アップロードリストが取得できませんでした');
+
+    // 動画一覧取得（最大200件）
+    let videos = [];
+    let pageToken = '';
+    let page = 0;
+    while (page < 4) {
+      const plRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${uploadsId}&maxResults=50${pageToken ? '&pageToken='+pageToken : ''}&key=${YT_KEY}`);
+      const plData = await plRes.json();
+      const ids = (plData.items || []).map(i => i.contentDetails.videoId).join(',');
+      if (!ids) break;
+
+      // 再生数取得
+      document.getElementById('channelLoadingMsg').textContent = `再生数を取得中... (${videos.length}件)`;
+      const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids}&key=${YT_KEY}`);
+      const vData = await vRes.json();
+      (vData.items || []).forEach(item => {
+        videos.push({
+          vid: item.id,
+          title: item.snippet.title,
+          views: parseInt(item.statistics.viewCount || 0),
+          uploadDate: item.snippet.publishedAt.slice(0, 10),
+          channel: chName,
+          url: 'https://www.youtube.com/watch?v=' + item.id
+        });
+      });
+
+      pageToken = plData.nextPageToken || '';
+      if (!pageToken) break;
+      page++;
+    }
+
+    if (videos.length === 0) throw new Error('動画が見つかりませんでした');
+
+    // 再生数でソート
+    videos.sort((a, b) => b.views - a.views);
+    const top5 = videos.slice(0, 5);
+    const bottom5 = videos.slice(-5).reverse();
+    channelVideos = [...top5, ...bottom5];
+
+    // 表示
+    document.getElementById('channelLoading').style.display = 'none';
+    document.getElementById('channelResult').style.display = 'block';
+    document.getElementById('channelActions').style.display = 'flex';
+    document.getElementById('channelCloseOnly').style.display = 'none';
+
+    renderChannelList('channelTopList', top5);
+    renderChannelList('channelBottomList', bottom5);
+
+  } catch(e) {
+    document.getElementById('channelLoading').style.display = 'none';
+    document.getElementById('channelCloseOnly').style.display = 'block';
+    showToast('エラー: ' + e.message);
+  }
+}
+
+function extractChannelId(url) {
+  const m = url.match(/\/channel\/(UC[\w-]+)/);
+  return m ? m[1] : null;
+}
+
+function renderChannelList(containerId, videos) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = videos.map((v, i) => `
+    <label class="channel-video-item">
+      <input type="checkbox" class="channel-video-check" value="${i}_${containerId}" checked>
+      <img src="https://img.youtube.com/vi/${v.vid}/mqdefault.jpg" class="channel-video-thumb">
+      <div class="channel-video-info">
+        <div class="channel-video-title">${esc(v.title)}</div>
+        <div class="channel-video-meta">
+          <span>▶ ${fmt(v.views)}</span>
+          <span>📅 ${v.uploadDate}</span>
+        </div>
+      </div>
+    </label>`).join('');
+}
+
+async function addSelectedToCase() {
+  if (!activeCaseId) return;
+  const top5 = channelVideos.slice(0, 5);
+  const bottom5 = channelVideos.slice(5);
+  const allVideos = [...top5, ...bottom5];
+
+  // チェック済みの動画を収集
+  const checked = [];
+  document.querySelectorAll('.channel-video-check:checked').forEach(cb => {
+    const [idx, listId] = cb.value.split('_');
+    const offset = listId === 'channelBottomList' ? 5 : 0;
+    checked.push(allVideos[parseInt(idx) + offset]);
+  });
+
+  if (checked.length === 0) { showToast('動画を選択してください'); return; }
+
+  // 各動画を新しい行として追加
+  for (const v of checked) {
+    const snap = await db.collection('samune_plans').where('caseId','==',activeCaseId).get();
+    const refs = [{url: v.url, vid: v.vid, title: v.title, views: v.views, channel: v.channel, uploadDate: v.uploadDate}, {}, {}, {}, {}];
+    const ref = await db.collection('samune_plans').add({
+      planText: v.title, titleText: '',
+      refs,
+      caseId: activeCaseId, order: snap.size,
+      detail: { rationale: '', keywords: [] },
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    createRow(ref.id, v.title, '', refs, false, {});
+  }
+
+  closeModal('channelBg');
+  showToast(checked.length + '本の動画を追加しました');
 }
 
 
