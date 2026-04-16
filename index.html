@@ -261,6 +261,94 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
 
 
 
+
+/* ══ 表示切り替え ══ */
+.view-toggle {
+  display: flex; border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden;
+}
+.view-toggle-btn {
+  width: 28px; height: 26px; border: none; background: transparent;
+  font-size: 13px; cursor: pointer; color: var(--muted);
+  transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+}
+.view-toggle-btn.active { background: var(--green); color: #fff; }
+.view-toggle-btn:not(.active):hover { background: var(--green-bg); color: var(--green); }
+
+/* ══ リストビュー ══ */
+.list-row {
+  display: flex; align-items: stretch; gap: 0;
+  border: 1px solid var(--border); border-radius: 8px;
+  margin-bottom: 8px; background: var(--white);
+  overflow: hidden; transition: box-shadow 0.15s;
+}
+.list-row:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.list-row-num {
+  width: 36px; flex-shrink: 0; background: var(--green-bg);
+  border-right: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  font-weight: 700; color: var(--green);
+}
+.list-row-plan {
+  width: 220px; flex-shrink: 0; padding: 10px 12px;
+  border-right: 2px solid var(--border2); background: var(--green-bg);
+}
+.list-row-plan-title {
+  font-size: 12px; font-weight: 700; color: var(--hdr2);
+  line-height: 1.5; margin-bottom: 4px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.list-row-plan-b {
+  font-size: 11px; color: var(--muted); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+.list-row-plan-tags {
+  display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px;
+}
+.list-row-plan-tag {
+  font-size: 9px; background: var(--green-bg2); border: 1px solid var(--border2);
+  color: var(--hdr2); padding: 1px 5px; border-radius: 10px;
+  font-family: 'DM Mono', monospace; font-weight: 600;
+}
+.list-row-thumbs {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px; flex: 1; overflow-x: auto;
+}
+.list-row-thumbs::-webkit-scrollbar { height: 3px; }
+.list-row-thumbs::-webkit-scrollbar-thumb { background: var(--border2); }
+.list-thumb-wrap {
+  flex-shrink: 0; position: relative;
+  width: 120px;
+}
+.list-thumb-link {
+  display: block; width: 120px; aspect-ratio: 16/9;
+  border-radius: 5px; overflow: hidden; background: var(--green-bg2);
+  text-decoration: none; position: relative;
+}
+.list-thumb-link img { width: 100%; height: 100%; object-fit: cover; }
+.list-thumb-link:hover .thumb-ov { opacity: 1; }
+.list-thumb-score {
+  position: absolute; top: 3px; left: 3px;
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700;
+  padding: 1px 5px; border-radius: 3px; border: 1px solid transparent;
+}
+.list-thumb-score.S { background: #f0fdf4; color: #15803d; border-color: #86efac; }
+.list-thumb-score.A { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+.list-thumb-score.B { background: #eff6ff; color: #2563eb; border-color: #93c5fd; }
+.list-thumb-score.C { background: #fffbeb; color: #d97706; border-color: #fcd34d; }
+.list-thumb-score.X { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
+.list-thumb-views {
+  font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace;
+  margin-top: 3px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.list-thumb-empty {
+  width: 120px; aspect-ratio: 16/9; border-radius: 5px;
+  background: var(--green-bg); border: 1px dashed var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--muted2);
+}
+
 /* ══ チャンネル動画リスト ══ */
 .channel-video-item {
   display: flex; align-items: center; gap: 10px;
@@ -559,6 +647,10 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
     <span class="toolbar-count" id="toolbarCount"></span>
     <button class="toolbar-sort-btn active" id="sortAsc" onclick="setSort('asc')" title="古い順（#昇順）">↑ 古い順</button>
     <button class="toolbar-sort-btn" id="sortDesc" onclick="setSort('desc')" title="新しい順（#降順）">↓ 新しい順</button>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" id="viewCard" onclick="setView('card')" title="カード表示">⊞</button>
+      <button class="view-toggle-btn" id="viewList" onclick="setView('list')" title="リスト表示">☰</button>
+    </div>
   </div>
 </div>
 
@@ -581,6 +673,9 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
     <tbody id="tbody"></tbody>
   </table>
 </div>
+
+<!-- リストビュー -->
+<div id="listView" style="display:none;padding:8px 12px"></div>
 
 <!-- 共有モーダル -->
 <div class="modal-bg" id="shareBg" onclick="if(event.target===this)closeModal('shareBg')">
@@ -1589,6 +1684,91 @@ function renumDisplay() {
 }
 
 
+
+
+// ══ 表示切り替え ══
+let currentView = 'card';
+
+function setView(mode) {
+  currentView = mode;
+  document.getElementById('viewCard').classList.toggle('active', mode === 'card');
+  document.getElementById('viewList').classList.toggle('active', mode === 'list');
+
+  const sheetWrap = document.querySelector('.sheet-wrap');
+  const listView = document.getElementById('listView');
+
+  if (mode === 'list') {
+    sheetWrap.style.display = 'none';
+    listView.style.display = 'block';
+    renderListView();
+  } else {
+    sheetWrap.style.display = '';
+    listView.style.display = 'none';
+  }
+}
+
+function renderListView() {
+  const listView = document.getElementById('listView');
+  const rows = Array.from(document.querySelectorAll('#tbody tr')).filter(r => !r.classList.contains('search-no-match'));
+
+  listView.innerHTML = rows.map((tr, idx) => {
+    const rid = tr.id.replace('row-', '');
+    const num = tr.querySelector('.rn')?.textContent || (idx + 1);
+    const titleA = document.getElementById('plan-a-' + rid)?.value || '';
+    const titleB = document.getElementById('plan-b-' + rid)?.value || '';
+    const tags = Array.from(document.querySelectorAll('#tag-chips-' + rid + ' .tag-chip') || [])
+      .map(c => c.textContent.replace('×','').trim()).filter(Boolean);
+
+    // サムネデータ収集
+    const thumbs = [];
+    for (let i = 0; i < 5; i++) {
+      const cid = 'c' + rid + 'r' + i;
+      const card = document.getElementById(cid + '-card');
+      if (card && card.dataset.refdata) {
+        const ref = JSON.parse(card.dataset.refdata);
+        const sc = calcScore(ref);
+        thumbs.push({ ref, sc });
+      } else {
+        thumbs.push(null);
+      }
+    }
+
+    const thumbsHtml = thumbs.map(t => {
+      if (!t) return `<div class="list-thumb-empty">未入力</div>`;
+      const { ref, sc } = t;
+      const ytUrl = 'https://www.youtube.com/watch?v=' + ref.vid;
+      return `
+        <div class="list-thumb-wrap">
+          <a class="list-thumb-link" href="${ytUrl}" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/${ref.vid}/mqdefault.jpg" alt="">
+            <div class="thumb-ov"><div class="thumb-play"></div></div>
+            <span class="list-thumb-score ${sc.grade}">${sc.grade}</span>
+          </a>
+          <div class="list-thumb-views">▶ ${fmt(ref.views)}</div>
+        </div>`;
+    }).join('');
+
+    const tagsHtml = tags.map(t => `<span class="list-row-plan-tag">${esc(t)}</span>`).join('');
+
+    return `
+      <div class="list-row ${tr.classList.contains('search-match') ? 'search-match' : ''}">
+        <div class="list-row-num">${num}</div>
+        <div class="list-row-plan">
+          <div class="list-row-plan-title">${esc(titleA) || '<span style="color:var(--muted2)">未入力</span>'}</div>
+          ${titleB ? `<div class="list-row-plan-b">${esc(titleB)}</div>` : ''}
+          ${tagsHtml ? `<div class="list-row-plan-tags">${tagsHtml}</div>` : ''}
+        </div>
+        <div class="list-row-thumbs">${thumbsHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+// loadCaseRows後にリストビューも更新
+const _origShowToolbar = showToolbar;
+function showToolbar() {
+  _origShowToolbar();
+  if (currentView === 'list') renderListView();
+}
 
 // ══ チャンネル分析 ══
 let channelVideos = [];
