@@ -1587,6 +1587,7 @@ function showToolbar() {
   const tb = document.getElementById('toolbar');
   if (tb) tb.style.display = 'flex';
   updateRowCount();
+  if (currentView === 'list') renderListView();
 }
 
 function updateRowCount() {
@@ -1764,11 +1765,7 @@ function renderListView() {
 }
 
 // loadCaseRows後にリストビューも更新
-const _origShowToolbar = showToolbar;
-function showToolbar() {
-  _origShowToolbar();
-  if (currentView === 'list') renderListView();
-}
+
 
 // ══ チャンネル分析 ══
 let channelVideos = [];
