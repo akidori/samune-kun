@@ -631,7 +631,7 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 </div>
 
 <!-- 検索・ジャンプ・並び替えバー -->
-<div class="toolbar" id="toolbar" style="display:none">
+<div class="toolbar" id="toolbar" style="display:none;visibility:hidden">
   <div class="toolbar-left">
     <div class="toolbar-search-wrap">
       <span class="toolbar-search-icon">🔍</span>
@@ -1062,7 +1062,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
       <hr class="plan-divider">
       <div class="acc-field">
         <div class="acc-label">💡 企画根拠</div>
-        <textarea class="acc-ta" rows="2" placeholder="例：検索ボリュームが多く競合が少ない。脳×努力系のトレンドに乗れる。" id="acc-rationale-${rid}">${esc(det.rationale||'')}</textarea>
+        <textarea class="acc-ta" rows="4" placeholder="例：検索ボリュームが多く競合が少ない。脳×努力系のトレンドに乗れる。" id="acc-rationale-${rid}" style="resize:vertical;min-height:60px">${esc(det.rationale||'')}</textarea>
       </div>
       <div class="acc-field">
         <div class="acc-label">🔑 メインワード</div>
@@ -1556,18 +1556,23 @@ ${relatedTitles.slice(0,10).map((t,i) => (i+1)+'. '+t).join('\n')}
     document.getElementById('analysisLoading').style.display = 'none';
     const resultEl = document.getElementById('analysisResult');
     resultEl.style.display = 'block';
+    const makeTagHtml = (keywords) => keywords.map((k,i) =>
+      `<span class="analysis-tag ${i<3?'highlight':''}" style="cursor:pointer" onclick="addAnalysisKeyword('${rid}',this,'${esc(k)}')" title="クリックでメインワードに追加">${esc(k)} ＋</span>`
+    ).join('');
+
     resultEl.innerHTML = `
+      <div style="font-size:10px;color:var(--muted);margin-bottom:10px">💡 タグをクリックするとメインワードに追加されます</div>
       <div class="analysis-section">
         <div class="analysis-section-title">🖼️ サムネに共通するキーワード</div>
-        <div class="analysis-tags">${(result.thumbKeywords||[]).map((k,i) => `<span class="analysis-tag ${i<3?'highlight':''}">${esc(k)}</span>`).join('')}</div>
+        <div class="analysis-tags">${makeTagHtml(result.thumbKeywords||[])}</div>
       </div>
       <div class="analysis-section">
         <div class="analysis-section-title">📝 タイトルに共通するキーワード</div>
-        <div class="analysis-tags">${(result.titleKeywords||[]).map((k,i) => `<span class="analysis-tag ${i<3?'highlight':''}">${esc(k)}</span>`).join('')}</div>
+        <div class="analysis-tags">${makeTagHtml(result.titleKeywords||[])}</div>
       </div>
       <div class="analysis-section">
         <div class="analysis-section-title">🔎 関連動画から見える検索キーワード</div>
-        <div class="analysis-tags">${(result.relatedKeywords||[]).map((k,i) => `<span class="analysis-tag ${i<3?'highlight':''}">${esc(k)}</span>`).join('')}</div>
+        <div class="analysis-tags">${makeTagHtml(result.relatedKeywords||[])}</div>
       </div>`;
 
   } catch(e) {
@@ -1585,7 +1590,11 @@ let searchTimer = null;
 
 function showToolbar() {
   const tb = document.getElementById('toolbar');
-  if (tb) tb.style.display = 'flex';
+  if (tb) {
+    tb.style.display = 'flex';
+    tb.style.visibility = 'visible';
+    tb.style.opacity = '1';
+  }
   updateRowCount();
   if (currentView === 'list') renderListView();
 }
@@ -1920,6 +1929,28 @@ async function addSelectedToCase() {
   showToast(checked.length + '本の動画を追加しました');
 }
 
+
+
+// 分析キーワードをメインワードに追加
+function addAnalysisKeyword(rid, el, word) {
+  const chips = document.getElementById('tag-chips-' + rid);
+  if (!chips) return;
+  const existing = Array.from(chips.querySelectorAll('.tag-chip')).map(c => c.textContent.replace('×','').trim());
+  if (existing.includes(word)) { showToast('すでに追加済みです'); return; }
+  const tr = document.getElementById('row-' + rid);
+  const docId = tr?.dataset?.docId;
+  if (!docId) return;
+  chips.insertAdjacentHTML('beforeend', makeChipHtml(word, docId, rid));
+  // ボタンを追加済みスタイルに
+  el.style.background = 'var(--green)';
+  el.style.color = '#fff';
+  el.style.borderColor = 'var(--green)';
+  el.style.cursor = 'default';
+  el.onclick = null;
+  el.textContent = el.textContent.replace(' ＋', ' ✓');
+  scheduleSave(docId, parseInt(rid));
+  showToast('「' + word + '」をメインワードに追加しました');
+}
 
 // ══ UTILS ══
 function closeModal(id){document.getElementById(id).classList.remove('open');}
