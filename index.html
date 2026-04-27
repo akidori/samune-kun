@@ -846,6 +846,20 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   </div>
 </div>
 
+
+<!-- 企画選択モーダル（カレンダー用） -->
+<div class="modal-bg" id="planPickerBg" onclick="if(event.target===this)closeModal('planPickerBg')">
+  <div class="modal" style="width:480px;max-height:80vh;display:flex;flex-direction:column">
+    <div class="modal-title">📅 企画に投稿日をアサイン</div>
+    <div class="modal-sub"><span id="planPickerDate"></span> に投稿する企画を選択</div>
+    <div id="planPickerList" style="overflow-y:auto;flex:1;margin-bottom:12px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="tab-add-row-btn" style="flex:1" onclick="confirmPlanPicker()">設定する</button>
+      <button class="modal-close" style="flex:1;margin-top:0" onclick="closeModal('planPickerBg')">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <!-- 投稿日設定モーダル -->
 <div class="modal-bg" id="postDateBg" onclick="if(event.target===this)closeModal('postDateBg')">
   <div class="modal date-picker-modal">
@@ -1259,6 +1273,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
 
       <div class="plan-actions">
         <button class="analyze-btn" onclick="openAnalysis('${docId}',${rid})">🔍 分析</button>
+        <button class="analyze-btn" style="background:var(--green-bg2);color:var(--hdr2);border:1px solid var(--border2)" onclick="openPostDateModal('${docId}')">📅 投稿日</button>
         <button class="del-row-btn" onclick="delRow('${docId}',${rid})">✕ 削除</button>
       </div>`;
 
@@ -2254,17 +2269,48 @@ function getEventsForDate(dateStr) {
 }
 
 function onCalCellClick(dateStr) {
-  // 日付クリック→企画選択ポップアップ
+  openPlanPickerModal(dateStr);
+}
+
+// 企画選択モーダル
+let pickerTargetDate = '';
+function openPlanPickerModal(dateStr) {
+  pickerTargetDate = dateStr;
   const rows = Array.from(document.querySelectorAll('#tbody tr'));
   if (rows.length === 0) { showToast('企画がありません'); return; }
 
-  // 簡易: 空の企画に日付をアサイン
-  const sel = rows.find(tr => {
+  const list = rows.map(tr => {
     const docId = tr.dataset.docId;
-    return !localStorage.getItem('postdate_' + docId);
+    const rid = tr.id.replace('row-', '');
+    const title = document.getElementById('plan-a-' + rid)?.value || '（無題）';
+    const currentDate = localStorage.getItem('postdate_' + docId) || '';
+    return { docId, rid, title, currentDate };
   });
-  if (!sel) { showToast('すべての企画に投稿日が設定済みです'); return; }
-  openPostDateModal(sel.dataset.docId, dateStr);
+
+  document.getElementById('planPickerDate').textContent = dateStr;
+  const ul = document.getElementById('planPickerList');
+  ul.innerHTML = list.map(p => `
+    <label class="channel-video-item" style="cursor:pointer;gap:8px">
+      <input type="radio" name="planPick" value="${p.docId}" ${p.currentDate === dateStr ? 'checked' : ''}>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;color:var(--hdr2)">${esc(p.title)}</div>
+        ${p.currentDate ? `<div style="font-size:10px;color:var(--green);font-family:'DM Mono',monospace">📅 現在: ${p.currentDate}</div>` : '<div style="font-size:10px;color:var(--muted2)">未設定</div>'}
+      </div>
+    </label>`).join('');
+
+  document.getElementById('planPickerBg').classList.add('open');
+}
+
+function confirmPlanPicker() {
+  const sel = document.querySelector('input[name="planPick"]:checked');
+  if (!sel) { showToast('企画を選択してください'); return; }
+  const docId = sel.value;
+  localStorage.setItem('postdate_' + docId, pickerTargetDate);
+  closeModal('planPickerBg');
+  renderCalendar();
+  restorePostDateBadges();
+  updatePostDateBadge(docId, pickerTargetDate);
+  showToast(pickerTargetDate + ' に投稿日を設定しました');
 }
 
 function openPostDateModal(docId, prefillDate) {
@@ -2413,18 +2459,30 @@ async function fetchChannelData(url) {
     if (!ch) return null;
     // 最新動画10本取得
     const uploadsId = ch.contentDetails.relatedPlaylists.uploads;
-    const plRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${uploadsId}&maxResults=10&key=${YT_KEY}`);
+    // ショート除外のため多めに取得してフィルタリング
+    const plRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${uploadsId}&maxResults=30&key=${YT_KEY}`);
     const plData = await plRes.json();
     const videoIds = plData.items.map(i => i.contentDetails.videoId).join(',');
-    const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoIds}&key=${YT_KEY}`);
+    const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds}&key=${YT_KEY}`);
     const vData = await vRes.json();
+    // ショート除外: duration 60秒以下 or タイトルに#Shorts含む
+    const filtered = (vData.items || []).filter(v => {
+      const dur = v.contentDetails?.duration || '';
+      const title = v.snippet.title || '';
+      if (title.match(/#[Ss]horts?/)) return false;
+      // PT1M以下 = 60秒以下
+      const m = dur.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+      if (!m) return true;
+      const secs = (parseInt(m[1]||0)*3600) + (parseInt(m[2]||0)*60) + parseInt(m[3]||0);
+      return secs > 60;
+    }).slice(0, 10);
     return {
       id: channelId, url, name: ch.snippet.title,
       subs: parseInt(ch.statistics.subscriberCount || 0),
       totalViews: parseInt(ch.statistics.viewCount || 0),
       videoCount: parseInt(ch.statistics.videoCount || 0),
       thumb: ch.snippet.thumbnails?.default?.url || '',
-      videos: (vData.items || []).map(v => ({
+      videos: filtered.map(v => ({
         vid: v.id, title: v.snippet.title,
         views: parseInt(v.statistics.viewCount || 0),
         date: v.snippet.publishedAt.slice(0, 10),
