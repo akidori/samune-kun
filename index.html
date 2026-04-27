@@ -349,6 +349,103 @@ table.sheet tbody tr.dragging { opacity: 0.4; }
   font-size: 10px; color: var(--muted2);
 }
 
+
+/* ══ メインビュー切り替え ══ */
+.main-view { display: none; }
+.main-view.active { display: block; }
+
+/* ══ ビュー切り替えボタン（ヘッダー内） ══ */
+.hdr-view-btn {
+  height: 28px; padding: 0 12px; border-radius: 5px; border: none;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7);
+  transition: all 0.15s; white-space: nowrap;
+}
+.hdr-view-btn.active { background: var(--green-l); color: var(--hdr2); }
+.hdr-view-btn:hover:not(.active) { background: rgba(255,255,255,0.22); color: #fff; }
+
+/* ══ カレンダービュー ══ */
+.cal-wrap { padding: 20px; max-width: 1100px; margin: 0 auto; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.cal-title { font-size: 18px; font-weight: 700; color: var(--hdr2); }
+.cal-nav-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--white); cursor: pointer; font-size: 14px; color: var(--text2);
+  display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+}
+.cal-nav-btn:hover { background: var(--green-bg); border-color: var(--green); }
+.cal-sync-btn {
+  height: 32px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--border2);
+  background: var(--green-bg); color: var(--green); font-size: 11px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s;
+}
+.cal-sync-btn:hover { background: var(--green-bg2); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.cal-day-header { background: var(--hdr2); color: rgba(255,255,255,0.6); text-align: center; padding: 8px; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
+.cal-day-header.weekend { color: rgba(255,180,180,0.7); }
+.cal-cell {
+  background: var(--white); min-height: 90px; padding: 6px;
+  cursor: pointer; transition: background 0.12s; position: relative;
+}
+.cal-cell:hover { background: var(--green-bg); }
+.cal-cell.other-month { background: #fafafa; }
+.cal-cell.other-month .cal-date { color: var(--muted2); }
+.cal-cell.today { background: #f0fff4; }
+.cal-cell.today .cal-date { background: var(--green); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+.cal-date { font-size: 11px; font-weight: 700; color: var(--text2); font-family: 'DM Mono', monospace; margin-bottom: 4px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+.cal-event {
+  font-size: 9px; font-weight: 600; padding: 2px 5px; border-radius: 3px;
+  margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: var(--green-bg2); color: var(--hdr2); border-left: 2px solid var(--green);
+  cursor: pointer; transition: opacity 0.12s;
+}
+.cal-event:hover { opacity: 0.8; }
+.cal-event.gcal { border-left-color: #4285f4; background: #e8f0fe; color: #1a73e8; }
+
+/* ══ 投稿日設定ポップオーバー ══ */
+.date-picker-modal { width: 420px; }
+.date-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; outline: none; color: var(--text); }
+.date-input:focus { border-color: var(--green); }
+
+/* ══ ベンチマークビュー ══ */
+.bench-wrap { padding: 16px; }
+.bench-tabs { display: flex; gap: 2px; border-bottom: 2px solid var(--border2); margin-bottom: 20px; }
+.bench-tab {
+  padding: 8px 18px; border: none; background: transparent; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  font-family: 'Noto Sans JP', sans-serif; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: all 0.15s;
+}
+.bench-tab.active { color: var(--green); border-bottom-color: var(--green); }
+.bench-tab:hover:not(.active) { color: var(--text2); }
+
+.bench-section-title { font-size: 14px; font-weight: 700; color: var(--hdr2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.bench-add-btn { height: 30px; padding: 0 14px; border: none; border-radius: 5px; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; margin-left: auto; }
+.bench-channel-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px; border: 1px solid var(--border); border-radius: 8px;
+  margin-bottom: 10px; background: var(--white); transition: box-shadow 0.15s;
+}
+.bench-channel-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.bench-channel-info { flex: 1; min-width: 0; }
+.bench-channel-name { font-size: 13px; font-weight: 700; color: var(--hdr2); margin-bottom: 4px; }
+.bench-channel-url { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bench-video-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+.bench-video-item { cursor: pointer; }
+.bench-video-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 4px; object-fit: cover; display: block; }
+.bench-video-title { font-size: 9px; color: var(--text2); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
+.bench-video-views { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.bench-del-btn { background: none; border: none; cursor: pointer; color: var(--muted2); font-size: 13px; padding: 4px; transition: color 0.12s; }
+.bench-del-btn:hover { color: #dc2626; }
+
+.bench-stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.bench-stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.bench-stat-label { font-size: 10px; font-weight: 600; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.06em; margin-bottom: 6px; }
+.bench-stat-value { font-size: 22px; font-weight: 700; color: var(--hdr2); font-family: 'DM Mono', monospace; }
+.bench-stat-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.bench-loading { text-align: center; padding: 40px; color: var(--muted); font-size: 12px; }
+
 /* ══ チャンネル動画リスト ══ */
 .channel-video-item {
   display: flex; align-items: center; gap: 10px;
@@ -600,6 +697,11 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   </div>
   <div class="hdr-sep"></div>
   <div class="hdr-spacer"></div>
+  <div style="display:flex;gap:4px;margin-right:8px" id="viewBtns" style="display:none">
+    <button class="hdr-view-btn active" id="hdrViewPlan" onclick="switchMainView('plan')">📋 企画</button>
+    <button class="hdr-view-btn" id="hdrViewCal" onclick="switchMainView('cal')">📅 カレンダー</button>
+    <button class="hdr-view-btn" id="hdrViewBench" onclick="switchMainView('bench')">🏆 ベンチマーク</button>
+  </div>
   <div class="legend">
     <div class="litem"><span class="ldot" style="background:#16a34a"></span>S(5倍+)</div>
     <div class="litem"><span class="ldot" style="background:#22c55e"></span>A(3〜5倍)</div>
@@ -676,6 +778,87 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 
 <!-- リストビュー -->
 <div id="listView" style="display:none;padding:8px 12px"></div>
+
+<!-- カレンダービュー -->
+<div class="main-view" id="viewCal">
+  <div class="cal-wrap">
+    <div class="cal-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+        <span class="cal-title" id="calTitle"></span>
+        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        <button class="cal-nav-btn" onclick="calGoToday()" style="font-size:9px;width:auto;padding:0 8px;border-radius:4px">今日</button>
+      </div>
+      <button class="cal-sync-btn" onclick="syncToGcal()">🔗 Googleカレンダーに同期</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+</div>
+
+<!-- ベンチマークビュー -->
+<div class="main-view" id="viewBench">
+  <div class="bench-wrap">
+    <div class="bench-tabs">
+      <button class="bench-tab active" id="benchTabComp" onclick="switchBenchTab('comp')">🔍 競合チャンネル</button>
+      <button class="bench-tab" id="benchTabMine" onclick="switchBenchTab('mine')">📊 自チャンネル</button>
+    </div>
+    <!-- 競合チャンネル -->
+    <div id="benchComp">
+      <div class="bench-section-title">
+        競合チャンネル
+        <button class="bench-add-btn" onclick="openAddCompModal()">＋ チャンネルを追加</button>
+      </div>
+      <div id="compChannelList"><div class="bench-loading">チャンネルを追加してください</div></div>
+    </div>
+    <!-- 自チャンネル -->
+    <div id="benchMine" style="display:none">
+      <div class="bench-section-title">
+        自チャンネルのパフォーマンス
+        <button class="bench-add-btn" onclick="openAddMineModal()">＋ チャンネルを設定</button>
+      </div>
+      <div id="mineStats"><div class="bench-loading">チャンネルURLを設定してください</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 競合チャンネル追加モーダル -->
+<div class="modal-bg" id="addCompBg" onclick="if(event.target===this)closeModal('addCompBg')">
+  <div class="modal">
+    <div class="modal-title">🔍 競合チャンネルを追加</div>
+    <div class="modal-sub">チャンネルURLを入力してください</div>
+    <input type="text" class="invite-input" id="compChannelInput" placeholder="https://www.youtube.com/@channel" style="width:100%;margin-bottom:10px">
+    <div style="display:flex;gap:8px">
+      <button class="invite-add-btn" style="flex:1" onclick="addCompChannel()">追加して分析</button>
+      <button class="modal-close" style="flex:1;margin-top:0" onclick="closeModal('addCompBg')">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- 自チャンネル設定モーダル -->
+<div class="modal-bg" id="addMineBg" onclick="if(event.target===this)closeModal('addMineBg')">
+  <div class="modal">
+    <div class="modal-title">📊 自チャンネルを設定</div>
+    <input type="text" class="invite-input" id="mineChannelInput" placeholder="https://www.youtube.com/@channel" style="width:100%;margin-bottom:10px">
+    <div style="display:flex;gap:8px">
+      <button class="invite-add-btn" style="flex:1" onclick="setMineChannel()">設定して分析</button>
+      <button class="modal-close" style="flex:1;margin-top:0" onclick="closeModal('addMineBg')">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- 投稿日設定モーダル -->
+<div class="modal-bg" id="postDateBg" onclick="if(event.target===this)closeModal('postDateBg')">
+  <div class="modal date-picker-modal">
+    <div class="modal-title" id="postDateTitle">📅 投稿日を設定</div>
+    <div class="modal-sub" id="postDateSub"></div>
+    <input type="date" class="date-input" id="postDateInput" style="margin-bottom:16px">
+    <div style="display:flex;gap:8px">
+      <button class="tab-add-row-btn" style="flex:1" onclick="savePostDate()">設定する</button>
+      <button class="del-row-btn" style="flex:1;border:1px solid var(--border);border-radius:5px;padding:8px" onclick="clearPostDate()">削除</button>
+      <button class="modal-close" style="flex:1;margin-top:0" onclick="closeModal('postDateBg')">閉じる</button>
+    </div>
+  </div>
+</div>
 
 <!-- 共有モーダル -->
 <div class="modal-bg" id="shareBg" onclick="if(event.target===this)closeModal('shareBg')">
@@ -847,6 +1030,7 @@ auth.onAuthStateChanged(async user => {
     </div>`;
 
   document.getElementById('caseTabbar').style.display = 'flex';
+  initCal();
   await loadCases();
 });
 
@@ -1597,6 +1781,8 @@ function showToolbar() {
   }
   updateRowCount();
   if (currentView === 'list') renderListView();
+  showViewBtns();
+  restorePostDateBadges();
 }
 
 function updateRowCount() {
@@ -1950,6 +2136,397 @@ function addAnalysisKeyword(rid, el, word) {
   el.textContent = el.textContent.replace(' ＋', ' ✓');
   scheduleSave(docId, parseInt(rid));
   showToast('「' + word + '」をメインワードに追加しました');
+}
+
+
+// ══ メインビュー切り替え ══
+let currentMainView = 'plan';
+
+function switchMainView(view) {
+  currentMainView = view;
+  // ヘッダーボタン
+  ['plan','cal','bench'].forEach(v => {
+    document.getElementById('hdrView' + v.charAt(0).toUpperCase() + v.slice(1))?.classList.toggle('active', v === view);
+  });
+  // 企画ビュー（シートラップ＋ツールバー＋リストビュー）
+  const planEls = [document.querySelector('.sheet-wrap'), document.getElementById('toolbar'), document.getElementById('listView'), document.getElementById('caseTabbar')];
+  planEls.forEach(el => { if (el) el.style.display = view === 'plan' ? '' : 'none'; });
+  // カレンダー・ベンチマーク
+  const calEl = document.getElementById('viewCal');
+  const benchEl = document.getElementById('viewBench');
+  if (calEl) calEl.classList.toggle('active', view === 'cal');
+  if (benchEl) benchEl.classList.toggle('active', view === 'bench');
+  if (view === 'cal') renderCalendar();
+  if (view === 'bench') renderBenchComp();
+}
+
+// viewBtnsをログイン後に表示
+function showViewBtns() {
+  const el = document.getElementById('viewBtns');
+  if (el) el.style.display = 'flex';
+}
+
+// ══ カレンダー ══
+let calYear, calMonth;
+let postDates = {}; // { docId: '2025-04-10' }
+let currentPostDocId = null;
+
+function initCal() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function calNav(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function calGoToday() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('calTitle').textContent = `${calYear}年 ${months[calMonth]}`;
+
+  const grid = document.getElementById('calGrid');
+  const days = ['日','月','火','水','木','金','土'];
+  const today = new Date();
+
+  let html = days.map((d,i) => `<div class="cal-day-header ${i===0||i===6?'weekend':''}">${d}</div>`).join('');
+
+  const first = new Date(calYear, calMonth, 1);
+  const last = new Date(calYear, calMonth + 1, 0);
+  const startDow = first.getDay();
+
+  // 前月の日
+  for (let i = 0; i < startDow; i++) {
+    const d = new Date(calYear, calMonth, -startDow + i + 1);
+    html += `<div class="cal-cell other-month"><div class="cal-date">${d.getDate()}</div></div>`;
+  }
+
+  // 当月の日
+  for (let d = 1; d <= last.getDate(); d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
+
+    // この日の企画を収集
+    const events = getEventsForDate(dateStr);
+    const evHtml = events.map(e =>
+      `<div class="cal-event" onclick="openPostDateModal('${e.docId}')" title="${esc(e.title)}">${esc(e.title||'無題')}</div>`
+    ).join('');
+
+    html += `<div class="cal-cell ${isToday?'today':''}" onclick="onCalCellClick('${dateStr}')">
+      <div class="cal-date">${d}</div>
+      ${evHtml}
+    </div>`;
+  }
+
+  // 翌月の日（6行になるよう埋める）
+  const total = startDow + last.getDate();
+  const remaining = (7 - (total % 7)) % 7;
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-cell other-month"><div class="cal-date">${i}</div></div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function getEventsForDate(dateStr) {
+  const events = [];
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    const docId = tr.dataset.docId;
+    if (!docId) return;
+    const saved = localStorage.getItem('postdate_' + docId);
+    if (saved === dateStr) {
+      const rid = tr.id.replace('row-', '');
+      const title = document.getElementById('plan-a-' + rid)?.value || '無題';
+      events.push({ docId, title });
+    }
+  });
+  return events;
+}
+
+function onCalCellClick(dateStr) {
+  // 日付クリック→企画選択ポップアップ
+  const rows = Array.from(document.querySelectorAll('#tbody tr'));
+  if (rows.length === 0) { showToast('企画がありません'); return; }
+
+  // 簡易: 空の企画に日付をアサイン
+  const sel = rows.find(tr => {
+    const docId = tr.dataset.docId;
+    return !localStorage.getItem('postdate_' + docId);
+  });
+  if (!sel) { showToast('すべての企画に投稿日が設定済みです'); return; }
+  openPostDateModal(sel.dataset.docId, dateStr);
+}
+
+function openPostDateModal(docId, prefillDate) {
+  currentPostDocId = docId;
+  const tr = document.querySelector(`[data-doc-id="${docId}"]`);
+  const rid = tr?.id?.replace('row-', '');
+  const title = rid ? (document.getElementById('plan-a-' + rid)?.value || '無題') : '企画';
+  document.getElementById('postDateTitle').textContent = '📅 投稿日を設定';
+  document.getElementById('postDateSub').textContent = `「${title}」の投稿予定日`;
+  const saved = localStorage.getItem('postdate_' + docId) || prefillDate || '';
+  document.getElementById('postDateInput').value = saved;
+  document.getElementById('postDateBg').classList.add('open');
+}
+
+function savePostDate() {
+  if (!currentPostDocId) return;
+  const date = document.getElementById('postDateInput').value;
+  if (!date) { showToast('日付を選択してください'); return; }
+  localStorage.setItem('postdate_' + currentPostDocId, date);
+  closeModal('postDateBg');
+  renderCalendar();
+  showToast('投稿日を設定しました');
+  // 各行に投稿日バッジを更新
+  updatePostDateBadge(currentPostDocId, date);
+}
+
+function clearPostDate() {
+  if (!currentPostDocId) return;
+  localStorage.removeItem('postdate_' + currentPostDocId);
+  closeModal('postDateBg');
+  renderCalendar();
+  updatePostDateBadge(currentPostDocId, '');
+  showToast('投稿日を削除しました');
+}
+
+function updatePostDateBadge(docId, date) {
+  const tr = document.querySelector(`[data-doc-id="${docId}"]`);
+  if (!tr) return;
+  const rid = tr.id.replace('row-', '');
+  let badge = document.getElementById('postdate-badge-' + rid);
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'postdate-badge-' + rid;
+    badge.style.cssText = 'font-size:9px;color:var(--green);font-family:"DM Mono",monospace;font-weight:600;cursor:pointer;margin-top:4px;display:flex;align-items:center;gap:3px;';
+    badge.onclick = () => openPostDateModal(docId);
+    const planTd = tr.querySelector('.plan-td');
+    if (planTd) planTd.appendChild(badge);
+  }
+  badge.innerHTML = date ? `📅 ${date}` : '';
+}
+
+// 既存行にバッジを追加
+function restorePostDateBadges() {
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    const docId = tr.dataset.docId;
+    if (!docId) return;
+    const date = localStorage.getItem('postdate_' + docId);
+    if (date) updatePostDateBadge(docId, date);
+  });
+}
+
+// Googleカレンダー同期
+async function syncToGcal() {
+  const events = [];
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    const docId = tr.dataset.docId;
+    if (!docId) return;
+    const date = localStorage.getItem('postdate_' + docId);
+    if (!date) return;
+    const rid = tr.id.replace('row-', '');
+    const title = document.getElementById('plan-a-' + rid)?.value || '投稿予定';
+    events.push({ title, date, docId });
+  });
+
+  if (events.length === 0) { showToast('投稿日が設定された企画がありません'); return; }
+
+  // Google Calendar API (要OAuth) - 簡易版: Google Calendarリンクを開く
+  let added = 0;
+  for (const ev of events) {
+    const start = ev.date.replace(/-/g, '');
+    const end = ev.date.replace(/-/g, '');
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&dates=${start}/${end}&details=${encodeURIComponent('さむね君より: ' + ev.title)}`;
+    if (added === 0) window.open(url, '_blank');
+    added++;
+  }
+  showToast(`${events.length}件の投稿予定をGoogleカレンダーで開きました`);
+}
+
+// ══ ベンチマーク ══
+let compChannels = JSON.parse(localStorage.getItem('bench_comp') || '[]');
+let mineChannel = JSON.parse(localStorage.getItem('bench_mine') || 'null');
+let currentBenchTab = 'comp';
+
+function switchBenchTab(tab) {
+  currentBenchTab = tab;
+  document.getElementById('benchTabComp').classList.toggle('active', tab === 'comp');
+  document.getElementById('benchTabMine').classList.toggle('active', tab === 'mine');
+  document.getElementById('benchComp').style.display = tab === 'comp' ? 'block' : 'none';
+  document.getElementById('benchMine').style.display = tab === 'mine' ? 'block' : 'none';
+  if (tab === 'mine') renderMineChannel();
+}
+
+function openAddCompModal() { document.getElementById('compChannelInput').value = ''; document.getElementById('addCompBg').classList.add('open'); }
+function openAddMineModal() { document.getElementById('mineChannelInput').value = mineChannel?.url || ''; document.getElementById('addMineBg').classList.add('open'); }
+
+async function addCompChannel() {
+  const url = document.getElementById('compChannelInput').value.trim();
+  if (!url) return;
+  closeModal('addCompBg');
+  showToast('チャンネル情報を取得中...');
+  const data = await fetchChannelData(url);
+  if (!data) { showToast('チャンネルが見つかりませんでした'); return; }
+  compChannels.push(data);
+  localStorage.setItem('bench_comp', JSON.stringify(compChannels));
+  renderBenchComp();
+  showToast(data.name + ' を追加しました');
+}
+
+async function setMineChannel() {
+  const url = document.getElementById('mineChannelInput').value.trim();
+  if (!url) return;
+  closeModal('addMineBg');
+  showToast('チャンネル情報を取得中...');
+  const data = await fetchChannelData(url);
+  if (!data) { showToast('チャンネルが見つかりませんでした'); return; }
+  mineChannel = data;
+  localStorage.setItem('bench_mine', JSON.stringify(mineChannel));
+  renderMineChannel();
+  showToast('自チャンネルを設定しました');
+}
+
+async function fetchChannelData(url) {
+  try {
+    let channelId = url.match(/\/channel\/(UC[\w-]+)/)?.[1];
+    if (!channelId) {
+      const handle = url.match(/@([\w.-]+)/)?.[1];
+      if (!handle) return null;
+      const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(handle)}&type=channel&maxResults=1&key=${YT_KEY}`);
+      const data = await res.json();
+      channelId = data.items?.[0]?.id?.channelId;
+    }
+    if (!channelId) return null;
+    const chRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,contentDetails&id=${channelId}&key=${YT_KEY}`);
+    const chData = await chRes.json();
+    const ch = chData.items?.[0];
+    if (!ch) return null;
+    // 最新動画10本取得
+    const uploadsId = ch.contentDetails.relatedPlaylists.uploads;
+    const plRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${uploadsId}&maxResults=10&key=${YT_KEY}`);
+    const plData = await plRes.json();
+    const videoIds = plData.items.map(i => i.contentDetails.videoId).join(',');
+    const vRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoIds}&key=${YT_KEY}`);
+    const vData = await vRes.json();
+    return {
+      id: channelId, url, name: ch.snippet.title,
+      subs: parseInt(ch.statistics.subscriberCount || 0),
+      totalViews: parseInt(ch.statistics.viewCount || 0),
+      videoCount: parseInt(ch.statistics.videoCount || 0),
+      thumb: ch.snippet.thumbnails?.default?.url || '',
+      videos: (vData.items || []).map(v => ({
+        vid: v.id, title: v.snippet.title,
+        views: parseInt(v.statistics.viewCount || 0),
+        date: v.snippet.publishedAt.slice(0, 10),
+        thumb: v.snippet.thumbnails?.medium?.url || ''
+      })),
+      fetchedAt: new Date().toISOString()
+    };
+  } catch(e) { return null; }
+}
+
+function renderBenchComp() {
+  const el = document.getElementById('compChannelList');
+  if (compChannels.length === 0) {
+    el.innerHTML = '<div class="bench-loading">チャンネルを追加してください</div>';
+    return;
+  }
+  el.innerHTML = compChannels.map((ch, ci) => {
+    const avgViews = ch.videos.length > 0 ? Math.round(ch.videos.reduce((s, v) => s + v.views, 0) / ch.videos.length) : 0;
+    const videosHtml = ch.videos.slice(0, 5).map(v => `
+      <div class="bench-video-item">
+        <a href="https://www.youtube.com/watch?v=${v.vid}" target="_blank">
+          <img class="bench-video-thumb" src="${v.thumb}" alt="">
+        </a>
+        <div class="bench-video-title">${esc(v.title)}</div>
+        <div class="bench-video-views">▶ ${fmt(v.views)}</div>
+      </div>`).join('');
+    return `
+      <div class="bench-channel-card">
+        ${ch.thumb ? `<img src="${ch.thumb}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0">` : ''}
+        <div class="bench-channel-info">
+          <div class="bench-channel-name">${esc(ch.name)}</div>
+          <div class="bench-channel-url">${esc(ch.url)}</div>
+          <div style="display:flex;gap:16px;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px">
+            <span>🔔 ${fmt(ch.subs)}</span>
+            <span>▶ 平均 ${fmt(avgViews)}</span>
+            <span>📹 ${fmt(ch.videoCount)}本</span>
+            <span style="color:var(--muted2)">取得: ${ch.fetchedAt?.slice(0,10)||''}</span>
+          </div>
+          <div class="bench-video-grid">${videosHtml}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <button class="bench-del-btn" onclick="delCompChannel(${ci})" title="削除">✕</button>
+          <button class="bench-del-btn" onclick="refreshCompChannel(${ci})" title="更新" style="font-size:11px">↺</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function delCompChannel(idx) {
+  if (!confirm('削除しますか？')) return;
+  compChannels.splice(idx, 1);
+  localStorage.setItem('bench_comp', JSON.stringify(compChannels));
+  renderBenchComp();
+}
+
+async function refreshCompChannel(idx) {
+  showToast('更新中...');
+  const data = await fetchChannelData(compChannels[idx].url);
+  if (!data) { showToast('更新に失敗しました'); return; }
+  compChannels[idx] = data;
+  localStorage.setItem('bench_comp', JSON.stringify(compChannels));
+  renderBenchComp();
+  showToast('更新しました');
+}
+
+async function renderMineChannel() {
+  const el = document.getElementById('mineStats');
+  if (!mineChannel) { el.innerHTML = '<div class="bench-loading">チャンネルURLを設定してください</div>'; return; }
+  const avgViews = mineChannel.videos.length > 0 ? Math.round(mineChannel.videos.reduce((s,v) => s+v.views, 0) / mineChannel.videos.length) : 0;
+  const topVideo = mineChannel.videos.reduce((a,b) => a.views > b.views ? a : b, {views:0});
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px;background:var(--white);border:1px solid var(--border);border-radius:8px">
+      ${mineChannel.thumb ? `<img src="${mineChannel.thumb}" style="width:56px;height:56px;border-radius:50%;object-fit:cover">` : ''}
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--hdr2)">${esc(mineChannel.name)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${esc(mineChannel.url)}</div>
+      </div>
+      <button class="bench-del-btn" onclick="openAddMineModal()" style="margin-left:auto;font-size:11px">変更</button>
+    </div>
+    <div class="bench-stat-grid">
+      <div class="bench-stat-card"><div class="bench-stat-label">登録者数</div><div class="bench-stat-value">${fmt(mineChannel.subs)}</div></div>
+      <div class="bench-stat-card"><div class="bench-stat-label">総再生数</div><div class="bench-stat-value">${fmt(mineChannel.totalViews)}</div></div>
+      <div class="bench-stat-card"><div class="bench-stat-label">動画本数</div><div class="bench-stat-value">${fmt(mineChannel.videoCount)}</div></div>
+      <div class="bench-stat-card"><div class="bench-stat-label">直近平均再生数</div><div class="bench-stat-value">${fmt(avgViews)}</div><div class="bench-stat-sub">直近10本</div></div>
+    </div>
+    <div style="margin-top:20px">
+      <div class="bench-section-title" style="font-size:13px">直近10本のパフォーマンス</div>
+      <div class="bench-video-grid" style="grid-template-columns:repeat(5,1fr)">
+        ${mineChannel.videos.map(v => {
+          const sc = calcScore({views: v.views, subs: mineChannel.subs, uploadDate: v.date});
+          return `<div class="bench-video-item">
+            <a href="https://www.youtube.com/watch?v=${v.vid}" target="_blank" style="position:relative;display:block">
+              <img class="bench-video-thumb" src="${v.thumb}" alt="">
+              <span class="list-thumb-score ${sc.grade}" style="position:absolute;top:3px;left:3px">${sc.grade}</span>
+            </a>
+            <div class="bench-video-title">${esc(v.title)}</div>
+            <div class="bench-video-views">▶ ${fmt(v.views)} · ${v.date}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
 }
 
 // ══ UTILS ══
