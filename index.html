@@ -687,7 +687,9 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 .yt-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(var(--yt-card-width, 240px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--yt-card-width, 280px), 1fr));
+  width: 100%;
+  box-sizing: border-box;
 }
 .yt-card {
   background: var(--white); border-radius: 10px;
@@ -902,7 +904,7 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 
 <!-- リストビュー -->
 <div id="listView" style="display:none;padding:8px 12px"></div>
-<div id="ytViewPlan" style="display:none;padding:8px 16px">
+<div id="ytViewPlan" style="display:none;padding:16px 20px;width:100%;box-sizing:border-box">
   <div class="yt-grid" id="ytGridPlan"></div>
 </div>
 
@@ -2731,14 +2733,15 @@ async function _renderMineOld() {
 
 
 // ══ YouTubeグリッドビュー ══
-let ytCardScale = 100;
+let ytCardScale = 100; // base=280px
 let benchCardScale = 100;
 
 function onYtSizeChange(val) {
   ytCardScale = parseInt(val);
   document.getElementById('ytSizeVal').textContent = val + '%';
-  const base = 240 * ytCardScale / 100;
-  document.getElementById('ytGridPlan').style.setProperty('--yt-card-width', base + 'px');
+  const base = 280 * ytCardScale / 100;
+  const grid = document.getElementById('ytGridPlan');
+  if (grid) grid.style.setProperty('--yt-card-width', base + 'px');
 }
 
 function onBenchSizeChange(val) {
@@ -2753,7 +2756,7 @@ function renderYtView() {
   const grid = document.getElementById('ytGridPlan');
   if (!grid) return;
 
-  const base = 240 * ytCardScale / 100;
+  const base = 280 * ytCardScale / 100;
   grid.style.setProperty('--yt-card-width', base + 'px');
 
   grid.innerHTML = rows.map((tr, idx) => {
@@ -2783,8 +2786,12 @@ function renderYtView() {
     const avgViews = thumbCount > 0 ? Math.round(totalViews / thumbCount) : 0;
     const tagsHtml = tags.map(t => `<span class="yt-card-tag">${esc(t)}</span>`).join('');
 
-    return `<div class="yt-card" onclick="openPostDateModal('${docId}')">
-      <div class="yt-card-thumb-wrap">
+    const noteKey = 'yt_note_' + docId;
+    const note = docId ? (localStorage.getItem(noteKey) || '') : '';
+    const noteId = 'ytnote_' + rid;
+
+    return `<div class="yt-card">
+      <div class="yt-card-thumb-wrap" onclick="openPostDateModal('${docId}')">
         ${firstThumb
           ? `<img class="yt-card-thumb" src="https://img.youtube.com/vi/${firstThumb}/mqdefault.jpg" alt="">`
           : `<div class="yt-card-empty-thumb">サムネ未設定</div>`}
@@ -2793,10 +2800,16 @@ function renderYtView() {
         ${postDate ? `<span class="yt-card-postdate">📅 ${postDate}</span>` : ''}
       </div>
       <div class="yt-card-body">
-        <div class="yt-card-title">${esc(titleA) || '<span style="color:var(--muted2)">タイトル未設定</span>'}</div>
+        <div class="yt-card-title" onclick="openPostDateModal('${docId}')">${esc(titleA) || '<span style="color:var(--muted2)">タイトル未設定</span>'}</div>
         ${titleB ? `<div class="yt-card-title-b">${esc(titleB)}</div>` : ''}
         ${avgViews > 0 ? `<div class="yt-card-views">▶ 参考平均 ${fmt(avgViews)}</div>` : ''}
         ${tagsHtml ? `<div class="yt-card-tags">${tagsHtml}</div>` : ''}
+        <button class="yt-note-toggle" onclick="toggleYtNote('${noteId}')">
+          <span class="yt-note-toggle-icon" id="${noteId}_icon">${note ? '▾' : '▸'}</span> 備考
+        </button>
+        <div class="yt-note-body" id="${noteId}" style="${note ? '' : 'display:none'}">
+          <textarea class="yt-note-ta" placeholder="備考を入力…" oninput="saveYtNote('${noteKey}','${noteId}',this.value)">${esc(note)}</textarea>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -2870,6 +2883,21 @@ function renderYtBench() {
   wrap.innerHTML = html;
 }
 
+
+
+function toggleYtNote(noteId) {
+  const body = document.getElementById(noteId);
+  const icon = document.getElementById(noteId + '_icon');
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (icon) icon.textContent = isOpen ? '▸' : '▾';
+  if (!isOpen) body.querySelector('textarea')?.focus();
+}
+
+function saveYtNote(key, noteId, val) {
+  localStorage.setItem(key, val);
+}
 
 // ══ UTILS ══
 function closeModal(id){document.getElementById(id).classList.remove('open');}
