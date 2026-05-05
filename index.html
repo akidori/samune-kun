@@ -661,6 +661,124 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   padding: 2px 7px; border-radius: 3px;
 }
 
+
+/* ══ YouTubeグリッドビュー ══ */
+.yt-view { display: none; padding: 12px 16px; }
+.yt-view.active { display: block; }
+
+/* サイズスライダー */
+.size-slider-wrap {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 0; margin-bottom: 12px;
+}
+.size-slider-label { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; }
+.size-slider {
+  -webkit-appearance: none; width: 140px; height: 4px;
+  border-radius: 2px; background: var(--border2); outline: none; cursor: pointer;
+}
+.size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--green); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.size-slider-val { font-size: 10px; color: var(--green); font-family: 'DM Mono', monospace; font-weight: 700; width: 36px; }
+
+/* YouTubeカードグリッド */
+.yt-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(var(--yt-card-width, 240px), 1fr));
+}
+.yt-card {
+  background: var(--white); border-radius: 10px;
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.yt-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.yt-card-thumb-wrap {
+  position: relative; width: 100%; aspect-ratio: 16/9;
+  background: var(--green-bg2); overflow: hidden;
+}
+.yt-card-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s; }
+.yt-card:hover .yt-card-thumb { transform: scale(1.03); }
+.yt-card-empty-thumb {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--green-bg); color: var(--muted2); font-size: 11px;
+}
+.yt-card-score {
+  position: absolute; top: 6px; left: 6px;
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px; border: 1px solid transparent;
+}
+.yt-card-score.S { background: #f0fdf4; color: #15803d; border-color: #86efac; }
+.yt-card-score.A { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+.yt-card-score.B { background: #eff6ff; color: #2563eb; border-color: #93c5fd; }
+.yt-card-score.C { background: #fffbeb; color: #d97706; border-color: #fcd34d; }
+.yt-card-score.X { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
+.yt-card-postdate {
+  position: absolute; bottom: 6px; right: 6px;
+  background: rgba(0,0,0,0.7); color: #fff;
+  font-size: 9px; font-family: 'DM Mono', monospace;
+  padding: 2px 6px; border-radius: 3px;
+}
+.yt-card-body { padding: 10px 12px 12px; }
+.yt-card-title {
+  font-size: 13px; font-weight: 700; color: var(--hdr2);
+  line-height: 1.45; margin-bottom: 5px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.yt-card-title-b {
+  font-size: 11px; color: var(--muted); line-height: 1.4;
+  margin-bottom: 6px;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+.yt-card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.yt-card-views { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.yt-card-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+.yt-card-tag {
+  font-size: 9px; background: var(--green-bg2); border: 1px solid var(--border2);
+  color: var(--hdr2); padding: 1px 6px; border-radius: 10px;
+  font-family: 'DM Mono', monospace; font-weight: 600;
+}
+.yt-card-num {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(0,0,0,0.6); color: #fff;
+  font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px;
+}
+
+/* ベンチマークYTグリッド */
+.yt-bench-section { margin-bottom: 28px; }
+.yt-bench-channel-hdr {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px;
+}
+.yt-bench-channel-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.yt-bench-channel-name { font-size: 14px; font-weight: 700; color: var(--hdr2); }
+.yt-bench-channel-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.yt-bench-del { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--muted2); font-size: 14px; padding: 4px 8px; transition: color 0.12s; border-radius: 4px; }
+.yt-bench-del:hover { color: #dc2626; background: #fee2e2; }
+.yt-bench-refresh { background: none; border: 1px solid var(--border); cursor: pointer; color: var(--muted); font-size: 11px; padding: 4px 10px; transition: all 0.12s; border-radius: 4px; font-family: 'Noto Sans JP', sans-serif; }
+.yt-bench-refresh:hover { border-color: var(--green); color: var(--green); }
+
+/* ベンチマーク動画カード */
+.yt-bench-card {
+  background: var(--white); border-radius: 8px; overflow: hidden;
+  border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s;
+}
+.yt-bench-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+.yt-bench-card-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.yt-bench-card-body { padding: 8px 10px 10px; }
+.yt-bench-card-title {
+  font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 4px;
+}
+.yt-bench-card-views { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
 /* 読み取り専用アコーディオン */
 .acc-value {
   font-size: 11px; color: var(--text2); line-height: 1.6;
@@ -750,8 +868,14 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
     <button class="toolbar-sort-btn active" id="sortAsc" onclick="setSort('asc')" title="古い順（#昇順）">↑ 古い順</button>
     <button class="toolbar-sort-btn" id="sortDesc" onclick="setSort('desc')" title="新しい順（#降順）">↓ 新しい順</button>
     <div class="view-toggle">
-      <button class="view-toggle-btn active" id="viewCard" onclick="setView('card')" title="カード表示">⊞</button>
+      <button class="view-toggle-btn active" id="viewCard" onclick="setView('card')" title="テーブル表示">⊟</button>
       <button class="view-toggle-btn" id="viewList" onclick="setView('list')" title="リスト表示">☰</button>
+      <button class="view-toggle-btn" id="viewYt" onclick="setView('yt')" title="YouTubeグリッド">▶</button>
+    </div>
+    <div class="size-slider-wrap" id="sizeSliderWrap" style="display:none">
+      <span class="size-slider-label">表示サイズ</span>
+      <input class="size-slider" type="range" min="50" max="120" value="100" id="ytSizeSlider" oninput="onYtSizeChange(this.value)">
+      <span class="size-slider-val" id="ytSizeVal">100%</span>
     </div>
   </div>
 </div>
@@ -778,6 +902,9 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 
 <!-- リストビュー -->
 <div id="listView" style="display:none;padding:8px 12px"></div>
+<div id="ytViewPlan" style="display:none;padding:8px 16px">
+  <div class="yt-grid" id="ytGridPlan"></div>
+</div>
 
 <!-- カレンダービュー -->
 <div class="main-view" id="viewCal">
@@ -798,25 +925,31 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 <!-- ベンチマークビュー -->
 <div class="main-view" id="viewBench">
   <div class="bench-wrap">
-    <div class="bench-tabs">
-      <button class="bench-tab active" id="benchTabComp" onclick="switchBenchTab('comp')">🔍 競合チャンネル</button>
-      <button class="bench-tab" id="benchTabMine" onclick="switchBenchTab('mine')">📊 自チャンネル</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
+      <div class="bench-tabs" style="margin-bottom:0;border-bottom:none">
+        <button class="bench-tab active" id="benchTabComp" onclick="switchBenchTab('comp')">🔍 競合チャンネル</button>
+        <button class="bench-tab" id="benchTabMine" onclick="switchBenchTab('mine')">📊 自チャンネル</button>
+      </div>
+      <div class="size-slider-wrap" style="margin-bottom:0">
+        <span class="size-slider-label">サイズ</span>
+        <input class="size-slider" type="range" min="50" max="120" value="100" id="benchSizeSlider" oninput="onBenchSizeChange(this.value)">
+        <span class="size-slider-val" id="benchSizeVal">100%</span>
+      </div>
     </div>
+    <div style="border-bottom:2px solid var(--border2);margin-bottom:16px"></div>
     <!-- 競合チャンネル -->
     <div id="benchComp">
-      <div class="bench-section-title">
-        競合チャンネル
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
         <button class="bench-add-btn" onclick="openAddCompModal()">＋ チャンネルを追加</button>
       </div>
-      <div id="compChannelList"><div class="bench-loading">チャンネルを追加してください</div></div>
+      <div id="ytBenchWrap"><div class="bench-loading">チャンネルを追加してください</div></div>
     </div>
     <!-- 自チャンネル -->
     <div id="benchMine" style="display:none">
-      <div class="bench-section-title">
-        自チャンネルのパフォーマンス
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
         <button class="bench-add-btn" onclick="openAddMineModal()">＋ チャンネルを設定</button>
       </div>
-      <div id="mineStats"><div class="bench-loading">チャンネルURLを設定してください</div></div>
+      <div id="ytBenchWrap"><div class="bench-loading">チャンネルURLを設定してください</div></div>
     </div>
   </div>
 </div>
@@ -1796,6 +1929,7 @@ function showToolbar() {
   }
   updateRowCount();
   if (currentView === 'list') renderListView();
+  if (currentView === 'yt') renderYtView();
   showViewBtns();
   restorePostDateBadges();
 }
@@ -1904,18 +2038,20 @@ function setView(mode) {
   currentView = mode;
   document.getElementById('viewCard').classList.toggle('active', mode === 'card');
   document.getElementById('viewList').classList.toggle('active', mode === 'list');
+  document.getElementById('viewYt')?.classList.toggle('active', mode === 'yt');
 
   const sheetWrap = document.querySelector('.sheet-wrap');
   const listView = document.getElementById('listView');
+  const ytView = document.getElementById('ytViewPlan');
+  const slider = document.getElementById('sizeSliderWrap');
 
-  if (mode === 'list') {
-    sheetWrap.style.display = 'none';
-    listView.style.display = 'block';
-    renderListView();
-  } else {
-    sheetWrap.style.display = '';
-    listView.style.display = 'none';
-  }
+  sheetWrap.style.display = mode === 'card' ? '' : 'none';
+  listView.style.display = mode === 'list' ? 'block' : 'none';
+  if (ytView) ytView.style.display = mode === 'yt' ? 'block' : 'none';
+  if (slider) slider.style.display = mode === 'yt' ? 'flex' : 'none';
+
+  if (mode === 'list') renderListView();
+  if (mode === 'yt') renderYtView();
 }
 
 function renderListView() {
@@ -2410,7 +2546,7 @@ function switchBenchTab(tab) {
   document.getElementById('benchTabMine').classList.toggle('active', tab === 'mine');
   document.getElementById('benchComp').style.display = tab === 'comp' ? 'block' : 'none';
   document.getElementById('benchMine').style.display = tab === 'mine' ? 'block' : 'none';
-  if (tab === 'mine') renderMineChannel();
+  renderYtBench();
 }
 
 function openAddCompModal() { document.getElementById('compChannelInput').value = ''; document.getElementById('addCompBg').classList.add('open'); }
@@ -2494,6 +2630,9 @@ async function fetchChannelData(url) {
 }
 
 function renderBenchComp() {
+  renderYtBench();
+}
+function _renderBenchCompOld() {
   const el = document.getElementById('compChannelList');
   if (compChannels.length === 0) {
     el.innerHTML = '<div class="bench-loading">チャンネルを追加してください</div>';
@@ -2549,6 +2688,9 @@ async function refreshCompChannel(idx) {
 }
 
 async function renderMineChannel() {
+  renderYtBench(); return;
+}
+async function _renderMineOld() {
   const el = document.getElementById('mineStats');
   if (!mineChannel) { el.innerHTML = '<div class="bench-loading">チャンネルURLを設定してください</div>'; return; }
   const avgViews = mineChannel.videos.length > 0 ? Math.round(mineChannel.videos.reduce((s,v) => s+v.views, 0) / mineChannel.videos.length) : 0;
@@ -2586,6 +2728,148 @@ async function renderMineChannel() {
       </div>
     </div>`;
 }
+
+
+// ══ YouTubeグリッドビュー ══
+let ytCardScale = 100;
+let benchCardScale = 100;
+
+function onYtSizeChange(val) {
+  ytCardScale = parseInt(val);
+  document.getElementById('ytSizeVal').textContent = val + '%';
+  const base = 240 * ytCardScale / 100;
+  document.getElementById('ytGridPlan').style.setProperty('--yt-card-width', base + 'px');
+}
+
+function onBenchSizeChange(val) {
+  benchCardScale = parseInt(val);
+  document.getElementById('benchSizeVal').textContent = val + '%';
+  const base = 200 * benchCardScale / 100;
+  document.getElementById('ytGridBench')?.style.setProperty('--yt-card-width', base + 'px');
+}
+
+function renderYtView() {
+  const rows = Array.from(document.querySelectorAll('#tbody tr')).filter(r => !r.classList.contains('search-no-match'));
+  const grid = document.getElementById('ytGridPlan');
+  if (!grid) return;
+
+  const base = 240 * ytCardScale / 100;
+  grid.style.setProperty('--yt-card-width', base + 'px');
+
+  grid.innerHTML = rows.map((tr, idx) => {
+    const rid = tr.id.replace('row-', '');
+    const docId = tr.dataset.docId;
+    const num = tr.querySelector('.rn')?.textContent || (idx + 1);
+    const titleA = document.getElementById('plan-a-' + rid)?.value || '';
+    const titleB = document.getElementById('plan-b-' + rid)?.value || '';
+    const tags = Array.from(document.querySelectorAll('#tag-chips-' + rid + ' .tag-chip') || [])
+      .map(c => c.textContent.replace('×','').trim()).filter(Boolean);
+    const postDate = docId ? localStorage.getItem('postdate_' + docId) : '';
+
+    // 参考サムネ（最初に見つかったもの）
+    let firstThumb = null, firstScore = null, totalViews = 0, thumbCount = 0;
+    for (let i = 0; i < 5; i++) {
+      const cid = 'c' + rid + 'r' + i;
+      const card = document.getElementById(cid + '-card');
+      if (card && card.dataset.refdata) {
+        const ref = JSON.parse(card.dataset.refdata);
+        if (!firstThumb && ref.vid) {
+          firstThumb = ref.vid;
+          firstScore = calcScore(ref);
+        }
+        if (ref.views) { totalViews += ref.views; thumbCount++; }
+      }
+    }
+    const avgViews = thumbCount > 0 ? Math.round(totalViews / thumbCount) : 0;
+    const tagsHtml = tags.map(t => `<span class="yt-card-tag">${esc(t)}</span>`).join('');
+
+    return `<div class="yt-card" onclick="openPostDateModal('${docId}')">
+      <div class="yt-card-thumb-wrap">
+        ${firstThumb
+          ? `<img class="yt-card-thumb" src="https://img.youtube.com/vi/${firstThumb}/mqdefault.jpg" alt="">`
+          : `<div class="yt-card-empty-thumb">サムネ未設定</div>`}
+        ${firstScore ? `<span class="yt-card-score ${firstScore.grade}">${firstScore.grade}</span>` : ''}
+        <span class="yt-card-num">#${num}</span>
+        ${postDate ? `<span class="yt-card-postdate">📅 ${postDate}</span>` : ''}
+      </div>
+      <div class="yt-card-body">
+        <div class="yt-card-title">${esc(titleA) || '<span style="color:var(--muted2)">タイトル未設定</span>'}</div>
+        ${titleB ? `<div class="yt-card-title-b">${esc(titleB)}</div>` : ''}
+        ${avgViews > 0 ? `<div class="yt-card-views">▶ 参考平均 ${fmt(avgViews)}</div>` : ''}
+        ${tagsHtml ? `<div class="yt-card-tags">${tagsHtml}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderYtBench() {
+  const wrap = document.getElementById('ytBenchWrap');
+  if (!wrap) return;
+  const base = 200 * benchCardScale / 100;
+
+  let html = '';
+  // 競合チャンネル
+  if (currentBenchTab === 'comp') {
+    if (compChannels.length === 0) {
+      html = '<div class="bench-loading">チャンネルを追加してください</div>';
+    } else {
+      html = compChannels.map((ch, ci) => {
+        const avgViews = ch.videos.length > 0 ? Math.round(ch.videos.reduce((s,v) => s+v.views, 0) / ch.videos.length) : 0;
+        const cardsHtml = ch.videos.map(v => `
+          <a class="yt-bench-card" href="https://www.youtube.com/watch?v=${v.vid}" target="_blank" rel="noopener" style="text-decoration:none">
+            <img class="yt-bench-card-thumb" src="${v.thumb}" alt="">
+            <div class="yt-bench-card-body">
+              <div class="yt-bench-card-title">${esc(v.title)}</div>
+              <div class="yt-bench-card-views">▶ ${fmt(v.views)} · ${v.date}</div>
+            </div>
+          </a>`).join('');
+        return `<div class="yt-bench-section">
+          <div class="yt-bench-channel-hdr">
+            ${ch.thumb ? `<img class="yt-bench-channel-avatar" src="${ch.thumb}" alt="">` : ''}
+            <div>
+              <div class="yt-bench-channel-name">${esc(ch.name)}</div>
+              <div class="yt-bench-channel-sub">🔔 ${fmt(ch.subs)} · 平均▶ ${fmt(avgViews)}</div>
+            </div>
+            <button class="yt-bench-refresh" onclick="event.stopPropagation();refreshCompChannel(${ci})">↺ 更新</button>
+            <button class="yt-bench-del" onclick="event.stopPropagation();delCompChannel(${ci})">✕</button>
+          </div>
+          <div class="yt-grid" id="ytGridBench-${ci}" style="--yt-card-width:${base}px">${cardsHtml}</div>
+        </div>`;
+      }).join('');
+    }
+  } else {
+    // 自チャンネル
+    if (!mineChannel) {
+      html = '<div class="bench-loading">チャンネルURLを設定してください</div>';
+    } else {
+      const avgViews = mineChannel.videos.length > 0 ? Math.round(mineChannel.videos.reduce((s,v) => s+v.views, 0) / mineChannel.videos.length) : 0;
+      const cardsHtml = mineChannel.videos.map(v => {
+        const sc = calcScore({views: v.views, subs: mineChannel.subs, uploadDate: v.date});
+        return `<a class="yt-bench-card" href="https://www.youtube.com/watch?v=${v.vid}" target="_blank" rel="noopener" style="text-decoration:none;position:relative">
+          <div style="position:relative">
+            <img class="yt-bench-card-thumb" src="${v.thumb}" alt="">
+            <span class="yt-card-score ${sc.grade}" style="position:absolute;top:4px;left:4px">${sc.grade}</span>
+          </div>
+          <div class="yt-bench-card-body">
+            <div class="yt-bench-card-title">${esc(v.title)}</div>
+            <div class="yt-bench-card-views">▶ ${fmt(v.views)} · ${v.date}</div>
+          </div>
+        </a>`;
+      }).join('');
+      html = `<div class="yt-bench-channel-hdr">
+        ${mineChannel.thumb ? `<img class="yt-bench-channel-avatar" src="${mineChannel.thumb}" alt="">` : ''}
+        <div>
+          <div class="yt-bench-channel-name">${esc(mineChannel.name)}</div>
+          <div class="yt-bench-channel-sub">🔔 ${fmt(mineChannel.subs)} · 平均▶ ${fmt(avgViews)} · ${fmt(mineChannel.videoCount)}本</div>
+        </div>
+        <button class="yt-bench-refresh" onclick="openAddMineModal()">変更</button>
+      </div>
+      <div class="yt-grid" style="--yt-card-width:${base}px">${cardsHtml}</div>`;
+    }
+  }
+  wrap.innerHTML = html;
+}
+
 
 // ══ UTILS ══
 function closeModal(id){document.getElementById(id).classList.remove('open');}
