@@ -111,11 +111,13 @@ body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: va
 .case-tab-add { display: flex; align-items: center; gap: 4px; padding: 0 12px; height: 40px; border: none; background: transparent; color: var(--muted2); font-size: 11px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: color 0.12s; white-space: nowrap; flex-shrink: 0; }
 .case-tab-add:hover { color: var(--green); }
 .case-tabbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 4px; flex-shrink: 0; }
-.tab-share-btn { height: 26px; padding: 0 10px; border: 1px solid var(--border2); border-radius: 5px; background: var(--green-bg); font-size: 10px; font-weight: 600; color: var(--green); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 4px; transition: all 0.12s; white-space: nowrap; }
-.tab-share-btn:hover { background: var(--green-bg2); }
-.tab-invite-btn { height: 26px; padding: 0 10px; border: 1px solid var(--border2); border-radius: 5px; background: var(--green-bg); font-size: 10px; font-weight: 600; color: var(--green); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 4px; transition: all 0.12s; white-space: nowrap; }
-.tab-invite-btn:hover { background: var(--green-bg2); }
-.tab-add-row-btn { height: 26px; padding: 0 10px; border: none; border-radius: 5px; background: var(--green); color: #fff; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 3px; transition: background 0.12s; white-space: nowrap; }
+/* 統一アクションボタン（案件タブバー右） */
+.tab-action-btn { height: 28px; padding: 0 11px; border: 1px solid var(--border2); border-radius: 6px; background: var(--white); font-size: 10px; font-weight: 600; color: var(--text2); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 4px; transition: all 0.12s; white-space: nowrap; }
+.tab-action-btn:hover { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.tab-action-btn.accent { background: var(--green-bg); color: var(--green); }
+.tab-action-btn.accent:hover { background: var(--green-bg2); border-color: var(--green); }
+.tab-action-sep { width: 1px; height: 18px; background: var(--border2); margin: 0 2px; flex-shrink: 0; }
+.tab-add-row-btn { height: 28px; padding: 0 12px; border: none; border-radius: 6px; background: var(--green); color: #fff; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 3px; transition: background 0.12s; white-space: nowrap; }
 .tab-add-row-btn:hover { background: var(--green-l); }
 
 /* ══ TABLE ══ */
@@ -534,10 +536,6 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   30% { background-color: #bbf7d0 !important; }
 }
 
-/* ══ 設定ボタン ══ */
-.tab-settings-btn { height: 26px; padding: 0 10px; border: 1px solid var(--border2); border-radius: 5px; background: var(--green-bg); font-size: 10px; font-weight: 600; color: var(--green); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 4px; transition: all 0.12s; white-space: nowrap; }
-.tab-settings-btn:hover { background: var(--green-bg2); }
-
 /* ══ 分析ボタン ══ */
 .analyze-btn { display: inline-flex; align-items: center; gap: 4px; background: var(--hdr2); border: none; border-radius: 4px; padding: 4px 10px; margin-top: 8px; font-size: 10px; font-weight: 700; color: #fff; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s; }
 .analyze-btn:hover { background: var(--green); }
@@ -786,6 +784,54 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   font-size: 11px; color: var(--text2); line-height: 1.6;
   padding: 4px 6px; min-height: 20px;
 }
+
+/* ══ ヘッダー ビュー切替グループ ══ */
+.hdr-view-group { display: flex; gap: 4px; margin-right: 8px; }
+
+/* ══ 台本 ══ */
+.acc-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+.acc-label-row .acc-label { margin-bottom: 0; }
+.script-expand-btn {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: none; border: 1px solid var(--border2); border-radius: 4px;
+  padding: 2px 7px; font-size: 10px; font-weight: 600; color: var(--green);
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.12s;
+}
+.script-expand-btn:hover { background: var(--green-bg); border-color: var(--green); }
+.script-ta { font-size: 11px !important; }
+.script-preview {
+  font-size: 11px; color: var(--text2); line-height: 1.6;
+  padding: 6px 8px; background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border); border-radius: 5px;
+  max-height: 88px; overflow: hidden; white-space: pre-wrap;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+}
+.script-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--green); text-decoration: none; word-break: break-all; }
+.script-link:hover { text-decoration: underline; }
+.list-script-btn {
+  display: inline-flex; align-items: center; gap: 3px; margin-top: 5px;
+  background: var(--green-bg2); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 1px 8px; font-size: 9px; font-weight: 600; color: var(--hdr2);
+  cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.12s;
+}
+.list-script-btn:hover { background: var(--border2); }
+
+/* ══ 台本モーダル ══ */
+.script-modal { width: 720px; max-width: 92vw; display: flex; flex-direction: column; max-height: 86vh; }
+.script-modal-open { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; padding: 6px 12px; background: var(--green-bg); border: 1px solid var(--border2); border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--green); text-decoration: none; word-break: break-all; transition: all 0.12s; }
+.script-modal-open:hover { background: var(--green-bg2); }
+.script-modal-ta {
+  width: 100%; flex: 1; min-height: 320px; resize: vertical;
+  background: var(--green-bg); border: 1px solid var(--border2); border-radius: 8px;
+  padding: 14px 16px; font-size: 13px; line-height: 1.85; color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif; outline: none; transition: border-color 0.15s, background 0.15s;
+}
+.script-modal-ta:focus { border-color: var(--green); background: #fff; }
+.script-modal-ta::placeholder { color: var(--muted2); }
+.script-modal-ta[readonly] { background: #f9fafb; }
+.script-modal-actions { display: flex; gap: 8px; margin-top: 14px; }
+.script-modal-actions .tab-add-row-btn,
+.script-modal-actions .modal-close { flex: 1; margin-top: 0; height: auto; padding: 9px; justify-content: center; }
 </style>
 </head>
 <body>
@@ -817,7 +863,7 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   </div>
   <div class="hdr-sep"></div>
   <div class="hdr-spacer"></div>
-  <div style="display:flex;gap:4px;margin-right:8px" id="viewBtns" style="display:none">
+  <div class="hdr-view-group" id="viewBtns" style="display:none">
     <button class="hdr-view-btn active" id="hdrViewPlan" onclick="switchMainView('plan')">📋 企画</button>
     <button class="hdr-view-btn" id="hdrViewCal" onclick="switchMainView('cal')">📅 カレンダー</button>
     <button class="hdr-view-btn" id="hdrViewBench" onclick="switchMainView('bench')">🏆 ベンチマーク</button>
@@ -844,10 +890,11 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
 <div class="case-tabbar" id="caseTabbar" style="display:none">
   <button class="case-tab-add" onclick="addCase()">＋ 案件を追加</button>
   <div class="case-tabbar-right">
-    <button class="tab-invite-btn" onclick="openInviteModal()" id="inviteBtn">👥 メンバーを招待</button>
-    <button class="tab-settings-btn" onclick="openChannelModal()" style="background:var(--green-bg2)">📺 チャンネル分析</button>
-    <button class="tab-settings-btn" onclick="openSettingsModal()">⚙️ 設定</button>
-    <button class="tab-share-btn" onclick="openShareModal()">🔗 クライアントに共有</button>
+    <button class="tab-action-btn" onclick="openChannelModal()">📺 チャンネル分析</button>
+    <button class="tab-action-btn" onclick="openSettingsModal()">⚙️ 設定</button>
+    <span class="tab-action-sep"></span>
+    <button class="tab-action-btn" onclick="openInviteModal()" id="inviteBtn">👥 招待</button>
+    <button class="tab-action-btn accent" onclick="openShareModal()">🔗 共有</button>
     <button class="tab-add-row-btn" onclick="addRow()">＋ 企画を追加</button>
   </div>
 </div>
@@ -1114,6 +1161,20 @@ tr.jump-target td { animation: jumpFlash 1s ease; }
   </div>
 </div>
 
+<!-- 台本モーダル -->
+<div class="modal-bg" id="scriptBg" onclick="if(event.target===this)closeModal('scriptBg')">
+  <div class="modal script-modal">
+    <div class="modal-title">📜 台本</div>
+    <div class="modal-sub" id="scriptModalSub">URL・ドキュメントを貼り付けて台本を管理できます</div>
+    <a id="scriptOpenLink" class="script-modal-open" href="#" target="_blank" rel="noopener" style="display:none">🔗 リンクを開く</a>
+    <textarea class="script-modal-ta" id="scriptModalTa" oninput="onScriptModalInput()" placeholder="台本のURLやドキュメント本文を貼り付けてください"></textarea>
+    <div class="script-modal-actions">
+      <button class="tab-add-row-btn" id="scriptSaveBtn" onclick="saveScriptModal()">保存して閉じる</button>
+      <button class="modal-close" onclick="closeModal('scriptBg')">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Firebase -->
@@ -1333,7 +1394,7 @@ async function addRow() {
   const ref = await db.collection('samune_plans').add({
     planText: '', titleText: '', refs:[{},{},{},{},{}],
     caseId: activeCaseId, order: snap.size,
-    detail: { rationale: '', keywords: [] },
+    detail: { rationale: '', keywords: [], script: '' },
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
   createRow(ref.id, '', '', [{},{},{},{},{}], false, {});
@@ -1372,7 +1433,8 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
       <div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(planText)||'—'}</div>
       ${titleText ? `<hr class="plan-divider"><div class="plan-label">タイトル案 ②</div><div style="font-size:12px;font-weight:600;color:var(--hdr2);padding:2px 6px;line-height:1.65;min-height:20px">${esc(titleText)}</div>` : ''}
       ${det.rationale ? `<hr class="plan-divider"><div class="acc-label">💡 企画根拠</div><div class="acc-value">${esc(det.rationale)}</div>` : ''}
-      ${(det.keywords||[]).length > 0 ? `<div class="acc-label" style="margin-top:8px">🔑 メインワード</div><div style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 0">${kwHtml}</div>` : ''}`;
+      ${(det.keywords||[]).length > 0 ? `<div class="acc-label" style="margin-top:8px">🔑 メインワード</div><div style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 0">${kwHtml}</div>` : ''}
+      ${det.script ? `<hr class="plan-divider"><div class="acc-label-row"><div class="acc-label">📜 台本</div><button type="button" class="script-expand-btn" onclick="openScriptModal('',${rid},true)">⛶ 全文</button></div><textarea id="script-${rid}" style="display:none">${esc(det.script)}</textarea>${scriptPreviewHtml(det.script)}` : ''}`;
   } else {
     // 編集可能
     const kwChipsHtml = (det.keywords||[]).map(k => makeChipHtml(k, docId, rid)).join('');
@@ -1406,6 +1468,14 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
         </div>
       </div>
 
+      <div class="acc-field">
+        <div class="acc-label-row">
+          <div class="acc-label">📜 台本</div>
+          <button type="button" class="script-expand-btn" onclick="openScriptModal('${docId}',${rid})" title="全文を表示・編集">⛶ 拡大</button>
+        </div>
+        <textarea class="acc-ta script-ta" rows="2" placeholder="台本URL・ドキュメントを貼り付け" id="script-${rid}" style="resize:vertical;min-height:38px">${esc(det.script||'')}</textarea>
+      </div>
+
       <div class="plan-actions">
         <button class="analyze-btn" onclick="openAnalysis('${docId}',${rid})">🔍 分析</button>
         <button class="analyze-btn" style="background:var(--green-bg2);color:var(--hdr2);border:1px solid var(--border2)" onclick="openPostDateModal('${docId}')">📅 投稿日</button>
@@ -1415,6 +1485,7 @@ function createRow(docId, planText, titleText, refs, readOnly, detail) {
     tdPlan.querySelector('#plan-a-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
     if (hasTitleB) tdPlan.querySelector('#plan-b-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
     tdPlan.querySelector('#acc-rationale-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
+    tdPlan.querySelector('#script-'+rid).addEventListener('input', () => scheduleSave(docId, rid));
   }
   tr.appendChild(tdPlan);
 
@@ -1543,6 +1614,7 @@ async function saveRow(docId, rid) {
   const detail = {
     rationale: tr.querySelector('#acc-rationale-'+rid)?.value || '',
     keywords:  getTagsForRow(rid),
+    script:    tr.querySelector('#script-'+rid)?.value || '',
   };
   try { await db.collection('samune_plans').doc(docId).update({ planText, titleText, refs, detail }); } catch(e) {}
 }
@@ -1552,6 +1624,61 @@ async function delRow(docId, rid) {
   await db.collection('samune_plans').doc(docId).delete();
   document.getElementById('row-'+rid)?.remove();
   renum(); showToast('削除しました');
+}
+
+// ══ 台本 ══
+let scriptModalState = { docId: null, rid: null, readOnly: false };
+
+function firstUrl(text) {
+  const m = (text || '').match(/https?:\/\/[^\s<>"']+/);
+  return m ? m[0] : '';
+}
+
+function scriptPreviewHtml(text) {
+  const t = (text || '').trim();
+  const url = firstUrl(t);
+  // URLのみ（前後に説明が無い）の場合はリンク表示
+  if (url && t.length <= url.length + 4) {
+    return `<a class="script-link" href="${esc(url)}" target="_blank" rel="noopener">🔗 ${esc(url)}</a>`;
+  }
+  return `<div class="script-preview">${esc(t)}</div>`;
+}
+
+function openScriptModal(docId, rid, readOnly) {
+  const ta = document.getElementById('script-' + rid);
+  const val = ta ? ta.value : '';
+  scriptModalState = { docId, rid, readOnly: !!readOnly };
+  const modalTa = document.getElementById('scriptModalTa');
+  modalTa.value = val;
+  modalTa.readOnly = !!readOnly;
+  refreshScriptLink(val);
+  document.getElementById('scriptSaveBtn').style.display = readOnly ? 'none' : '';
+  document.getElementById('scriptModalSub').textContent = readOnly
+    ? '閲覧専用' : 'URL・ドキュメントを貼り付けて台本を管理できます';
+  document.getElementById('scriptBg').classList.add('open');
+  if (!readOnly) setTimeout(() => modalTa.focus(), 50);
+}
+
+function refreshScriptLink(val) {
+  const url = firstUrl(val);
+  const link = document.getElementById('scriptOpenLink');
+  if (url) { link.href = url; link.style.display = 'inline-flex'; }
+  else { link.style.display = 'none'; }
+}
+
+function onScriptModalInput() {
+  refreshScriptLink(document.getElementById('scriptModalTa').value);
+}
+
+function saveScriptModal() {
+  const { docId, rid, readOnly } = scriptModalState;
+  if (readOnly) { closeModal('scriptBg'); return; }
+  const val = document.getElementById('scriptModalTa').value;
+  const ta = document.getElementById('script-' + rid);
+  if (ta) ta.value = val;
+  if (docId) scheduleSave(docId, rid);
+  closeModal('scriptBg');
+  showToast('台本を保存しました');
 }
 
 // ══ YouTube ══
@@ -2062,9 +2189,11 @@ function renderListView() {
 
   listView.innerHTML = rows.map((tr, idx) => {
     const rid = tr.id.replace('row-', '');
+    const docId = tr.dataset.docId || '';
     const num = tr.querySelector('.rn')?.textContent || (idx + 1);
     const titleA = document.getElementById('plan-a-' + rid)?.value || '';
     const titleB = document.getElementById('plan-b-' + rid)?.value || '';
+    const script = document.getElementById('script-' + rid)?.value || '';
     const tags = Array.from(document.querySelectorAll('#tag-chips-' + rid + ' .tag-chip') || [])
       .map(c => c.textContent.replace('×','').trim()).filter(Boolean);
 
@@ -2106,6 +2235,7 @@ function renderListView() {
           <div class="list-row-plan-title">${esc(titleA) || '<span style="color:var(--muted2)">未入力</span>'}</div>
           ${titleB ? `<div class="list-row-plan-b">${esc(titleB)}</div>` : ''}
           ${tagsHtml ? `<div class="list-row-plan-tags">${tagsHtml}</div>` : ''}
+          ${script ? `<button class="list-script-btn" onclick="openScriptModal('${docId}',${rid},${isShare})">📜 台本</button>` : ''}
         </div>
         <div class="list-row-thumbs">${thumbsHtml}</div>
       </div>`;
