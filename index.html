@@ -152,7 +152,8 @@ td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .url-in::placeholder { color: var(--muted2); font-family: 'Noto Sans JP', sans-serif; font-size: 9px; }
 .go-btn { width: 24px; height: 24px; background: var(--green); border: none; border-radius: 4px; cursor: pointer; color: #fff; font-size: 11px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
 .go-btn:hover { background: var(--green-l); }
-.score-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 4px; padding: 3px 8px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; margin-bottom: 6px; border: 1px solid transparent; }
+.v-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+.score-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 4px; padding: 3px 8px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; border: 1px solid transparent; }
 .score-badge.S { color: #15803d; background: #f0fdf4; border-color: #86efac; }
 .score-badge.A { color: #16a34a; background: #f0fdf4; border-color: #bbf7d0; }
 .score-badge.B { color: #2563eb; background: #eff6ff; border-color: #93c5fd; }
@@ -173,12 +174,12 @@ td.ref-td:last-child { border-right: none; padding-right: 20px; }
 .thumb-dur { position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.8); color: #fff; font-family: 'DM Mono', monospace; font-size: 9px; padding: 1px 4px; border-radius: 2px; }
 .v-ch { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
 .v-title { font-size: 12px; font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 7px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.v-stats { display: flex; flex-direction: column; gap: 4px; }
-.v-stat { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 10px; }
-.v-stat-icon { color: var(--green-l); width: 10px; }
+.v-stats { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.v-stat { display: flex; align-items: center; gap: 4px; font-family: 'DM Mono', monospace; font-size: 10px; white-space: nowrap; }
+.v-stat-icon { color: var(--green-l); }
 .v-stat-val { color: var(--text); font-weight: 600; }
 .v-stat-sub { color: var(--muted2); }
-.v-ratio { font-family: 'DM Mono', monospace; font-size: 10px; margin-top: 6px; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 700; }
+.v-ratio { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 7px; border-radius: 4px; display: inline-block; font-weight: 700; white-space: nowrap; }
 .v-ratio.great { background: #f0fdf4; color: #15803d; }
 .v-ratio.ok { background: #dbeafe; color: #1d4ed8; }
 .v-ratio.low { background: #fef2f2; color: #dc2626; }
@@ -245,12 +246,12 @@ table.sheet tbody tr.drag-over { border-top: 2px solid var(--green); }
 table.sheet tbody tr.dragging { opacity: 0.4; }
 
 .add-title-btn {
-  display: inline-flex; align-items: center; gap: 3px;
+  display: inline-flex; align-items: center; gap: 2px;
   background: none; border: 1px dashed var(--border2);
-  border-radius: 4px; padding: 4px 8px; margin-top: 6px;
-  font-size: 10px; font-weight: 600; color: var(--muted);
+  border-radius: 3px; padding: 1px 6px; margin-top: 4px;
+  font-size: 9px; font-weight: 600; color: var(--muted2);
   cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
-  transition: all 0.15s;
+  transition: all 0.15s; line-height: 1.6;
 }
 .add-title-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
 .del-title-b-btn {
@@ -1718,7 +1719,7 @@ function renderCard(cid,vid,info,readOnly){
   const dLabel=sc.days<=30?`${sc.days}日前`:sc.days<=365?`${Math.round(sc.days/30)}ヶ月前`:'1年超';
   const el=document.getElementById(cid+'-card'); if(!el) return;
   el.dataset.refdata=JSON.stringify(info);
-  el.innerHTML=`<div class="score-badge ${sc.grade}">${sc.label}</div><div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div><a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener"><img src="${thumb}" alt=""><div class="thumb-ov"><div class="thumb-play"></div></div><span class="thumb-dur">${esc(info.duration)}</span></a><div class="v-ch">${esc(info.channel)}</div><div class="v-title">${esc(info.title)}</div><div class="v-stats"><div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span><span class="v-stat-sub">再生</span></div><div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span><span class="v-stat-sub">登録者</span></div><div class="v-stat"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span><span class="v-stat-sub">${info.uploadDate}</span></div></div><div class="v-ratio ${rCls}">再生/登録 = ${rStr}</div>`;
+  el.innerHTML=`<div class="v-top"><div class="score-badge ${sc.grade}">${sc.label}</div><div class="v-ratio ${rCls}" title="再生数 ÷ 登録者数">再生/登録 ${rStr}</div></div><div class="score-bar-wrap"><div class="score-bar ${sc.grade}" style="width:${Math.min(sc.score*2,100)}%"></div></div><a class="thumb-link" href="${ytUrl}" target="_blank" rel="noopener"><img src="${thumb}" alt=""><div class="thumb-ov"><div class="thumb-play"></div></div><span class="thumb-dur">${esc(info.duration)}</span></a><div class="v-ch">${esc(info.channel)}</div><div class="v-title">${esc(info.title)}</div><div class="v-stats"><div class="v-stat"><span class="v-stat-icon">▶</span><span class="v-stat-val">${fmt(info.views)}</span></div><div class="v-stat"><span class="v-stat-icon">🔔</span><span class="v-stat-val">${fmt(info.subs)}</span></div><div class="v-stat" title="${info.uploadDate}"><span class="v-stat-icon">📅</span><span class="v-stat-val">${dLabel}</span></div></div>`;
   el.classList.add('loaded');
   if(!readOnly) document.getElementById(cid+'-clear')?.classList.add('show');
 }
