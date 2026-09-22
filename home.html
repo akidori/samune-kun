@@ -208,18 +208,6 @@ a { color: inherit; text-decoration: none; }
 .rs-hd { display: flex; align-items: center; gap: 6px; margin-bottom: 9px; }
 .rs-hd h3 { font-size: 11.5px; font-weight: 700; color: var(--text); }
 .rs-hd .beta { font-size: 8.5px; font-weight: 700; color: var(--green); background: var(--green-bg2); padding: 1px 6px; border-radius: 8px; letter-spacing: 0.04em; }
-.rs-week { font-size: 9.5px; color: var(--muted2); font-family: 'DM Mono', monospace; margin-bottom: 8px; }
-.sched-day { margin-bottom: 8px; }
-.sched-day-lbl { font-size: 9.5px; font-weight: 700; color: var(--muted); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
-.sched-day-lbl.today { color: var(--green); }
-.sched-day-lbl .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: none; }
-.sched-day-lbl.today .dot { display: inline-block; }
-.sched-event { display: flex; gap: 7px; padding: 5px 6px; border-radius: 5px; margin-bottom: 2px; transition: background 0.12s; cursor: default; }
-.sched-event:hover { background: var(--green-bg); }
-.sched-time { font-size: 9.5px; color: var(--muted); font-family: 'DM Mono', monospace; flex-shrink: 0; width: 34px; }
-.sched-info { min-width: 0; }
-.sched-name { font-size: 10.5px; color: var(--text2); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sched-loc { font-size: 9.5px; color: var(--muted2); }
 
 .wait-item { display: flex; align-items: center; gap: 8px; padding: 7px 6px; border-radius: 6px; margin-bottom: 2px; transition: background 0.12s; cursor: default; }
 .wait-item:hover { background: var(--green-bg); }
@@ -426,12 +414,6 @@ a { color: inherit; text-decoration: none; }
   <!-- ══════ RIGHT SIDEBAR ══════ -->
   <aside class="right-sidebar">
     <div class="rs-block">
-      <div class="rs-hd"><h3>📅 今週のスケジュール</h3></div>
-      <div class="rs-week mono" id="weekRange"></div>
-      <div id="scheduleList"></div>
-    </div>
-
-    <div class="rs-block">
       <div class="rs-hd"><h3>📥 確認待ち</h3><span class="cnt mono" id="waitCount" style="font-size:10px;color:var(--muted2)"></span></div>
       <div id="waitingList"></div>
     </div>
@@ -463,7 +445,6 @@ a { color: inherit; text-decoration: none; }
     <button class="mnav-item active" data-nav="home"><span class="ic">🏠</span>ホーム</button>
     <button class="mnav-item" data-nav="waiting"><span class="ic">📥</span>確認待ち<span class="mnav-badge" id="mnavWaitBadge" style="display:none;"></span></button>
     <button class="mnav-item" data-nav="projects"><span class="ic">🎬</span>案件</button>
-    <button class="mnav-item" data-nav="schedule"><span class="ic">📅</span>予定</button>
     <a class="mnav-item" href="index.html"><span class="ic">📁</span>ツール</a>
   </div>
 </nav>
@@ -720,29 +701,6 @@ function renderSidebarFavorites() {
   }).join('');
 }
 
-function renderSchedule() {
-  const list = document.getElementById('scheduleList');
-  const byDay = {};
-  schedule.forEach(e => { (byDay[e.day] = byDay[e.day] || []).push(e); });
-  const days = Object.keys(byDay);
-  document.getElementById('weekRange').textContent = `${days[0]} 〜 ${days[days.length - 1]}`;
-  list.innerHTML = days.map(day => {
-    const isToday = byDay[day][0].today;
-    return `
-    <div class="sched-day">
-      <div class="sched-day-lbl ${isToday ? 'today' : ''}"><span class="dot"></span>${day}${isToday ? '（今日）' : ''}</div>
-      ${byDay[day].map(e => `
-        <div class="sched-event">
-          <span class="sched-time mono">${e.time}</span>
-          <div class="sched-info">
-            <div class="sched-name">${e.name}</div>
-            <div class="sched-loc">${e.loc}</div>
-          </div>
-        </div>`).join('')}
-    </div>`;
-  }).join('');
-}
-
 const REASON_CLASS = { '自分の確認待ち': 'self', 'クライアント確認待ち': 'client', '編集者から初稿待ち': 'editor', '素材待ち': 'material', '担当者確認待ち': 'assignee' };
 function daysAgo(dateStr) {
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
@@ -791,7 +749,6 @@ function renderAll() {
   renderProjects();
   renderChannels();
   renderSidebarFavorites();
-  renderSchedule();
   renderWaiting();
   renderNotifications();
 }
@@ -804,12 +761,10 @@ document.querySelectorAll('[data-nav]').forEach(el => {
   el.addEventListener('click', () => {
     document.querySelectorAll('.sb-item[data-nav], .mnav-item[data-nav]').forEach(x => x.classList.remove('active'));
     document.querySelectorAll(`[data-nav="${el.dataset.nav}"]`).forEach(x => x.classList.add('active'));
-    const targets = { mytasks: 'today', waiting: 'right-waiting', channels: 'channels', projects: 'projects', schedule: 'right-schedule' };
     if (el.dataset.nav === 'home') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (el.dataset.nav === 'waiting') { document.querySelector('.right-sidebar').scrollIntoView({ behavior: 'smooth' }); return; }
     if (el.dataset.nav === 'channels' || el.dataset.nav === 'projects') { document.querySelector(`[data-sec="${el.dataset.nav === 'channels' ? 'channels' : 'projects'}"]`).scrollIntoView({ behavior: 'smooth' }); return; }
     if (el.dataset.nav === 'mytasks') { document.querySelector('[data-sec="today"]').scrollIntoView({ behavior: 'smooth' }); return; }
-    if (el.dataset.nav === 'schedule') { document.querySelector('.right-sidebar').scrollIntoView({ behavior: 'smooth' }); return; }
     if (el.dataset.nav === 'calendar') { window.location.href = 'index.html'; return; }
     showToast('この画面は準備中です');
   });
