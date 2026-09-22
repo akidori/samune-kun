@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ホーム | ものがたりっち</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+:root {
+  --bg: #f8faf8;
+  --white: #fff;
+  --hdr: #0f4c2a;
+  --hdr2: #0a3d22;
+  --green: #16a34a;
+  --green-l: #22c55e;
+  --green-xl: #4ade80;
+  --green-bg: #f0fdf4;
+  --green-bg2: #dcfce7;
+  --border: #e2f0e6;
+  --border2: #bbf7d0;
+  --text: #0f172a;
+  --text2: #374151;
+  --muted: #6b7280;
+  --muted2: #9ca3af;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-border: #fecaca;
+  --sidebar-w: 216px;
+  --right-w: 296px;
+  --hdr-h: 52px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: var(--text); font-size: 12px; min-height: 100vh; }
+button, input { font-family: 'Noto Sans JP', sans-serif; }
+a { color: inherit; text-decoration: none; }
+.mono { font-family: 'DM Mono', monospace; }
+
+/* ══════ TOP HEADER ══════ */
+.hdr {
+  background: var(--hdr);
+  height: var(--hdr-h); padding: 0 14px;
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.hdr-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.hdr-icon { width: 28px; height: 28px; background: linear-gradient(135deg,var(--green-l),var(--green)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.hdr-name { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.1; }
+.hdr-sub { font-size: 9px; color: rgba(255,255,255,0.4); line-height: 1.1; }
+.hdr-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+.hdr-search {
+  display: flex; align-items: center; gap: 6px;
+  width: 300px; max-width: 34vw; height: 30px; padding: 0 10px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px; color: rgba(255,255,255,0.5); cursor: pointer;
+  transition: background 0.15s;
+}
+.hdr-search:hover { background: rgba(255,255,255,0.13); }
+.hdr-search input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #fff; font-size: 11px; }
+.hdr-search input::placeholder { color: rgba(255,255,255,0.4); }
+.hdr-kbd { font-size: 9px; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); flex-shrink: 0; }
+.hdr-spacer { flex: 1; }
+.hdr-btn { height: 30px; padding: 0 12px; border-radius: 5px; border: none; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; display: flex; align-items: center; gap: 5px; transition: all 0.15s; flex-shrink: 0; }
+.hdr-btn.green { background: var(--green-l); color: var(--hdr2); }
+.hdr-btn.green:hover { background: var(--green-xl); }
+.hdr-icon-btn { position: relative; width: 30px; height: 30px; border-radius: 6px; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; transition: background 0.15s; }
+.hdr-icon-btn:hover { background: rgba(255,255,255,0.18); }
+.hdr-badge-dot { position: absolute; top: 4px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: #f87171; border: 1.5px solid var(--hdr); }
+.hdr-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+
+/* ══════ SHELL ══════ */
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr var(--right-w);
+  grid-template-areas: "sidebar main right";
+  min-height: calc(100vh - var(--hdr-h));
+}
+
+/* ══════ LEFT SIDEBAR ══════ */
+.sidebar {
+  grid-area: sidebar;
+  background: var(--white); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: var(--hdr-h); height: calc(100vh - var(--hdr-h));
+  overflow-y: auto;
+}
+.sb-section { padding: 10px 10px 4px; }
+.sb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted2); padding: 8px 8px 4px; }
+.sb-item {
+  display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+  padding: 7px 9px; border-radius: 6px; border: none; background: none;
+  font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer;
+  transition: background 0.12s, color 0.12s; margin-bottom: 1px;
+}
+.sb-item:hover { background: var(--green-bg); }
+.sb-item.active { background: var(--green-bg2); color: var(--hdr2); font-weight: 700; }
+.sb-item .ic { width: 16px; text-align: center; font-size: 13px; flex-shrink: 0; }
+.sb-item .lbl { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: var(--green); color: #fff; font-family: 'DM Mono', monospace; flex-shrink: 0; }
+.sb-badge.muted { background: var(--border2); color: var(--hdr2); }
+.sb-div { height: 1px; background: var(--border); margin: 6px 12px; }
+.sb-fav-item { display: flex; align-items: center; gap: 8px; padding: 6px 9px; border-radius: 6px; cursor: pointer; transition: background 0.12s; }
+.sb-fav-item:hover { background: var(--green-bg); }
+.sb-fav-logo { width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.sb-fav-name { font-size: 11.5px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-spacer { flex: 1; }
+.sb-sync { margin: 6px 10px 8px; padding: 9px 10px; background: var(--green-bg); border: 1px solid var(--border2); border-radius: 8px; }
+.sb-sync-row { display: flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; color: var(--hdr2); margin-bottom: 3px; }
+.sb-sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-l); box-shadow: 0 0 0 3px rgba(34,197,94,0.18); flex-shrink: 0; }
+.sb-sync-sub { font-size: 9.5px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.sb-bottom { display: flex; border-top: 1px solid var(--border); padding: 6px; gap: 2px; }
+.sb-bottom .sb-item { flex: 1; justify-content: center; }
+.sb-bottom .sb-item .lbl { display: none; }
+
+/* ══════ MAIN ══════ */
+.main { grid-area: main; padding: 20px 24px 60px; min-width: 0; }
+.greeting { margin-bottom: 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.greeting h1 { font-size: 19px; font-weight: 700; color: var(--hdr2); margin-bottom: 4px; }
+.greeting p { font-size: 11.5px; color: var(--muted); }
+.greeting-date { font-size: 10.5px; color: var(--muted2); font-family: 'DM Mono', monospace; text-align: right; white-space: nowrap; }
+
+.section { margin-bottom: 26px; }
+.section-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.section-hd h2 { font-size: 13px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
+.section-hd .cnt { font-size: 10px; color: var(--muted2); font-family: 'DM Mono', monospace; font-weight: 500; }
+.section-hd-spacer { flex: 1; }
+.link-btn { font-size: 10.5px; font-weight: 600; color: var(--green); background: none; border: none; cursor: pointer; padding: 3px 4px; }
+.link-btn:hover { text-decoration: underline; }
+
+/* today tasks */
+.task-list { display: flex; flex-direction: column; gap: 6px; }
+.task-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  transition: border-color 0.15s, transform 0.15s, opacity 0.25s, max-height 0.25s;
+}
+.task-row:hover { border-color: var(--border2); }
+.task-row.leaving { opacity: 0; transform: translateX(8px); }
+.pr-badge { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+.pr-badge.最優先 { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.pr-badge.優先 { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.pr-badge.通常 { background: var(--border); color: var(--muted); border: 1px solid var(--border2); }
+.proj-logo { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.task-main { flex: 1; min-width: 0; }
+.task-title-row { display: flex; align-items: baseline; gap: 6px; }
+.task-proj { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-ch { font-size: 10px; color: var(--muted2); white-space: nowrap; }
+.task-action { font-size: 11px; color: var(--text2); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-meta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.meta-comment { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--muted2); font-family: 'DM Mono', monospace; }
+.meta-deadline { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; }
+.meta-deadline.soon { color: var(--red); font-weight: 700; }
+.primary-action-btn { height: 28px; padding: 0 13px; border-radius: 6px; border: 1px solid var(--green); background: var(--white); color: var(--green); font-size: 10.5px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.12s; flex-shrink: 0; }
+.primary-action-btn:hover { background: var(--green); color: #fff; }
+.empty-note { padding: 18px; text-align: center; color: var(--muted2); font-size: 11px; background: var(--white); border: 1px dashed var(--border2); border-radius: 8px; }
+
+/* filters */
+.filter-tabs { display: flex; gap: 4px; }
+.filter-tab { padding: 4px 11px; border-radius: 14px; border: 1px solid var(--border); background: var(--white); font-size: 10.5px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+.filter-tab:hover { border-color: var(--border2); color: var(--text2); }
+.filter-tab.active { background: var(--hdr2); border-color: var(--hdr2); color: #fff; }
+
+/* project cards - horizontal */
+.hcards { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+.hcards::-webkit-scrollbar { height: 6px; }
+.hcards::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.proj-card {
+  flex: 0 0 216px; background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: all 0.15s;
+}
+.proj-card:hover { border-color: var(--green-l); box-shadow: 0 3px 10px rgba(22,163,74,0.08); transform: translateY(-1px); }
+.proj-card-top { display: flex; align-items: center; gap: 8px; }
+.proj-card-names { flex: 1; min-width: 0; }
+.proj-card-ch { font-size: 9.5px; color: var(--muted2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.proj-card-name { font-size: 12.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phase-badge { align-self: flex-start; font-size: 9.5px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+.progress-track { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg,var(--green-l),var(--green)); border-radius: 3px; transition: width 0.3s; }
+.proj-card-next { font-size: 10.5px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.proj-card-next b { color: var(--hdr2); font-weight: 700; }
+.proj-card-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 9.5px; color: var(--muted2); font-family: 'DM Mono', monospace; }
+.proj-card-bottom .meta-comment { color: var(--muted2); }
+
+/* channel cards */
+.ch-card {
+  flex: 0 0 148px; background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; transition: all 0.15s; text-align: center;
+}
+.ch-card:hover { border-color: var(--green-l); box-shadow: 0 3px 10px rgba(22,163,74,0.08); }
+.ch-logo-lg { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; }
+.ch-card-name { font-size: 11.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.ch-card-count { font-size: 9.5px; color: var(--muted2); font-family: 'DM Mono', monospace; }
+.ch-add-card { flex: 0 0 148px; border: 1px dashed var(--border2); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--muted2); cursor: pointer; transition: all 0.15s; min-height: 92px; background: none; }
+.ch-add-card:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+
+/* ══════ RIGHT SIDEBAR ══════ */
+.right-sidebar {
+  grid-area: right; border-left: 1px solid var(--border);
+  padding: 16px 14px 40px; position: sticky; top: var(--hdr-h); height: calc(100vh - var(--hdr-h)); overflow-y: auto;
+}
+.rs-block { margin-bottom: 22px; }
+.rs-hd { display: flex; align-items: center; gap: 6px; margin-bottom: 9px; }
+.rs-hd h3 { font-size: 11.5px; font-weight: 700; color: var(--text); }
+.rs-hd .beta { font-size: 8.5px; font-weight: 700; color: var(--green); background: var(--green-bg2); padding: 1px 6px; border-radius: 8px; letter-spacing: 0.04em; }
+.rs-week { font-size: 9.5px; color: var(--muted2); font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+.sched-day { margin-bottom: 8px; }
+.sched-day-lbl { font-size: 9.5px; font-weight: 700; color: var(--muted); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+.sched-day-lbl.today { color: var(--green); }
+.sched-day-lbl .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: none; }
+.sched-day-lbl.today .dot { display: inline-block; }
+.sched-event { display: flex; gap: 7px; padding: 5px 6px; border-radius: 5px; margin-bottom: 2px; transition: background 0.12s; cursor: default; }
+.sched-event:hover { background: var(--green-bg); }
+.sched-time { font-size: 9.5px; color: var(--muted); font-family: 'DM Mono', monospace; flex-shrink: 0; width: 34px; }
+.sched-info { min-width: 0; }
+.sched-name { font-size: 10.5px; color: var(--text2); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sched-loc { font-size: 9.5px; color: var(--muted2); }
+
+.wait-item { display: flex; align-items: center; gap: 8px; padding: 7px 6px; border-radius: 6px; margin-bottom: 2px; transition: background 0.12s; cursor: default; }
+.wait-item:hover { background: var(--green-bg); }
+.wait-info { flex: 1; min-width: 0; }
+.wait-name { font-size: 11px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wait-reason-row { display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+.wait-reason { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.wait-reason.self { background: var(--red-bg); color: var(--red); }
+.wait-reason.client { background: var(--amber-bg); color: var(--amber); }
+.wait-reason.editor, .wait-reason.assignee { background: #eff6ff; color: #2563eb; }
+.wait-reason.material { background: #f3f4f6; color: var(--muted); }
+.wait-since { font-size: 9px; color: var(--muted2); font-family: 'DM Mono', monospace; white-space: nowrap; flex-shrink: 0; }
+
+/* AI assistant */
+.ai-panel { background: var(--green-bg); border: 1px solid var(--border2); border-radius: 10px; padding: 10px; }
+.ai-log { max-height: 190px; overflow-y: auto; margin-bottom: 8px; display: flex; flex-direction: column; gap: 7px; }
+.ai-msg { font-size: 10.5px; line-height: 1.55; padding: 7px 9px; border-radius: 8px; white-space: pre-wrap; }
+.ai-msg.user { background: var(--hdr2); color: #fff; align-self: flex-end; max-width: 88%; }
+.ai-msg.assistant { background: #fff; color: var(--text2); border: 1px solid var(--border2); }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.ai-chip { font-size: 9.5px; padding: 4px 9px; border-radius: 12px; background: #fff; border: 1px solid var(--border2); color: var(--hdr2); cursor: pointer; transition: all 0.12s; }
+.ai-chip:hover { background: var(--green-bg2); border-color: var(--green); }
+.ai-input-row { display: flex; gap: 6px; }
+.ai-input-row input { flex: 1; min-width: 0; height: 30px; padding: 0 9px; border-radius: 6px; border: 1px solid var(--border2); font-size: 11px; outline: none; background: #fff; }
+.ai-input-row input:focus { border-color: var(--green); }
+.ai-send-btn { width: 30px; height: 30px; border-radius: 6px; border: none; background: var(--green); color: #fff; font-size: 13px; cursor: pointer; flex-shrink: 0; }
+.ai-send-btn:hover { background: var(--hdr2); }
+
+/* ══════ MODALS / MISC ══════ */
+.overlay { position: fixed; inset: 0; background: rgba(10,20,15,0.45); z-index: 900; display: none; align-items: flex-start; justify-content: center; padding-top: 10vh; }
+.overlay.visible { display: flex; }
+.cmdk-modal { width: 560px; max-width: 90vw; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+.cmdk-input { width: 100%; padding: 16px 18px; font-size: 14px; border: none; outline: none; border-bottom: 1px solid var(--border); }
+.cmdk-results { max-height: 320px; overflow-y: auto; padding: 6px; }
+.cmdk-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 7px; cursor: pointer; font-size: 12px; }
+.cmdk-item:hover { background: var(--green-bg); }
+.cmdk-item .tag { margin-left: auto; font-size: 9px; color: var(--muted2); font-family: 'DM Mono', monospace; }
+.cmdk-empty { padding: 24px; text-align: center; color: var(--muted2); font-size: 11px; }
+
+.newproj-modal { width: 380px; max-width: 90vw; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 20px; }
+.newproj-modal h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: var(--hdr2); }
+.field-lbl { font-size: 10px; font-weight: 700; color: var(--muted); margin-bottom: 4px; display: block; }
+.field-in, .field-select { width: 100%; padding: 8px 10px; border: 1px solid var(--border2); border-radius: 6px; font-size: 12px; outline: none; margin-bottom: 12px; font-family: 'Noto Sans JP', sans-serif; }
+.field-in:focus, .field-select:focus { border-color: var(--green); }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-cancel { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border2); background: #fff; color: var(--text2); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.btn-submit { padding: 8px 16px; border-radius: 6px; border: none; background: var(--green); color: #fff; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+.btn-submit:hover { background: var(--hdr2); }
+
+.dropdown { position: absolute; top: 46px; right: 14px; width: 260px; background: #fff; border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.18); border: 1px solid var(--border); z-index: 600; display: none; overflow: hidden; }
+.dropdown.visible { display: block; }
+.dropdown-hd { padding: 10px 12px; font-size: 11px; font-weight: 700; border-bottom: 1px solid var(--border); color: var(--hdr2); }
+.notif-item { padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 10.5px; color: var(--text2); line-height: 1.5; }
+.notif-item:last-child { border-bottom: none; }
+.notif-time { font-size: 9px; color: var(--muted2); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.profile-item { padding: 9px 12px; font-size: 11px; color: var(--text2); cursor: pointer; }
+.profile-item:hover { background: var(--green-bg); }
+
+.toast-wrap { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.toast { background: var(--hdr2); color: #fff; padding: 9px 16px; border-radius: 8px; font-size: 11.5px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; animation: toast-in 0.2s ease; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ══════ MOBILE BOTTOM NAV ══════ */
+.mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #fff; border-top: 1px solid var(--border); z-index: 500; box-shadow: 0 -2px 10px rgba(0,0,0,0.06); }
+.mobile-nav-inner { display: flex; height: 100%; }
+.mnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: none; background: none; color: var(--muted); font-size: 9px; cursor: pointer; position: relative; }
+.mnav-item.active { color: var(--green); font-weight: 700; }
+.mnav-item .ic { font-size: 16px; }
+.mnav-badge { position: absolute; top: 3px; right: 22%; width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+
+/* ══════ RESPONSIVE ══════ */
+@media (max-width: 1180px) {
+  .shell { grid-template-columns: var(--sidebar-w) 1fr; grid-template-areas: "sidebar main" "sidebar right"; }
+  .right-sidebar { position: static; height: auto; border-left: none; border-top: 1px solid var(--border); max-width: 640px; }
+  .hcards { padding-bottom: 10px; }
+}
+@media (max-width: 860px) {
+  :root { --sidebar-w: 0px; }
+  .shell { grid-template-columns: 1fr; grid-template-areas: "main" "right"; }
+  .sidebar { display: none; }
+  .hdr { gap: 8px; padding: 0 10px; }
+  .hdr-sub { display: none; }
+  .hdr-search { width: 130px; }
+  .main { padding: 16px 14px 76px; }
+  .right-sidebar { padding: 14px 14px 76px; }
+  .mobile-nav { display: block; }
+  body.wait-priority .main .section[data-sec="today"] { order: 1; }
+}
+@media (max-width: 620px) {
+  .hdr-search { width: 34px; padding: 0; justify-content: center; }
+  .hdr-search input, .hdr-kbd { display: none; }
+  .hdr-btn.green .btn-txt { display: none; }
+  .hdr-btn.green { padding: 0 9px; }
+}
+@media (max-width: 480px) {
+  .task-meta { flex-wrap: wrap; }
+  .greeting { flex-direction: column; align-items: flex-start; }
+  .proj-card, .ch-card { flex-basis: 78vw; }
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-icon">📖</div>
+    <div>
+      <div class="hdr-name">ものがたりっち</div>
+      <div class="hdr-sub">制作OS ・ Studio OS 連携</div>
+    </div>
+  </div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-search" id="hdrSearchOpen">
+    <span>🔍</span>
+    <input type="text" placeholder="案件・タスク・メンバー・ファイルを検索..." readonly>
+    <span class="hdr-kbd mono">⌘K</span>
+  </div>
+  <div class="hdr-spacer"></div>
+  <button class="hdr-btn green" id="btnNewProject">＋ <span class="btn-txt">新規案件</span></button>
+  <button class="hdr-icon-btn" id="btnNotif">🔔<span class="hdr-badge-dot" id="notifDot"></span></button>
+  <div class="hdr-avatar" id="btnProfile">中</div>
+
+  <div class="dropdown" id="notifDropdown">
+    <div class="dropdown-hd">通知</div>
+    <div id="notifList"></div>
+  </div>
+  <div class="dropdown" id="profileDropdown" style="width:180px;">
+    <div class="profile-item">プロフィール</div>
+    <div class="profile-item">設定</div>
+    <div class="profile-item" style="color:var(--red)">ログアウト</div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- ══════ LEFT SIDEBAR ══════ -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <button class="sb-item active" data-nav="home"><span class="ic">🏠</span><span class="lbl">ホーム</span></button>
+      <button class="sb-item" data-nav="mytasks"><span class="ic">✅</span><span class="lbl">マイタスク</span><span class="sb-badge" id="sbMyTaskBadge">0</span></button>
+      <button class="sb-item" data-nav="waiting"><span class="ic">📥</span><span class="lbl">確認待ち</span><span class="sb-badge muted" id="sbWaitingBadge">0</span></button>
+    </div>
+    <div class="sb-div"></div>
+    <div class="sb-section">
+      <a class="sb-item" href="index.html"><span class="ic">📁</span><span class="lbl">案件一覧</span></a>
+      <button class="sb-item" data-nav="channels"><span class="ic">🗂️</span><span class="lbl">チャンネル</span></button>
+      <button class="sb-item" data-nav="calendar"><span class="ic">📅</span><span class="lbl">カレンダー</span></button>
+      <button class="sb-item" data-nav="files"><span class="ic">📄</span><span class="lbl">ファイル</span></button>
+      <button class="sb-item" data-nav="members"><span class="ic">👥</span><span class="lbl">メンバー</span></button>
+      <button class="sb-item" data-nav="reports"><span class="ic">📊</span><span class="lbl">レポート</span></button>
+    </div>
+    <div class="sb-div"></div>
+    <div class="sb-section">
+      <div class="sb-label">お気に入り</div>
+      <div id="sbFavorites"></div>
+    </div>
+    <div class="sb-spacer"></div>
+    <div class="sb-sync">
+      <div class="sb-sync-row"><span class="sb-sync-dot"></span>Studio OS 連携中</div>
+      <div class="sb-sync-sub" id="sbSyncTime">最終同期：1分前</div>
+    </div>
+    <div class="sb-bottom">
+      <button class="sb-item"><span class="ic">⚙️</span><span class="lbl">設定</span></button>
+      <button class="sb-item"><span class="ic">👤</span><span class="lbl">プロフィール</span></button>
+    </div>
+  </aside>
+
+  <!-- ══════ MAIN ══════ -->
+  <main class="main">
+    <div class="greeting">
+      <div>
+        <h1 id="greetingTitle">おはようございます、中村さん</h1>
+        <p>今日も、よいものがたりをつくりましょう。</p>
+      </div>
+      <div class="greeting-date" id="greetingDate"></div>
+    </div>
+
+    <section class="section" data-sec="today">
+      <div class="section-hd">
+        <h2>☀️ 今日やること <span class="cnt" id="todayCount"></span></h2>
+        <div class="section-hd-spacer"></div>
+        <button class="link-btn" id="btnShowAllTasks">すべて見る</button>
+      </div>
+      <div class="task-list" id="todayTaskList"></div>
+    </section>
+
+    <section class="section" data-sec="projects">
+      <div class="section-hd">
+        <h2>🎬 進行中の案件 <span class="cnt" id="projCount"></span></h2>
+        <div class="section-hd-spacer"></div>
+        <div class="filter-tabs" id="projFilters"></div>
+      </div>
+      <div class="hcards" id="projCards"></div>
+    </section>
+
+    <section class="section" data-sec="channels">
+      <div class="section-hd">
+        <h2>🗂️ チャンネル <span class="cnt" id="chCount"></span></h2>
+      </div>
+      <div class="hcards" id="chCards"></div>
+    </section>
+  </main>
+
+  <!-- ══════ RIGHT SIDEBAR ══════ -->
+  <aside class="right-sidebar">
+    <div class="rs-block">
+      <div class="rs-hd"><h3>📅 今週のスケジュール</h3></div>
+      <div class="rs-week mono" id="weekRange"></div>
+      <div id="scheduleList"></div>
+    </div>
+
+    <div class="rs-block">
+      <div class="rs-hd"><h3>📥 確認待ち</h3><span class="cnt mono" id="waitCount" style="font-size:10px;color:var(--muted2)"></span></div>
+      <div id="waitingList"></div>
+    </div>
+
+    <div class="rs-block">
+      <div class="rs-hd"><h3>💡 AIアシスタント</h3><span class="beta">Beta</span></div>
+      <div class="ai-panel">
+        <div class="ai-log" id="aiLog">
+          <div class="ai-msg assistant">こんにちは。Studio OSとものがたりっちのデータをもとに、タスクの要約や進捗の確認・更新をお手伝いします。</div>
+        </div>
+        <div class="ai-chips">
+          <button class="ai-chip" data-q="今日のタスクを要約して">今日のタスクを要約して</button>
+          <button class="ai-chip" data-q="案件の進捗を更新して">案件の進捗を更新して</button>
+          <button class="ai-chip" data-q="今週の撮影スケジュールを確認">今週の撮影スケジュールを確認</button>
+        </div>
+        <div class="ai-input-row">
+          <input type="text" id="aiInput" placeholder="質問や指示を入力...">
+          <button class="ai-send-btn" id="aiSend">↑</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ══════ MOBILE BOTTOM NAV ══════ -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mnav-item active" data-nav="home"><span class="ic">🏠</span>ホーム</button>
+    <button class="mnav-item" data-nav="waiting"><span class="ic">📥</span>確認待ち<span class="mnav-badge" id="mnavWaitBadge" style="display:none;"></span></button>
+    <button class="mnav-item" data-nav="projects"><span class="ic">🎬</span>案件</button>
+    <button class="mnav-item" data-nav="schedule"><span class="ic">📅</span>予定</button>
+    <a class="mnav-item" href="index.html"><span class="ic">📁</span>ツール</a>
+  </div>
+</nav>
+
+<!-- ══════ CMD+K SEARCH ══════ -->
+<div class="overlay" id="cmdkOverlay">
+  <div class="cmdk-modal">
+    <input type="text" class="cmdk-input" id="cmdkInput" placeholder="案件・タスク・メンバー・ファイルを検索...">
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<!-- ══════ NEW PROJECT MODAL ══════ -->
+<div class="overlay" id="newProjOverlay">
+  <div class="newproj-modal">
+    <h3>新規案件を作成</h3>
+    <label class="field-lbl">案件名</label>
+    <input type="text" class="field-in" id="npName" placeholder="例：11月新作Vlog企画">
+    <label class="field-lbl">チャンネル</label>
+    <select class="field-select" id="npChannel"></select>
+    <label class="field-lbl">開始工程</label>
+    <select class="field-select" id="npPhase">
+      <option>企画</option><option>撮影</option><option>編集</option><option>確認</option><option>公開</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="npCancel">キャンセル</button>
+      <button class="btn-submit" id="npSubmit">作成する</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ═══════════════════════════ DATA ═══════════════════════════
+   本番では Studio OS / ものがたりっち のDB・APIを MCP 経由で読み書きする想定。
+   ここではUI・操作フローを検証するためのローカルモックデータを使用する。 */
+
+const PHASES = ['企画', '撮影', '編集', '確認', '公開'];
+const PHASE_PROGRESS = { '企画': 15, '撮影': 38, '編集': 62, '確認': 85, '公開': 100 };
+const PHASE_COLOR = { '企画': '#8b5cf6', '撮影': '#2563eb', '編集': '#d97706', '確認': '#dc2626', '公開': '#16a34a' };
+const PALETTE = ['#16a34a','#2563eb','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#65a30d'];
+
+function colorFor(seed) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return PALETTE[h % PALETTE.length];
+}
+function initials(name) { return name.slice(0, 2); }
+
+let channels = [
+  { id: 'ch1', name: 'ものがたり Vlog', favorite: true },
+  { id: 'ch2', name: '旅する料理人 ハル', favorite: true },
+  { id: 'ch3', name: 'ビジネス図解チャンネル', favorite: true },
+  { id: 'ch4', name: 'ゆる建築めぐり', favorite: false },
+];
+
+let projects = [
+  { id: 'p1', name: '11月新作Vlog #24', channelId: 'ch1', phase: '確認', nextAction: 'AKが初稿確認', assignee: 'AK', deadline: '2026-09-24', blockedBy: null, comments: 4, status: 'active', updatedAt: '2026-09-22T08:10:00' },
+  { id: 'p2', name: '福岡ロケ ダイジェスト', channelId: 'ch1', phase: '編集', nextAction: '編集者が本編集', assignee: '編集:サカイ', deadline: '2026-09-26', blockedBy: null, comments: 2, status: 'active', updatedAt: '2026-09-21T17:40:00' },
+  { id: 'p3', name: '秋の一汁三菜 特集', channelId: 'ch2', phase: '撮影', nextAction: 'ロケハン結果を共有', assignee: 'AK', deadline: '2026-09-25', blockedBy: null, comments: 1, status: 'active', updatedAt: '2026-09-22T07:00:00' },
+  { id: 'p4', name: 'DXの進め方 #12', channelId: 'ch3', phase: '確認', nextAction: 'クライアント確認待ち', assignee: 'クライアント', deadline: '2026-09-29', blockedBy: 'クライアント確認待ち', comments: 6, status: 'waiting', updatedAt: '2026-09-20T11:20:00' },
+  { id: 'p5', name: '経営指標の読み方', channelId: 'ch3', phase: '企画', nextAction: '構成案を作成', assignee: 'AK', deadline: '2026-10-02', blockedBy: null, comments: 0, status: 'active', updatedAt: '2026-09-19T09:00:00' },
+  { id: 'p6', name: '古民家リノベ密着', channelId: 'ch4', phase: '編集', nextAction: '編集者から初稿待ち', assignee: '編集:モリ', deadline: '2026-09-27', blockedBy: '編集者から初稿待ち', comments: 3, status: 'waiting', updatedAt: '2026-09-21T14:00:00' },
+  { id: 'p7', name: '一人暮らしごはん week2', channelId: 'ch2', phase: '公開', nextAction: '公開後の初速確認', assignee: 'AK', deadline: '2026-09-23', blockedBy: null, comments: 1, status: 'active', updatedAt: '2026-09-22T06:30:00' },
+];
+
+let todayTasks = [
+  { id: 't1', projectId: 'p1', priority: '最優先', action: '初稿を確認してコメントを返す', deadline: '今日 18:00', comments: 4, primaryLabel: '確認する', kind: 'review' },
+  { id: 't2', projectId: 'p3', priority: '優先', action: 'ロケハン結果をチャンネルに共有', deadline: '今日 15:00', comments: 1, primaryLabel: '作業を開く', kind: 'work' },
+  { id: 't3', projectId: 'p7', priority: '通常', action: '公開後の再生数を確認', deadline: '今日中', comments: 1, primaryLabel: '確認する', kind: 'review' },
+  { id: 't4', projectId: 'p5', priority: '通常', action: '構成案のたたき台を作成', deadline: '明日 12:00', comments: 0, primaryLabel: '作業を開く', kind: 'work' },
+];
+
+let schedule = [
+  { day: '9/22(火)', today: true, time: '10:00', name: '編集方針すり合わせ', loc: 'Meet' },
+  { day: '9/22(火)', today: true, time: '15:00', name: '福岡ロケ 振り返りMTG', loc: '会議室A' },
+  { day: '9/23(水)', today: false, time: '09:30', name: '社内定例', loc: 'Meet' },
+  { day: '9/24(木)', today: false, time: '13:00', name: '秋の一汁三菜 撮影MTG', loc: '会議室B' },
+  { day: '9/25(金)', today: false, time: '09:00', name: '一汁三菜 撮影', loc: '都内スタジオ' },
+  { day: '9/26(土)', today: false, time: '11:00', name: 'クライアント定例（DX案件）', loc: 'Meet' },
+];
+
+const notifications = [
+  { text: 'AKさんが「11月新作Vlog #24」にコメントしました', time: '5分前' },
+  { text: '「秋の一汁三菜 特集」の締切が近づいています', time: '1時間前' },
+  { text: '編集:モリさんが初稿を提出しました', time: '3時間前' },
+];
+
+let currentFilter = 'すべて';
+let showAllTasks = false;
+
+/* ═══════════════════════════ AUTOMATION（進めた結果が反映される） ═══════════════════════════ */
+function advancePhase(project) {
+  const idx = PHASES.indexOf(project.phase);
+  if (idx < 0 || idx >= PHASES.length - 1) return null;
+  const next = PHASES[idx + 1];
+  project.phase = next;
+  project.updatedAt = new Date().toISOString();
+  if (next === '確認') { project.status = 'waiting'; project.blockedBy = '自分の確認待ち'; project.nextAction = 'AKが初稿確認'; project.assignee = 'AK'; }
+  else if (next === '公開') { project.status = 'active'; project.blockedBy = null; project.nextAction = '公開後の初速確認'; project.assignee = 'AK'; }
+  else { project.status = 'active'; project.blockedBy = null; }
+  return next;
+}
+
+function completeTask(taskId) {
+  const task = todayTasks.find(t => t.id === taskId);
+  if (!task) return;
+  const project = projects.find(p => p.id === task.projectId);
+  const row = document.querySelector(`.task-row[data-task="${taskId}"]`);
+  if (row) { row.classList.add('leaving'); }
+  todayTasks = todayTasks.filter(t => t.id !== taskId);
+
+  if (project) {
+    if (task.kind === 'review') {
+      const next = advancePhase(project);
+      if (next) showToast(`✓ 確認完了 → 「${project.name}」は次の工程「${next}」へ`);
+    } else {
+      project.updatedAt = new Date().toISOString();
+      showToast(`✓ 「${project.name}」の作業を記録しました`);
+    }
+  }
+  setTimeout(renderAll, 180);
+}
+
+function showToast(msg) {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3400);
+}
+
+/* ═══════════════════════════ RENDER ═══════════════════════════ */
+function channelName(id) { const c = channels.find(c => c.id === id); return c ? c.name : ''; }
+
+function renderGreeting() {
+  const now = new Date();
+  const h = now.getHours();
+  const greet = h < 11 ? 'おはようございます' : h < 18 ? 'こんにちは' : 'こんばんは';
+  document.getElementById('greetingTitle').textContent = `${greet}、中村さん`;
+  const wd = ['日','月','火','水','木','金','土'][now.getDay()];
+  document.getElementById('greetingDate').textContent = `${now.getMonth()+1}月${now.getDate()}日（${wd}）`;
+}
+
+function renderTodayTasks() {
+  const list = document.getElementById('todayTaskList');
+  document.getElementById('todayCount').textContent = todayTasks.length ? `${todayTasks.length}件` : '';
+  document.getElementById('sbMyTaskBadge').textContent = todayTasks.length;
+
+  if (!todayTasks.length) {
+    list.innerHTML = `<div class="empty-note">今日のタスクはすべて完了しています 🎉</div>`;
+    document.getElementById('btnShowAllTasks').style.display = 'none';
+    return;
+  }
+  const order = { '最優先': 0, '優先': 1, '通常': 2 };
+  const sorted = [...todayTasks].sort((a, b) => order[a.priority] - order[b.priority]);
+  const shown = showAllTasks ? sorted : sorted.slice(0, 3);
+  document.getElementById('btnShowAllTasks').style.display = todayTasks.length > 3 ? 'block' : 'none';
+  document.getElementById('btnShowAllTasks').textContent = showAllTasks ? '閉じる' : 'すべて見る';
+
+  list.innerHTML = shown.map(t => {
+    const p = projects.find(p => p.id === t.projectId);
+    if (!p) return '';
+    const color = colorFor(p.name);
+    const soon = /今日/.test(t.deadline);
+    return `
+    <div class="task-row" data-task="${t.id}">
+      <span class="pr-badge ${t.priority}">${t.priority}</span>
+      <div class="proj-logo" style="background:${color}">${initials(p.name)}</div>
+      <div class="task-main">
+        <div class="task-title-row">
+          <span class="task-proj">${p.name}</span>
+          <span class="task-ch">${channelName(p.channelId)}</span>
+        </div>
+        <div class="task-action">${t.action}</div>
+      </div>
+      <div class="task-meta">
+        <span class="meta-comment">💬 ${t.comments}</span>
+        <span class="meta-deadline ${soon ? 'soon' : ''}">${t.deadline}</span>
+      </div>
+      <button class="primary-action-btn" onclick="completeTask('${t.id}')">${t.primaryLabel}</button>
+    </div>`;
+  }).join('');
+}
+
+function renderProjectFilters() {
+  const wrap = document.getElementById('projFilters');
+  const tabs = ['すべて', ...PHASES];
+  wrap.innerHTML = tabs.map(f => `<button class="filter-tab ${f === currentFilter ? 'active' : ''}" data-filter="${f}">${f}</button>`).join('');
+  wrap.querySelectorAll('.filter-tab').forEach(btn => btn.addEventListener('click', () => { currentFilter = btn.dataset.filter; renderProjects(); }));
+}
+
+function renderProjects() {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.toggle('active', b.dataset.filter === currentFilter));
+  const active = projects.filter(p => p.status !== 'archived');
+  const filtered = currentFilter === 'すべて' ? active : active.filter(p => p.phase === currentFilter);
+  document.getElementById('projCount').textContent = `${filtered.length}件`;
+
+  const cards = document.getElementById('projCards');
+  if (!filtered.length) {
+    cards.innerHTML = `<div class="empty-note" style="flex:1;">該当する案件はありません</div>`;
+    return;
+  }
+  cards.innerHTML = filtered.map(p => {
+    const color = colorFor(p.name);
+    const pc = PHASE_COLOR[p.phase];
+    const progress = PHASE_PROGRESS[p.phase];
+    return `
+    <div class="proj-card" onclick="showToast('「${p.name}」の詳細画面（実装予定）')">
+      <div class="proj-card-top">
+        <div class="proj-logo" style="background:${color}">${initials(p.name)}</div>
+        <div class="proj-card-names">
+          <div class="proj-card-ch">${channelName(p.channelId)}</div>
+          <div class="proj-card-name">${p.name}</div>
+        </div>
+      </div>
+      <span class="phase-badge" style="background:${pc}1a;color:${pc}">${p.phase}</span>
+      <div class="progress-track"><div class="progress-fill" style="width:${progress}%;background:${pc}"></div></div>
+      <div class="proj-card-next">次：<b>${p.nextAction}</b></div>
+      <div class="proj-card-bottom">
+        <span class="meta-comment">💬 ${p.comments}</span>
+        <span>${p.deadline.slice(5).replace('-', '/')} 締切</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderChannels() {
+  document.getElementById('chCount').textContent = `${channels.length}件`;
+  const wrap = document.getElementById('chCards');
+  wrap.innerHTML = channels.map(c => {
+    const count = projects.filter(p => p.channelId === c.id && p.status !== 'archived').length;
+    const color = colorFor(c.name);
+    return `
+    <div class="ch-card" onclick="currentFilter='すべて';renderProjectFilters();renderProjects();document.querySelector('[data-sec=projects]').scrollIntoView({behavior:'smooth'})">
+      <div class="ch-logo-lg" style="background:${color}">${initials(c.name)}</div>
+      <div class="ch-card-name">${c.name}</div>
+      <div class="ch-card-count">${count}案件</div>
+    </div>`;
+  }).join('') + `<button class="ch-add-card" id="btnAddChannel">＋<br>チャンネルを追加</button>`;
+  document.getElementById('btnAddChannel').addEventListener('click', () => showToast('チャンネル追加（実装予定）'));
+}
+
+function renderSidebarFavorites() {
+  const wrap = document.getElementById('sbFavorites');
+  wrap.innerHTML = channels.filter(c => c.favorite).map(c => {
+    const color = colorFor(c.name);
+    return `<div class="sb-fav-item" onclick="document.querySelector('[data-sec=channels]').scrollIntoView({behavior:'smooth'})">
+      <div class="sb-fav-logo" style="background:${color}">${initials(c.name)}</div>
+      <div class="sb-fav-name">${c.name}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderSchedule() {
+  const list = document.getElementById('scheduleList');
+  const byDay = {};
+  schedule.forEach(e => { (byDay[e.day] = byDay[e.day] || []).push(e); });
+  const days = Object.keys(byDay);
+  document.getElementById('weekRange').textContent = `${days[0]} 〜 ${days[days.length - 1]}`;
+  list.innerHTML = days.map(day => {
+    const isToday = byDay[day][0].today;
+    return `
+    <div class="sched-day">
+      <div class="sched-day-lbl ${isToday ? 'today' : ''}"><span class="dot"></span>${day}${isToday ? '（今日）' : ''}</div>
+      ${byDay[day].map(e => `
+        <div class="sched-event">
+          <span class="sched-time mono">${e.time}</span>
+          <div class="sched-info">
+            <div class="sched-name">${e.name}</div>
+            <div class="sched-loc">${e.loc}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+const REASON_CLASS = { '自分の確認待ち': 'self', 'クライアント確認待ち': 'client', '編集者から初稿待ち': 'editor', '素材待ち': 'material', '担当者確認待ち': 'assignee' };
+function daysAgo(dateStr) {
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
+  return diff <= 0 ? '今日' : `${diff}日前`;
+}
+function renderWaiting() {
+  const waiting = projects.filter(p => p.blockedBy);
+  document.getElementById('waitCount').textContent = `${waiting.length}件`;
+  document.getElementById('sbWaitingBadge').textContent = waiting.length;
+  const selfCount = waiting.filter(p => p.blockedBy === '自分の確認待ち').length;
+  const badge = document.getElementById('mnavWaitBadge');
+  badge.style.display = selfCount ? 'block' : 'none';
+
+  const wrap = document.getElementById('waitingList');
+  if (!waiting.length) {
+    wrap.innerHTML = `<div class="empty-note">確認待ちの案件はありません</div>`;
+    return;
+  }
+  wrap.innerHTML = waiting.map(p => {
+    const color = colorFor(p.name);
+    const cls = REASON_CLASS[p.blockedBy] || 'material';
+    return `
+    <div class="wait-item">
+      <div class="proj-logo" style="background:${color};width:20px;height:20px;font-size:9px;">${initials(p.name)}</div>
+      <div class="wait-info">
+        <div class="wait-name">${p.name}</div>
+        <div class="wait-reason-row">
+          <span class="wait-reason ${cls}">${p.blockedBy}</span>
+        </div>
+      </div>
+      <span class="wait-since">${daysAgo(p.updatedAt)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderNotifications() {
+  document.getElementById('notifDot').style.display = notifications.length ? 'block' : 'none';
+  document.getElementById('notifList').innerHTML = notifications.map(n => `
+    <div class="notif-item">${n.text}<div class="notif-time">${n.time}</div></div>`).join('');
+}
+
+function renderAll() {
+  renderGreeting();
+  renderTodayTasks();
+  renderProjectFilters();
+  renderProjects();
+  renderChannels();
+  renderSidebarFavorites();
+  renderSchedule();
+  renderWaiting();
+  renderNotifications();
+}
+renderAll();
+
+/* ═══════════════════════════ INTERACTIONS ═══════════════════════════ */
+document.getElementById('btnShowAllTasks').addEventListener('click', () => { showAllTasks = !showAllTasks; renderTodayTasks(); });
+
+document.querySelectorAll('[data-nav]').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.sb-item[data-nav], .mnav-item[data-nav]').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll(`[data-nav="${el.dataset.nav}"]`).forEach(x => x.classList.add('active'));
+    const targets = { mytasks: 'today', waiting: 'right-waiting', channels: 'channels', projects: 'projects', schedule: 'right-schedule' };
+    if (el.dataset.nav === 'home') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (el.dataset.nav === 'waiting') { document.querySelector('.right-sidebar').scrollIntoView({ behavior: 'smooth' }); return; }
+    if (el.dataset.nav === 'channels' || el.dataset.nav === 'projects') { document.querySelector(`[data-sec="${el.dataset.nav === 'channels' ? 'channels' : 'projects'}"]`).scrollIntoView({ behavior: 'smooth' }); return; }
+    if (el.dataset.nav === 'mytasks') { document.querySelector('[data-sec="today"]').scrollIntoView({ behavior: 'smooth' }); return; }
+    if (el.dataset.nav === 'schedule') { document.querySelector('.right-sidebar').scrollIntoView({ behavior: 'smooth' }); return; }
+    if (el.dataset.nav === 'calendar') { window.location.href = 'index.html'; return; }
+    showToast('この画面は準備中です');
+  });
+});
+
+/* Cmd+K search */
+const cmdkOverlay = document.getElementById('cmdkOverlay');
+const cmdkInput = document.getElementById('cmdkInput');
+function openCmdk() { cmdkOverlay.classList.add('visible'); cmdkInput.value = ''; runCmdk(''); setTimeout(() => cmdkInput.focus(), 30); }
+function closeCmdk() { cmdkOverlay.classList.remove('visible'); }
+document.getElementById('hdrSearchOpen').addEventListener('click', openCmdk);
+cmdkOverlay.addEventListener('click', e => { if (e.target === cmdkOverlay) closeCmdk(); });
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmdk(); }
+  if (e.key === 'Escape') { closeCmdk(); document.getElementById('newProjOverlay').classList.remove('visible'); }
+});
+function runCmdk(q) {
+  const query = q.trim().toLowerCase();
+  const results = [];
+  projects.forEach(p => { if (!query || p.name.toLowerCase().includes(query)) results.push({ label: p.name, tag: `案件・${p.phase}` }); });
+  channels.forEach(c => { if (!query || c.name.toLowerCase().includes(query)) results.push({ label: c.name, tag: 'チャンネル' }); });
+  todayTasks.forEach(t => { if (query && t.action.toLowerCase().includes(query)) results.push({ label: t.action, tag: 'タスク' }); });
+  const out = document.getElementById('cmdkResults');
+  out.innerHTML = results.length ? results.slice(0, 12).map(r => `<div class="cmdk-item">${r.label}<span class="tag">${r.tag}</span></div>`).join('') : `<div class="cmdk-empty">一致する結果がありません</div>`;
+}
+cmdkInput.addEventListener('input', () => runCmdk(cmdkInput.value));
+
+/* Notification / profile dropdowns */
+function toggleDropdown(id, others) {
+  const el = document.getElementById(id);
+  const willOpen = !el.classList.contains('visible');
+  others.forEach(o => document.getElementById(o).classList.remove('visible'));
+  el.classList.toggle('visible', willOpen);
+}
+document.getElementById('btnNotif').addEventListener('click', e => { e.stopPropagation(); toggleDropdown('notifDropdown', ['profileDropdown']); });
+document.getElementById('btnProfile').addEventListener('click', e => { e.stopPropagation(); toggleDropdown('profileDropdown', ['notifDropdown']); });
+document.addEventListener('click', () => { document.getElementById('notifDropdown').classList.remove('visible'); document.getElementById('profileDropdown').classList.remove('visible'); });
+
+/* New project modal */
+const npOverlay = document.getElementById('newProjOverlay');
+document.getElementById('btnNewProject').addEventListener('click', () => {
+  document.getElementById('npChannel').innerHTML = channels.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('npName').value = '';
+  npOverlay.classList.add('visible');
+});
+document.getElementById('npCancel').addEventListener('click', () => npOverlay.classList.remove('visible'));
+npOverlay.addEventListener('click', e => { if (e.target === npOverlay) npOverlay.classList.remove('visible'); });
+document.getElementById('npSubmit').addEventListener('click', () => {
+  const name = document.getElementById('npName').value.trim();
+  if (!name) { showToast('案件名を入力してください'); return; }
+  const channelId = document.getElementById('npChannel').value;
+  const phase = document.getElementById('npPhase').value;
+  const id = 'p' + Date.now();
+  projects.unshift({ id, name, channelId, phase, nextAction: '担当者をアサイン', assignee: '未定', deadline: '未設定', blockedBy: null, comments: 0, status: 'active', updatedAt: new Date().toISOString() });
+  npOverlay.classList.remove('visible');
+  renderAll();
+  showToast(`✓ 「${name}」を作成しました`);
+});
+
+/* AI assistant (ローカルデータに基づく簡易応答。本番は MCP 経由で Studio OS / ものがたりっちを参照) */
+function aiRespond(q) {
+  const query = q.toLowerCase();
+  if (query.includes('要約') || query.includes('タスク')) {
+    if (!todayTasks.length) return '今日のタスクはありません。お疲れさまでした 🎉';
+    const lines = todayTasks.map(t => { const p = projects.find(p => p.id === t.projectId); return `・[${t.priority}] ${p ? p.name : ''} — ${t.action}（${t.deadline}）`; });
+    return `今日やることは${todayTasks.length}件です。\n${lines.join('\n')}`;
+  }
+  if (query.includes('進捗') || query.includes('更新')) {
+    const byPhase = PHASES.map(ph => `${ph}: ${projects.filter(p => p.phase === ph && p.status !== 'archived').length}件`).join(' / ');
+    const waiting = projects.filter(p => p.blockedBy);
+    const waitLine = waiting.length ? `\n確認待ちが${waiting.length}件あります（${waiting.map(p => p.name).join('、')}）。` : '';
+    return `現在の案件は工程別に ${byPhase} です。${waitLine}\n進捗率は工程から自動算出されているため、手動更新は不要です。`;
+  }
+  if (query.includes('スケジュール') || query.includes('撮影')) {
+    const shootEvents = schedule.filter(e => e.name.includes('撮影'));
+    if (!shootEvents.length) return '今週、タイトルに「撮影」を含む予定は登録されていません。';
+    return `今週の撮影関連の予定です。\n${shootEvents.map(e => `・${e.day} ${e.time} ${e.name}（${e.loc}）`).join('\n')}`;
+  }
+  return 'この機能はベータ版です。現在はローカルのデモデータで応答しています。本番ではMCP経由でStudio OSとものがたりっちのデータを読み取り・更新します。';
+}
+function aiSend() {
+  const input = document.getElementById('aiInput');
+  const q = input.value.trim();
+  if (!q) return;
+  const log = document.getElementById('aiLog');
+  log.insertAdjacentHTML('beforeend', `<div class="ai-msg user">${q}</div>`);
+  input.value = '';
+  log.scrollTop = log.scrollHeight;
+  setTimeout(() => {
+    log.insertAdjacentHTML('beforeend', `<div class="ai-msg assistant">${aiRespond(q).replace(/\n/g, '<br>')}</div>`);
+    log.scrollTop = log.scrollHeight;
+  }, 260);
+}
+document.getElementById('aiSend').addEventListener('click', aiSend);
+document.getElementById('aiInput').addEventListener('keydown', e => { if (e.key === 'Enter') aiSend(); });
+document.querySelectorAll('.ai-chip').forEach(chip => chip.addEventListener('click', () => { document.getElementById('aiInput').value = chip.dataset.q; aiSend(); }));
+
+/* keep sync time label roughly fresh */
+let syncMinutes = 1;
+setInterval(() => { syncMinutes++; document.getElementById('sbSyncTime').textContent = `最終同期：${syncMinutes}分前`; }, 60000);
+</script>
+</body>
+</html>
