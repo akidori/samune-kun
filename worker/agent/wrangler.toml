@@ -1,0 +1,26 @@
+name = "monogataricchi-agent"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# 毎月28〜31日の 14:00 UTC（= 23:00 JST）に起動し、その月の最終日だけ請求書を確定する
+[triggers]
+crons = ["0 14 28-31 * *"]
+
+[vars]
+FIREBASE_PROJECT_ID = "birdstraike"
+# ディレクターのGoogleアカウント（カンマ区切り）。この人だけが案件作成・請求書発行をできる
+DIRECTOR_EMAILS = ""
+# 請求書の宛名（例：株式会社〇〇）
+BILL_TO_NAME = ""
+# LINEメッセージに載せるアプリのURL（任意）
+APP_URL = ""
+# CORS 許可オリジン（例：https://akidori.github.io）。空なら *
+ALLOWED_ORIGIN = ""
+
+# secrets（npx wrangler secret put <NAME>）
+#   ANTHROPIC_API_KEY
+#   LINE_CHANNEL_ACCESS_TOKEN / LINE_CHANNEL_SECRET / DIRECTOR_LINE_USER_ID
+#   GOOGLE_SERVICE_ACCOUNT_JSON           Firestore 読み書き用
+#   GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET / GOOGLE_OAUTH_REFRESH_TOKEN   ドライブ保存用
+#   DRIVE_ROOT_FOLDER_ID（任意）
