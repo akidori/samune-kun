@@ -270,6 +270,168 @@ a { color: inherit; text-decoration: none; }
 .toast { background: var(--hdr2); color: #fff; padding: 9px 16px; border-radius: 8px; font-size: 11.5px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; animation: toast-in 0.2s ease; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
+/* ══════ AGENT：ゴール / 現在地 / 今日のプラン ══════ */
+.mode-pill { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.8); flex-shrink: 0; white-space: nowrap; }
+.mode-pill.live { background: var(--green-l); color: var(--hdr2); }
+.hdr-login { height: 30px; padding: 0 12px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.3); background: none; color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+.hdr-login:hover { background: rgba(255,255,255,0.1); }
+
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.goal-card { background: linear-gradient(135deg, #0f4c2a, #16613a); color: #fff; border: none; }
+.goal-top { display: flex; align-items: flex-start; gap: 10px; }
+.goal-month { font-size: 10px; font-weight: 700; color: var(--green-xl); letter-spacing: 0.06em; margin-bottom: 3px; }
+.goal-ideal { font-size: 14.5px; font-weight: 700; line-height: 1.5; }
+.goal-why { font-size: 10.5px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+.goal-edit { margin-left: auto; flex-shrink: 0; height: 26px; padding: 0 10px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.3); background: none; color: #fff; font-size: 10px; font-weight: 700; cursor: pointer; }
+.goal-edit:hover { background: rgba(255,255,255,0.1); }
+.goal-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.goal-stat { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+.goal-stat .k { font-size: 9px; color: rgba(255,255,255,0.6); }
+.goal-stat .v { font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.goal-stat .v small { font-size: 10px; color: rgba(255,255,255,0.6); font-weight: 500; }
+.goal-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.15); overflow: hidden; margin-top: 5px; }
+.goal-bar > div { height: 100%; background: var(--green-xl); border-radius: 3px; }
+.goal-empty { text-align: center; padding: 8px 0 4px; }
+.goal-empty p { font-size: 11.5px; color: rgba(255,255,255,0.75); margin-bottom: 10px; line-height: 1.6; }
+.btn-light { height: 32px; padding: 0 16px; border-radius: 6px; border: none; background: var(--green-xl); color: var(--hdr2); font-size: 11.5px; font-weight: 700; cursor: pointer; }
+.btn-light:hover { background: #86efac; }
+
+.now-status { flex-shrink: 0; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 10px; white-space: nowrap; }
+.now-status.on_track { background: var(--green-bg2); color: var(--green); }
+.now-status.slightly_behind { background: var(--amber-bg); color: var(--amber); }
+.now-status.behind { background: var(--red-bg); color: var(--red); }
+.plan-note { font-size: 11px; color: var(--text2); margin: -2px 0 8px; line-height: 1.6; }
+.plan-note:empty { display: none; }
+.plan-note .now-status { margin-right: 6px; }
+
+.plan-state { font-size: 9.5px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: var(--amber-bg); color: var(--amber); }
+.plan-state.confirmed { background: var(--green-bg2); color: var(--green); }
+.btn-sm { height: 26px; padding: 0 11px; border-radius: 6px; border: 1px solid var(--border2); background: #fff; color: var(--text2); font-size: 10.5px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.btn-sm:hover { border-color: var(--green); color: var(--green); }
+.btn-sm.primary { background: var(--green); border-color: var(--green); color: #fff; }
+.btn-sm.primary:hover { background: var(--hdr2); }
+.btn-sm.warn { border-color: var(--amber-border); color: var(--amber); background: var(--amber-bg); }
+.btn-sm:disabled { opacity: 0.5; cursor: default; }
+
+.todo-list { display: flex; flex-direction: column; gap: 6px; }
+.todo { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; transition: border-color 0.15s, background 0.15s; }
+.todo.running { border-color: var(--green-l); box-shadow: 0 0 0 3px rgba(34,197,94,0.12); }
+.todo.overrun { border-color: var(--amber); background: #fffdf5; }
+.todo.done { opacity: 0.55; }
+.todo.done .todo-title { text-decoration: line-through; }
+.todo-row { display: flex; align-items: center; gap: 9px; }
+.todo-check { width: 17px; height: 17px; accent-color: var(--green); flex-shrink: 0; cursor: pointer; }
+.todo-time { display: flex; align-items: center; gap: 2px; flex-shrink: 0; font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--muted); }
+.todo-time input { width: 44px; border: 1px solid transparent; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--hdr2); background: none; padding: 1px 2px; }
+.todo-time input:hover, .todo-time input:focus { border-color: var(--border2); outline: none; }
+.todo-main { flex: 1; min-width: 0; cursor: pointer; }
+.todo-title { font-size: 12px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.todo-sub { display: flex; gap: 8px; align-items: center; margin-top: 1px; font-size: 9.5px; color: var(--muted2); }
+.todo-proj { color: var(--green); font-weight: 700; }
+.todo-btns { display: flex; gap: 4px; flex-shrink: 0; }
+.icon-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border2); background: #fff; cursor: pointer; font-size: 11px; color: var(--text2); }
+.icon-btn:hover { border-color: var(--green); color: var(--green); }
+.todo-detail { display: none; margin: 7px 0 0 26px; font-size: 10.5px; color: var(--text2); line-height: 1.6; }
+.todo.open .todo-detail { display: block; }
+.todo-detail b { color: var(--hdr2); }
+.todo-next { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 11px; color: var(--hdr2); }
+.todo-next b { font-size: 9.5px; font-weight: 700; color: #fff; background: var(--green); padding: 1px 6px; border-radius: 4px; flex-shrink: 0; }
+.todo-next span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.todo-next .sec { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 10px; flex-shrink: 0; }
+.hg { display: flex; align-items: center; gap: 5px; flex-shrink: 0; min-width: 84px; justify-content: flex-end; }
+.hg svg { flex-shrink: 0; }
+.hg-text { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--muted); line-height: 1.2; text-align: right; }
+.hg-text small { display: block; font-size: 9px; color: var(--muted2); }
+.todo.running .hg-text { color: var(--green); font-weight: 700; }
+.todo.overrun .hg-text { color: var(--amber); font-weight: 700; }
+.steps { list-style: none; margin: 6px 0 2px; padding: 0; }
+.steps li { display: flex; align-items: center; gap: 7px; padding: 3px 0; font-size: 11px; color: var(--text2); }
+.steps li.done span.t { text-decoration: line-through; color: var(--muted2); }
+.steps li.next span.t { font-weight: 700; color: var(--hdr2); }
+.steps li input { accent-color: var(--green); cursor: pointer; }
+.steps li .sec { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted2); }
+.step-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; margin-top: 5px; }
+.step-bar > div { height: 100%; background: var(--green-l); }
+.pct-row { display: flex; align-items: center; gap: 8px; width: 100%; }
+.pct-row input[type=range] { flex: 1; accent-color: var(--amber); }
+.pct-row .pct { font-family: 'DM Mono', monospace; font-weight: 700; min-width: 38px; text-align: right; }
+.replan-sched { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+.replan-sched .r { display: flex; gap: 10px; padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 11px; }
+.replan-sched .r:last-child { border-bottom: none; }
+.replan-sched .r .tm { font-family: 'DM Mono', monospace; color: var(--hdr2); flex-shrink: 0; width: 92px; }
+.replan-sched .r .st { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.replan-sched .r.delayed { background: var(--amber-bg); }
+.deferred { font-size: 10.5px; color: var(--muted); line-height: 1.7; }
+.overrun-bar { display: none; margin: 8px 0 0 26px; padding: 8px 10px; border-radius: 6px; background: var(--amber-bg); border: 1px solid var(--amber-border); font-size: 10.5px; color: #92400e; align-items: center; gap: 8px; flex-wrap: wrap; }
+.todo.overrun .overrun-bar { display: flex; }
+.overrun-bar span { flex: 1; min-width: 160px; }
+.plan-foot { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+.plan-foot .spacer { flex: 1; }
+.plan-total { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.loading { display: flex; align-items: center; gap: 8px; padding: 18px; font-size: 11px; color: var(--muted); background: var(--white); border: 1px dashed var(--border2); border-radius: 8px; }
+.spinner { width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* project card: 納品・差し戻し */
+.proj-status { font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px; align-self: flex-start; }
+.proj-status.delivered { background: #eff6ff; color: #2563eb; }
+.proj-status.rejected { background: var(--red-bg); color: var(--red); }
+.proj-status.approved { background: var(--green-bg2); color: var(--green); }
+.proj-reject { font-size: 10px; color: var(--red); background: var(--red-bg); border-radius: 5px; padding: 5px 7px; line-height: 1.5; }
+.proj-card-actions { display: flex; gap: 5px; }
+.proj-fee { font-family: 'DM Mono', monospace; }
+.budget { display: flex; flex-direction: column; gap: 4px; }
+.budget-row { display: flex; align-items: center; gap: 6px; font-size: 9.5px; color: var(--muted); }
+.budget-row .k { width: 44px; flex-shrink: 0; color: var(--text2); font-weight: 700; }
+.budget-row .bar { flex: 1; height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
+.budget-row .bar > div { height: 100%; background: var(--green-l); }
+.budget-row.over .bar > div { background: var(--amber); }
+.budget-row.over { color: var(--amber); font-weight: 700; }
+.budget-row .v { font-family: 'DM Mono', monospace; white-space: nowrap; }
+.plugin-code { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 700; letter-spacing: 0.08em; color: var(--hdr2); background: var(--green-bg); border: 1px dashed var(--green); border-radius: 6px; padding: 8px 10px; text-align: center; margin: 6px 0; user-select: all; }
+
+/* 相談・請求（右カラム） */
+.q-item { padding: 8px; border-radius: 7px; border: 1px solid var(--border); background: #fff; margin-bottom: 6px; cursor: pointer; }
+.q-item:hover { border-color: var(--border2); }
+.q-head { display: flex; align-items: center; gap: 6px; }
+.q-title { flex: 1; min-width: 0; font-size: 11px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.q-st { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.q-st.ai { background: var(--border); color: var(--muted); }
+.q-st.sent { background: var(--amber-bg); color: var(--amber); }
+.q-st.answered { background: var(--green-bg2); color: var(--green); }
+.q-answer { font-size: 10.5px; color: var(--text2); margin-top: 5px; line-height: 1.55; white-space: pre-wrap; background: var(--green-bg); border-radius: 5px; padding: 6px 7px; }
+.inv-box { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.inv-line { display: flex; justify-content: space-between; gap: 8px; font-size: 10.5px; padding: 3px 0; color: var(--text2); }
+.inv-line span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inv-line .mono { flex-shrink: 0; }
+.inv-sum { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 6px; }
+.inv-total { font-weight: 700; color: var(--hdr2); font-size: 12px; }
+.inv-meta { font-size: 9.5px; color: var(--muted2); margin-top: 6px; line-height: 1.5; }
+.inv-editor { font-size: 10px; font-weight: 700; color: var(--hdr2); margin: 8px 0 2px; }
+
+/* 汎用モーダル */
+.modal { width: 520px; max-width: 94vw; max-height: 84vh; background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; }
+.modal-hd { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.modal-hd h3 { font-size: 13.5px; font-weight: 700; color: var(--hdr2); flex: 1; }
+.modal-x { border: none; background: none; font-size: 16px; color: var(--muted); cursor: pointer; }
+.modal-bd { padding: 14px 18px; overflow-y: auto; flex: 1; }
+.modal-ft { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
+.modal-ft .hint { flex: 1; font-size: 10px; color: var(--muted2); min-width: 140px; }
+.field-ta { width: 100%; padding: 8px 10px; border: 1px solid var(--border2); border-radius: 6px; font-size: 12px; outline: none; margin-bottom: 12px; font-family: 'Noto Sans JP', sans-serif; resize: vertical; min-height: 58px; line-height: 1.55; }
+.field-ta:focus { border-color: var(--green); }
+.field-row { display: flex; gap: 10px; }
+.field-row > div { flex: 1; min-width: 0; }
+.field-note { font-size: 10px; color: var(--muted2); margin: -6px 0 12px; line-height: 1.5; }
+.ai-answer { border: 1px solid var(--border2); background: var(--green-bg); border-radius: 8px; padding: 11px 12px; font-size: 11.5px; line-height: 1.65; color: var(--text2); margin-bottom: 12px; }
+.ai-answer .diag { font-weight: 700; color: var(--hdr2); margin-bottom: 4px; }
+.ai-answer ol { margin: 6px 0 0 18px; }
+.conf { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+.conf.high { background: var(--green-bg2); color: var(--green); }
+.conf.medium { background: var(--amber-bg); color: var(--amber); }
+.conf.low { background: var(--red-bg); color: var(--red); }
+.escalate-box { border: 1px solid var(--amber-border); background: var(--amber-bg); border-radius: 8px; padding: 10px 12px; margin-bottom: 4px; }
+.escalate-box .why { font-size: 10.5px; color: #92400e; margin-bottom: 7px; }
+
 /* ══════ MOBILE BOTTOM NAV ══════ */
 .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #fff; border-top: 1px solid var(--border); z-index: 500; box-shadow: 0 -2px 10px rgba(0,0,0,0.06); }
 .mobile-nav-inner { display: flex; height: 100%; }
@@ -301,9 +463,21 @@ a { color: inherit; text-decoration: none; }
   .hdr-search input, .hdr-kbd { display: none; }
   .hdr-btn.green .btn-txt { display: none; }
   .hdr-btn.green { padding: 0 9px; }
+  .hdr-login { padding: 0 9px; }
+  .hdr-login .btn-txt { display: none; }
+  .hdr-sep { display: none; }
+}
+@media (max-width: 620px) {
+  .goal-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .todo-row { flex-wrap: wrap; }
+  .todo-main { flex-basis: calc(100% - 130px); }
+  .hg { margin-left: 26px; justify-content: flex-start; }
+  .todo-btns { margin-left: auto; }
+  .mode-pill { display: none; }
 }
 @media (max-width: 480px) {
   .task-meta { flex-wrap: wrap; }
+  .field-row { flex-direction: column; gap: 0; }
   .greeting { flex-direction: column; align-items: flex-start; }
   .proj-card, .ch-card { flex-basis: 78vw; }
 }
@@ -327,6 +501,8 @@ a { color: inherit; text-decoration: none; }
   </div>
   <div class="hdr-spacer"></div>
   <button class="hdr-btn green" id="btnNewProject">＋ <span class="btn-txt">新規案件</span></button>
+  <span class="mode-pill" id="modePill">デモ</span>
+  <button class="hdr-login" id="btnLogin"><span class="btn-txt">Googleで</span>ログイン</button>
   <button class="hdr-icon-btn" id="btnNotif">🔔<span class="hdr-badge-dot" id="notifDot"></span></button>
   <div class="hdr-avatar" id="btnProfile">中</div>
 
@@ -334,10 +510,10 @@ a { color: inherit; text-decoration: none; }
     <div class="dropdown-hd">通知</div>
     <div id="notifList"></div>
   </div>
-  <div class="dropdown" id="profileDropdown" style="width:180px;">
-    <div class="profile-item">プロフィール</div>
-    <div class="profile-item">設定</div>
-    <div class="profile-item" style="color:var(--red)">ログアウト</div>
+  <div class="dropdown" id="profileDropdown" style="width:200px;">
+    <div class="dropdown-hd" id="profileName">ゲスト</div>
+    <div class="profile-item" data-open-settings>設定・請求書プロフィール</div>
+    <div class="profile-item" id="btnLogout" style="color:var(--red)">ログアウト</div>
   </div>
 </header>
 
@@ -366,12 +542,12 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="sb-spacer"></div>
     <div class="sb-sync">
-      <div class="sb-sync-row"><span class="sb-sync-dot"></span>Studio OS 連携中</div>
-      <div class="sb-sync-sub" id="sbSyncTime">最終同期：1分前</div>
+      <div class="sb-sync-row"><span class="sb-sync-dot"></span><span id="sbSyncLabel">デモデータで表示中</span></div>
+      <div class="sb-sync-sub" id="sbSyncTime">ログインすると実データに切り替わります</div>
     </div>
     <div class="sb-bottom">
-      <button class="sb-item"><span class="ic">⚙️</span><span class="lbl">設定</span></button>
-      <button class="sb-item"><span class="ic">👤</span><span class="lbl">プロフィール</span></button>
+      <button class="sb-item" data-open-settings><span class="ic">⚙️</span><span class="lbl">設定</span></button>
+      <button class="sb-item" data-open-settings><span class="ic">👤</span><span class="lbl">プロフィール</span></button>
     </div>
   </aside>
 
@@ -385,13 +561,20 @@ a { color: inherit; text-decoration: none; }
       <div class="greeting-date" id="greetingDate"></div>
     </div>
 
+    <section class="section" data-sec="goal">
+      <div class="card goal-card" id="goalCard"></div>
+    </section>
+
     <section class="section" data-sec="today">
       <div class="section-hd">
-        <h2>☀️ 今日やること <span class="cnt" id="todayCount"></span></h2>
+        <h2>✅ 今日のプラン <span class="cnt" id="todayCount"></span></h2>
+        <span class="plan-state" id="planState"></span>
         <div class="section-hd-spacer"></div>
-        <button class="link-btn" id="btnShowAllTasks">すべて見る</button>
+        <button class="link-btn" id="btnReplan">AIに再提案してもらう</button>
       </div>
-      <div class="task-list" id="todayTaskList"></div>
+      <div class="plan-note" id="planNote"></div>
+      <div class="todo-list" id="todoList"></div>
+      <div class="plan-foot" id="planFoot"></div>
     </section>
 
     <section class="section" data-sec="projects">
@@ -419,15 +602,25 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <div class="rs-block">
+      <div class="rs-hd"><h3>🙋 相談</h3><span class="cnt mono" id="qCount" style="font-size:10px;color:var(--muted2)"></span></div>
+      <div id="questionList"></div>
+    </div>
+
+    <div class="rs-block">
+      <div class="rs-hd"><h3>💴 今月の請求</h3><span class="beta" id="invState"></span></div>
+      <div id="invoiceBox"></div>
+    </div>
+
+    <div class="rs-block">
       <div class="rs-hd"><h3>💡 AIアシスタント</h3><span class="beta">Beta</span></div>
       <div class="ai-panel">
         <div class="ai-log" id="aiLog">
-          <div class="ai-msg assistant">こんにちは。Studio OSとものがたりっちのデータをもとに、タスクの要約や進捗の確認・更新をお手伝いします。</div>
+          <div class="ai-msg assistant">こんにちは。今月のゴールと今日のプランをもとに、進み具合の確認や相談をお手伝いします。作業で詰まったら、TODOの「詰まった」から相談してください。</div>
         </div>
         <div class="ai-chips">
-          <button class="ai-chip" data-q="今日のタスクを要約して">今日のタスクを要約して</button>
-          <button class="ai-chip" data-q="案件の進捗を更新して">案件の進捗を更新して</button>
-          <button class="ai-chip" data-q="今週の撮影スケジュールを確認">今週の撮影スケジュールを確認</button>
+          <button class="ai-chip" data-q="今日のプランを要約して">今日のプランを要約して</button>
+          <button class="ai-chip" data-q="ゴールまであとどれくらい？">ゴールまであとどれくらい？</button>
+          <button class="ai-chip" data-q="今月の請求はいくら？">今月の請求はいくら？</button>
         </div>
         <div class="ai-input-row">
           <input type="text" id="aiInput" placeholder="質問や指示を入力...">
@@ -464,11 +657,39 @@ a { color: inherit; text-decoration: none; }
     <label class="field-lbl">案件名</label>
     <input type="text" class="field-in" id="npName" placeholder="例：11月新作Vlog企画">
     <label class="field-lbl">チャンネル</label>
-    <select class="field-select" id="npChannel"></select>
-    <label class="field-lbl">開始工程</label>
-    <select class="field-select" id="npPhase">
-      <option>企画</option><option>撮影</option><option>編集</option><option>確認</option><option>公開</option>
-    </select>
+    <input type="text" class="field-in" id="npChannel" list="npChannelList" placeholder="例：ものがたり Vlog">
+    <datalist id="npChannelList"></datalist>
+    <div class="field-row">
+      <div>
+        <label class="field-lbl">開始工程</label>
+        <select class="field-select" id="npPhase">
+          <option>企画</option><option>撮影</option><option selected>編集</option><option>確認</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-lbl">締切</label>
+        <input type="date" class="field-in" id="npDeadline">
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-lbl">担当編集者</label>
+        <select class="field-select" id="npEditor"></select>
+      </div>
+      <div>
+        <label class="field-lbl">編集費（税抜・円）</label>
+        <input type="number" class="field-in" id="npFee" min="0" step="1000" placeholder="30000">
+      </div>
+    </div>
+    <label class="field-lbl">工程ごとの時間予算（時間）</label>
+    <div class="field-row" id="npBudgets">
+      <div><input type="number" class="field-in" data-budget="粗カット" min="0" step="0.5" placeholder="粗カット"></div>
+      <div><input type="number" class="field-in" data-budget="本編集" min="0" step="0.5" placeholder="本編集"></div>
+      <div><input type="number" class="field-in" data-budget="テロップ" min="0" step="0.5" placeholder="テロップ"></div>
+      <div><input type="number" class="field-in" data-budget="修正" min="0" step="0.5" placeholder="修正"></div>
+    </div>
+    <div class="field-note" id="npBudgetHint">着手すると砂時計が落ち始めます。超過は記録され、この編集者の次回の予算提案に使われます。</div>
+    <div class="field-note" id="npNote">金額はディレクターだけが入力・変更できます。納品がOKになると編集者の請求明細に入ります。</div>
     <div class="modal-actions">
       <button class="btn-cancel" id="npCancel">キャンセル</button>
       <button class="btn-submit" id="npSubmit">作成する</button>
@@ -476,161 +697,1075 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
+<!-- ══════ STUCK / ASK MODAL ══════ -->
+<div class="overlay" id="askOverlay">
+  <div class="modal">
+    <div class="modal-hd"><h3>🧩 詰まっていることを言語化する</h3><button class="modal-x" data-close>✕</button></div>
+    <div class="modal-bd">
+      <div id="askForm">
+        <label class="field-lbl">何をしようとしている？</label>
+        <input type="text" class="field-in" id="askTask" readonly>
+        <label class="field-lbl">どこで止まっている？（具体的に）</label>
+        <textarea class="field-ta" id="askStuck" placeholder="例：冒頭30秒の構成が決まらず、どのカットから始めるか迷っている"></textarea>
+        <label class="field-lbl">ここまでに試したこと</label>
+        <textarea class="field-ta" id="askTried" placeholder="例：参考動画を2本見た／2パターン仮で繋いでみた"></textarea>
+        <label class="field-lbl">何が分かれば進める？</label>
+        <textarea class="field-ta" id="askNeed" placeholder="例：クライアントが一番見せたいのは料理か人物か"></textarea>
+      </div>
+      <div id="askResult"></div>
+    </div>
+    <div class="modal-ft" id="askFoot"></div>
+  </div>
+</div>
+
+<!-- ══════ REPLAN MODAL ══════ -->
+<div class="overlay" id="replanOverlay">
+  <div class="modal">
+    <div class="modal-hd"><h3>⏳ 巻き返しプラン</h3><button class="modal-x" data-close>✕</button></div>
+    <div class="modal-bd" id="replanBody"></div>
+    <div class="modal-ft" id="replanFoot"></div>
+  </div>
+</div>
+
+<!-- ══════ DELIVERY MODAL ══════ -->
+<div class="overlay" id="deliveryOverlay">
+  <div class="modal" style="width:440px;">
+    <div class="modal-hd"><h3>📦 納品を報告する</h3><button class="modal-x" data-close>✕</button></div>
+    <div class="modal-bd">
+      <div id="deliveryProject" style="font-size:12.5px;font-weight:700;margin-bottom:12px;"></div>
+      <label class="field-lbl">納品ファイルのURL</label>
+      <input type="url" class="field-in" id="deliveryUrl" placeholder="https://drive.google.com/...">
+      <label class="field-lbl">ディレクターへのメモ（任意）</label>
+      <textarea class="field-ta" id="deliveryNote" placeholder="例：指摘いただいたテロップを全て修正済みです"></textarea>
+      <div class="field-note">ディレクターのLINEに［OK］［差し戻し］ボタン付きで届きます。OKになると今月の請求明細に自動で追加されます。</div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-cancel" data-close>キャンセル</button>
+      <button class="btn-submit" id="deliverySubmit">納品を報告する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SETTINGS MODAL ══════ -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal">
+    <div class="modal-hd"><h3>⚙️ 設定</h3><button class="modal-x" data-close>✕</button></div>
+    <div class="modal-bd">
+      <label class="field-lbl">表示名</label>
+      <input type="text" class="field-in" id="setName" placeholder="例：佐藤">
+      <div class="field-row">
+        <div><label class="field-lbl">就業開始</label><input type="time" class="field-in" id="setStart" value="10:00"></div>
+        <div><label class="field-lbl">就業終了</label><input type="time" class="field-in" id="setEnd" value="19:00"></div>
+      </div>
+      <div style="font-size:11.5px;font-weight:700;color:var(--hdr2);margin:4px 0 8px;">🧾 請求書の発行者情報</div>
+      <label class="field-lbl">氏名・屋号</label>
+      <input type="text" class="field-in" id="setInvName" placeholder="例：佐藤 花子">
+      <label class="field-lbl">住所</label>
+      <input type="text" class="field-in" id="setInvAddr">
+      <label class="field-lbl">インボイス登録番号（任意）</label>
+      <input type="text" class="field-in" id="setInvNo" placeholder="T1234567890123">
+      <label class="field-lbl">振込先</label>
+      <textarea class="field-ta" id="setInvBank" placeholder="〇〇銀行 〇〇支店 普通 1234567 サトウハナコ"></textarea>
+      <div style="font-size:11.5px;font-weight:700;color:var(--hdr2);margin:4px 0 8px;">🎯 Addness 連携</div>
+      <label class="field-lbl">今月のゴール（Addness のゴールURL か ID）</label>
+      <input type="text" class="field-in" id="setAddnessGoal" placeholder="https://… /goals/xxxxxxxx-xxxx-…">
+      <label class="field-lbl">Addness のトークン</label>
+      <input type="password" class="field-in" id="setAddnessToken" placeholder="初回だけ入力（変更する時だけ入れ直す）">
+      <div class="field-note">ゴールは Addness で設定します。確定した今日のTODOと手順が、この月ゴールの下（案件 › TODO › 手順）に作られ、あなたの「今やるべきToDo」に入ります。チェックすると Addness でも完了になります。</div>
+      <div style="font-size:11.5px;font-weight:700;color:var(--hdr2);margin:4px 0 8px;">🎬 Premiere Pro パネル連携</div>
+      <div class="field-note" style="margin-top:0">パネルに連携コードを1回貼るだけで、Premiere で作業している時間が自動で記録され、今日のTODOと次の手順がパネルに表示されます。</div>
+      <div id="pluginCodeBox"><button class="btn-sm" id="btnPluginCode">連携コードを発行する</button></div>
+      <div style="height:12px"></div>
+      <div style="font-size:11.5px;font-weight:700;color:var(--hdr2);margin:4px 0 8px;">🔌 AIエージェント接続</div>
+      <label class="field-lbl">エージェントURL（Cloudflare Worker）</label>
+      <input type="url" class="field-in" id="setAgentUrl" placeholder="https://monogataricchi-agent.xxx.workers.dev">
+      <div class="field-note">未設定またはログイン前は、端末内のデモデータとかんたんなルールで動きます（LINE送信・請求書保存はシミュレーション）。</div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-cancel" data-close>キャンセル</button>
+      <button class="btn-submit" id="settingsSave">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ QUESTION DETAIL MODAL ══════ -->
+<div class="overlay" id="questionOverlay">
+  <div class="modal" style="width:460px;">
+    <div class="modal-hd"><h3>🙋 相談の詳細</h3><button class="modal-x" data-close>✕</button></div>
+    <div class="modal-bd" id="questionDetail"></div>
+  </div>
+</div>
+
 <div class="toast-wrap" id="toastWrap"></div>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script>
-/* ═══════════════════════════ DATA ═══════════════════════════
-   本番では Studio OS / ものがたりっち のDB・APIを MCP 経由で読み書きする想定。
-   ここではUI・操作フローを検証するためのローカルモックデータを使用する。 */
+/* ═══════════════════════════ CONFIG ═══════════════════════════
+   ログイン前・エージェントURL未設定のときは「デモ」：端末内のデータと簡易ルールで動く。
+   ログイン＋エージェントURL設定済みなら「連携中」：Firestore と AIエージェント Worker（Claude・LINE・ドライブ）を使う。 */
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAjBviZ8Pcg3fX8ti2y3y1nMcBz_Dps7mw",
+  authDomain: "birdstraike.firebaseapp.com",
+  projectId: "birdstraike",
+  storageBucket: "birdstraike.firebasestorage.app",
+  messagingSenderId: "177151250196",
+  appId: "1:177151250196:web:21aefe5c0a53dcb82b7c01"
+};
+const DEFAULT_AGENT_URL = '';
+const LS_AGENT_URL = 'mt_agent_url';
+const LS_DEMO = 'mt_demo_state_v1';
+const COL = { editors: 'mt_editors', projects: 'mt_projects', plans: 'mt_plans', questions: 'mt_questions', invoices: 'mt_invoices' };
 
 const PHASES = ['企画', '撮影', '編集', '確認', '公開'];
 const PHASE_PROGRESS = { '企画': 15, '撮影': 38, '編集': 62, '確認': 85, '公開': 100 };
 const PHASE_COLOR = { '企画': '#8b5cf6', '撮影': '#2563eb', '編集': '#d97706', '確認': '#dc2626', '公開': '#16a34a' };
 const PALETTE = ['#16a34a','#2563eb','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#65a30d'];
+const TAX_RATE = 0.1;
+const PHASE_KEYS = ['素材準備', '粗カット', '本編集', 'テロップ', '修正', '書き出し', 'その他'];
+const BUDGET_KEYS = ['粗カット', '本編集', 'テロップ', '修正'];
 
 function colorFor(seed) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   return PALETTE[h % PALETTE.length];
 }
-function initials(name) { return name.slice(0, 2); }
+function initials(name) { return String(name || '？').slice(0, 2); }
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+const yen = n => '¥' + Math.round(Number(n) || 0).toLocaleString('ja-JP');
+const pad = n => String(n).padStart(2, '0');
+const ymdOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const ymOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+const hmOf = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const toMin = hm => { const [h, m] = String(hm || '0:0').split(':').map(Number); return h * 60 + (m || 0); };
+const fromMin = m => `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`;
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const uid = p => `${p}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
-let channels = [
-  { id: 'ch1', name: 'ものがたり Vlog', favorite: true },
-  { id: 'ch2', name: '旅する料理人 ハル', favorite: true },
-  { id: 'ch3', name: 'ビジネス図解チャンネル', favorite: true },
-  { id: 'ch4', name: 'ゆる建築めぐり', favorite: false },
-];
+function today() {
+  const d = new Date();
+  const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  return { date: d, ymd: ymdOf(d), ym: ymOf(d), hm: hmOf(d), day: d.getDate(), lastDay, month: d.getMonth() + 1, daysLeft: lastDay - d.getDate() + 1 };
+}
 
-let projects = [
-  { id: 'p1', name: '11月新作Vlog #24', channelId: 'ch1', phase: '確認', nextAction: 'AKが初稿確認', assignee: 'AK', deadline: '2026-09-24', blockedBy: null, comments: 4, status: 'active', updatedAt: '2026-09-22T08:10:00' },
-  { id: 'p2', name: '福岡ロケ ダイジェスト', channelId: 'ch1', phase: '編集', nextAction: '編集者が本編集', assignee: '編集:サカイ', deadline: '2026-09-26', blockedBy: null, comments: 2, status: 'active', updatedAt: '2026-09-21T17:40:00' },
-  { id: 'p3', name: '秋の一汁三菜 特集', channelId: 'ch2', phase: '撮影', nextAction: 'ロケハン結果を共有', assignee: 'AK', deadline: '2026-09-25', blockedBy: null, comments: 1, status: 'active', updatedAt: '2026-09-22T07:00:00' },
-  { id: 'p4', name: 'DXの進め方 #12', channelId: 'ch3', phase: '確認', nextAction: 'クライアント確認待ち', assignee: 'クライアント', deadline: '2026-09-29', blockedBy: 'クライアント確認待ち', comments: 6, status: 'waiting', updatedAt: '2026-09-20T11:20:00' },
-  { id: 'p5', name: '経営指標の読み方', channelId: 'ch3', phase: '企画', nextAction: '構成案を作成', assignee: 'AK', deadline: '2026-10-02', blockedBy: null, comments: 0, status: 'active', updatedAt: '2026-09-19T09:00:00' },
-  { id: 'p6', name: '古民家リノベ密着', channelId: 'ch4', phase: '編集', nextAction: '編集者から初稿待ち', assignee: '編集:モリ', deadline: '2026-09-27', blockedBy: '編集者から初稿待ち', comments: 3, status: 'waiting', updatedAt: '2026-09-21T14:00:00' },
-  { id: 'p7', name: '一人暮らしごはん week2', channelId: 'ch2', phase: '公開', nextAction: '公開後の初速確認', assignee: 'AK', deadline: '2026-09-23', blockedBy: null, comments: 1, status: 'active', updatedAt: '2026-09-22T06:30:00' },
-];
+/* ═══════════════════════════ STATE ═══════════════════════════ */
 
-let todayTasks = [
-  { id: 't1', projectId: 'p1', priority: '最優先', action: '初稿を確認してコメントを返す', deadline: '今日 18:00', comments: 4, primaryLabel: '確認する', kind: 'review' },
-  { id: 't2', projectId: 'p3', priority: '優先', action: 'ロケハン結果をチャンネルに共有', deadline: '今日 15:00', comments: 1, primaryLabel: '作業を開く', kind: 'work' },
-  { id: 't3', projectId: 'p7', priority: '通常', action: '公開後の再生数を確認', deadline: '今日中', comments: 1, primaryLabel: '確認する', kind: 'review' },
-  { id: 't4', projectId: 'p5', priority: '通常', action: '構成案のたたき台を作成', deadline: '明日 12:00', comments: 0, primaryLabel: '作業を開く', kind: 'work' },
-];
+const state = {
+  mode: 'demo',          // 'demo' | 'live'
+  user: null,            // firebase user
+  role: 'editor',        // 'editor' | 'director'
+  profile: { name: '中村', workHours: { start: '10:00', end: '19:00' }, invoiceProfile: {} },
+  projects: [],
+  goal: null,
+  plan: null,
+  prevPlan: null,
+  questions: [],
+  invoices: [],
+  editors: [],
+  stats: {},             // 見積もりと実績の履歴（補正係数の学習）
+  planning: false,
+  planError: '',
+};
 
-let schedule = [
-  { day: '9/22(火)', today: true, time: '10:00', name: '編集方針すり合わせ', loc: 'Meet' },
-  { day: '9/22(火)', today: true, time: '15:00', name: '福岡ロケ 振り返りMTG', loc: '会議室A' },
-  { day: '9/23(水)', today: false, time: '09:30', name: '社内定例', loc: 'Meet' },
-  { day: '9/24(木)', today: false, time: '13:00', name: '秋の一汁三菜 撮影MTG', loc: '会議室B' },
-  { day: '9/25(金)', today: false, time: '09:00', name: '一汁三菜 撮影', loc: '都内スタジオ' },
-  { day: '9/26(土)', today: false, time: '11:00', name: 'クライアント定例（DX案件）', loc: 'Meet' },
-];
-
-const notifications = [
-  { text: 'AKさんが「11月新作Vlog #24」にコメントしました', time: '5分前' },
-  { text: '「秋の一汁三菜 特集」の締切が近づいています', time: '1時間前' },
-  { text: '編集:モリさんが初稿を提出しました', time: '3時間前' },
-];
-
+const notifications = [];
 let currentFilter = 'すべて';
-let showAllTasks = false;
 
-/* ═══════════════════════════ AUTOMATION（進めた結果が反映される） ═══════════════════════════ */
-function advancePhase(project) {
-  const idx = PHASES.indexOf(project.phase);
-  if (idx < 0 || idx >= PHASES.length - 1) return null;
-  const next = PHASES[idx + 1];
-  project.phase = next;
-  project.updatedAt = new Date().toISOString();
-  if (next === '確認') { project.status = 'waiting'; project.blockedBy = '自分の確認待ち'; project.nextAction = 'AKが初稿確認'; project.assignee = 'AK'; }
-  else if (next === '公開') { project.status = 'active'; project.blockedBy = null; project.nextAction = '公開後の初速確認'; project.assignee = 'AK'; }
-  else { project.status = 'active'; project.blockedBy = null; }
-  return next;
+/* ═══════════════════════════ DEMO BACKEND ═══════════════════════════ */
+
+function demoSeed() {
+  const t = today();
+  const d = n => ymdOf(addDays(t.date, n));
+  const me = 'me';
+  return {
+    profile: { name: '中村', workHours: { start: '10:00', end: '19:00' }, invoiceProfile: { name: '中村 ゆう', address: '東京都渋谷区〇〇 1-2-3', invoiceNo: 'T1234567890123', bank: '〇〇銀行 渋谷支店 普通 1234567 ナカムラユウ' } },
+    projects: [
+      { id: 'p1', name: '11月新作Vlog #24', channelName: 'ものがたり Vlog', editorId: me, phase: '確認', status: 'rejected', rejectReason: '冒頭のテロップが早すぎるので1.5倍の長さに。BGMは2曲目に差し替え', fee: 35000, deadline: d(2), comments: 4, updatedAt: addDays(t.date, -1).toISOString() },
+      { id: 'p6', name: '古民家リノベ密着', channelName: 'ゆる建築めぐり', editorId: me, phase: '編集', status: 'active', fee: 80000, deadline: d(9), comments: 3, updatedAt: addDays(t.date, -1).toISOString(),
+        budgetsH: { '粗カット': 30, '本編集': 12, 'テロップ': 6, '修正': 3 }, actualSec: { '素材準備': 2 * 3600, '粗カット': 8.5 * 3600 } },
+      { id: 'p2', name: '福岡ロケ ダイジェスト', channelName: 'ものがたり Vlog', editorId: me, phase: '編集', status: 'active', fee: 45000, deadline: d(5), comments: 2, updatedAt: addDays(t.date, -2).toISOString(),
+        budgetsH: { '粗カット': 10, '本編集': 6 }, actualSec: { '粗カット': 10.8 * 3600, '本編集': 1.2 * 3600 }, overruns: { '粗カット': { budgetH: 10, exceededAt: addDays(t.date, -1).toISOString() } } },
+      { id: 'p3', name: '秋の一汁三菜 特集', channelName: '旅する料理人 ハル', editorId: me, phase: '撮影', status: 'active', fee: 30000, deadline: d(11), comments: 1, updatedAt: t.date.toISOString() },
+      { id: 'p4', name: 'DXの進め方 #12', channelName: 'ビジネス図解チャンネル', editorId: me, phase: '確認', status: 'delivered', fee: 25000, deadline: d(1), comments: 6, updatedAt: addDays(t.date, -3).toISOString(), deliveredAt: addDays(t.date, -1).toISOString() },
+      { id: 'p5', name: '経営指標の読み方', channelName: 'ビジネス図解チャンネル', editorId: me, phase: '企画', status: 'active', fee: 25000, deadline: d(16), comments: 0, updatedAt: addDays(t.date, -4).toISOString() },
+      { id: 'p7', name: '一人暮らしごはん week2', channelName: '旅する料理人 ハル', editorId: me, phase: '公開', status: 'approved', fee: 30000, deadline: d(-2), comments: 1, approvedAt: addDays(t.date, -2).toISOString(), updatedAt: addDays(t.date, -2).toISOString() },
+    ],
+    // 月ゴールは Addness で設定したもの（デモでは連携済みの想定）
+    goal: { goalId: 'demo', title: `${t.month}月：担当案件をすべて締切内に納品する`, ideal: '差し戻しゼロ・締切を1本も落とさずに月を終える', due: ymdOf(new Date(t.date.getFullYear(), t.date.getMonth() + 1, 0)), url: '' },
+    plans: {},
+    questions: [],
+    invoices: [{ id: `me_${t.ym}`, editorId: me, editorName: '中村', month: t.ym, status: 'draft',
+      lines: [{ projectId: 'p7', name: '一人暮らしごはん week2', channel: '旅する料理人 ハル', fee: 30000, approvedAt: addDays(t.date, -2).toISOString() }] }],
+    editors: [{ id: 'me', name: '中村', stats: { budgets: { '粗カット': { budgetSec: 40 * 3600, actualSec: 48 * 3600, n: 2 } } } }, { id: 'ed_sakai', name: 'サカイ' }, { id: 'ed_mori', name: 'モリ' }],
+    // 過去の実績：粗カットは見積もりの約1.3倍かかっている
+    stats: { todos: { '粗カット': { estSec: 6 * 3600, actSec: 7.8 * 3600, n: 4 } }, budgets: { '粗カット': { budgetSec: 40 * 3600, actualSec: 48 * 3600, n: 2 } } },
+  };
 }
 
-function completeTask(taskId) {
-  const task = todayTasks.find(t => t.id === taskId);
-  if (!task) return;
-  const project = projects.find(p => p.id === task.projectId);
-  const row = document.querySelector(`.task-row[data-task="${taskId}"]`);
-  if (row) { row.classList.add('leaving'); }
-  todayTasks = todayTasks.filter(t => t.id !== taskId);
-
-  if (project) {
-    if (task.kind === 'review') {
-      const next = advancePhase(project);
-      if (next) showToast(`✓ 確認完了 → 「${project.name}」は次の工程「${next}」へ`);
-    } else {
-      project.updatedAt = new Date().toISOString();
-      showToast(`✓ 「${project.name}」の作業を記録しました`);
+const Demo = {
+  data: null,
+  persist() { try { localStorage.setItem(LS_DEMO, JSON.stringify(this.data)); } catch (e) {} },
+  async load() {
+    try { this.data = JSON.parse(localStorage.getItem(LS_DEMO) || 'null'); } catch (e) { this.data = null; }
+    if (!this.data) this.data = demoSeed();
+    const t = today();
+    state.role = 'editor';
+    state.profile = this.data.profile;
+    state.projects = this.data.projects;
+    state.goal = this.data.goal || null;
+    state.plan = this.data.plans[t.ymd] || null;
+    state.prevPlan = this.data.plans[ymdOf(addDays(t.date, -1))] || null;
+    state.questions = this.data.questions;
+    state.invoices = this.data.invoices.map(inv => ({ ...inv, ...totals(inv.lines) }));
+    state.editors = this.data.editors;
+    state.stats = this.data.stats || {};
+  },
+  reset() { localStorage.removeItem(LS_DEMO); this.data = null; },
+  async savePlan(plan) { this.data.plans = { [plan.date]: plan, ...Object.fromEntries(Object.entries(this.data.plans).filter(([k]) => k >= ymdOf(addDays(new Date(), -3)))) }; this.persist(); },
+  async saveProfile(p) { this.data.profile = p; this.persist(); },
+  async createProject(p) { this.data.projects.unshift(p); this.persist(); },
+  async connectAddness(goal) {
+    await sleep(500);
+    this.data.goal = { goalId: 'demo', title: '9月：担当案件をすべて締切内に納品する', ideal: '差し戻しゼロ・締切1本も落とさずに月を終える', due: ymdOf(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)), url: goal };
+    this.persist(); state.goal = this.data.goal;
+  },
+  async addnessSync() { await sleep(300); return { demo: true }; },
+  async plan(body) { await sleep(700); return localPlan(body); },
+  async replan(body) { await sleep(800); return localReplan(body); },
+  async worklog({ projectId, phaseKey, seconds, completed }) {
+    const p = this.data.projects.find(x => x.id === projectId);
+    if (p && seconds) {
+      p.actualSec = { ...(p.actualSec || {}), [phaseKey]: (p.actualSec?.[phaseKey] || 0) + seconds };
+      const budget = (p.budgetsH?.[phaseKey] || 0) * 3600;
+      if (budget && p.actualSec[phaseKey] > budget && !p.overruns?.[phaseKey]) {
+        p.overruns = { ...(p.overruns || {}), [phaseKey]: { budgetH: p.budgetsH[phaseKey], exceededAt: new Date().toISOString() } };
+        notify(`⌛ 「${p.name}」の${phaseKey}が予算${p.budgetsH[phaseKey]}時間を超えました。記録して次回の見積もりに反映します`);
+      }
     }
+    if (completed?.estimateSec) {
+      const st = this.data.stats = this.data.stats || {};
+      const todos = st.todos = st.todos || {};
+      const cur = todos[phaseKey] || { estSec: 0, actSec: 0, n: 0 };
+      todos[phaseKey] = { estSec: cur.estSec + completed.estimateSec, actSec: cur.actSec + completed.actualSec, n: cur.n + 1 };
+      state.stats = st;
+    }
+    this.persist();
+  },
+  async ask(body) {
+    await sleep(900);
+    const ai = localAsk(body);
+    const q = { id: uid('q'), editorId: 'me', editorName: state.profile.name, todo: body.todo.title, projectId: body.todo.projectId, estimateMin: body.todo.minutes, elapsedMin: body.todo.elapsedMin, stuckPoint: body.stuckPoint, tried: body.tried, needToKnow: body.needToKnow, ai, status: 'ai', createdAt: new Date().toISOString() };
+    this.data.questions.unshift(q); this.persist();
+    return { id: q.id, ...ai };
+  },
+  async escalate(questionId, message) {
+    await sleep(500);
+    const q = this.data.questions.find(x => x.id === questionId);
+    Object.assign(q, { status: 'sent', message, sentAt: new Date().toISOString() });
+    this.persist();
+    // デモ：数秒後にディレクターが LINE でリプライした想定
+    setTimeout(() => {
+      Object.assign(q, { status: 'answered', answer: '（デモ）ディレクターです。今回は案Aで進めてOKです。迷ったら尺は短い方を優先してください。', answeredAt: new Date().toISOString() });
+      this.persist(); notify(`💬 ディレクターから「${q.todo}」への回答が届きました`); renderAll();
+    }, 6000);
+  },
+  async delivery(projectId, note, url) {
+    await sleep(500);
+    const p = this.data.projects.find(x => x.id === projectId);
+    Object.assign(p, { status: 'delivered', deliveredAt: new Date().toISOString(), deliveryNote: note, deliveryUrl: url, rejectReason: '' });
+    this.persist();
+    // デモ：数秒後にディレクターが LINE で［OK］を押した想定
+    setTimeout(() => {
+      Object.assign(p, { status: 'approved', phase: '公開', approvedAt: new Date().toISOString() });
+      const ym = today().ym;
+      let inv = this.data.invoices.find(i => i.editorId === 'me' && i.month === ym && i.status === 'draft');
+      if (!inv) { inv = { id: `me_${ym}`, editorId: 'me', editorName: state.profile.name, month: ym, status: 'draft', lines: [] }; this.data.invoices.push(inv); }
+      if (!inv.lines.some(l => l.projectId === p.id)) inv.lines.push({ projectId: p.id, name: p.name, channel: p.channelName, fee: p.fee, approvedAt: p.approvedAt });
+      this.persist();
+      state.invoices = this.data.invoices.map(i => ({ ...i, ...totals(i.lines) }));
+      notify(`✅ 「${p.name}」がOKになり、請求明細に追加されました（${yen(p.fee)}）`); renderAll();
+    }, 5000);
+  },
+  async issueInvoices() {
+    await sleep(600);
+    this.data.invoices.filter(i => i.status === 'draft' && i.month === today().ym && i.lines.length).forEach(i => Object.assign(i, { status: 'issued', issuedAt: new Date().toISOString(), driveUrl: '#demo' }));
+    this.persist();
+    state.invoices = this.data.invoices.map(i => ({ ...i, ...totals(i.lines) }));
+  },
+};
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ═══════════════════════════ LIVE BACKEND（Firestore + Worker） ═══════════════════════════ */
+
+let fb = null;
+try {
+  firebase.initializeApp(FIREBASE_CONFIG);
+  fb = { auth: firebase.auth(), db: firebase.firestore() };
+} catch (e) { console.warn('Firebase unavailable', e); }
+
+const agentUrl = () => (localStorage.getItem(LS_AGENT_URL) || DEFAULT_AGENT_URL).replace(/\/+$/, '');
+
+const Live = {
+  unsubs: [],
+  async call(path, body, method = 'POST') {
+    const token = await state.user.getIdToken();
+    const res = await fetch(agentUrl() + path, {
+      method,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: method === 'POST' ? JSON.stringify(body || {}) : undefined,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `エージェントの呼び出しに失敗しました（${res.status}）`);
+    return data;
+  },
+  doc(col, id) { return fb.db.collection(col).doc(id); },
+  async load() {
+    const u = state.user, t = today();
+    const me = await this.call('/me', null, 'GET');
+    state.role = me.role;
+    const edRef = this.doc(COL.editors, u.uid);
+    const ed = await edRef.get();
+    if (!ed.exists) await edRef.set({ name: u.displayName || u.email, email: u.email, workHours: { start: '10:00', end: '19:00' }, invoiceProfile: {}, createdAt: new Date().toISOString() });
+    const edData = (await edRef.get()).data();
+    state.profile = { name: edData.name, workHours: edData.workHours || { start: '10:00', end: '19:00' }, invoiceProfile: edData.invoiceProfile || {} };
+    state.stats = edData.stats || {};
+
+    const [plan, prev] = await Promise.all([
+      this.doc(COL.plans, `${u.uid}_${t.ymd}`).get(),
+      this.doc(COL.plans, `${u.uid}_${ymdOf(addDays(t.date, -1))}`).get(),
+    ]);
+    state.goal = edData.addnessGoal || null;  // 月ゴールは Addness で設定する
+    state.plan = plan.exists ? plan.data() : null;
+    state.prevPlan = prev.exists ? prev.data() : null;
+
+    this.unsubs.forEach(f => f()); this.unsubs = [];
+    const listen = (query, apply) => new Promise(resolve => {
+      this.unsubs.push(query.onSnapshot(snap => { apply(snap.docs.map(d => ({ id: d.id, ...d.data() }))); resolve(); renderAll(); },
+        err => { console.error(err); showToast('データの読み込みに失敗しました：' + err.message); resolve(); }));
+    });
+    const isDirector = state.role === 'director';
+    const projQ = isDirector ? fb.db.collection(COL.projects) : fb.db.collection(COL.projects).where('editorId', '==', u.uid);
+    const invQ = isDirector ? fb.db.collection(COL.invoices).where('month', '==', t.ym) : fb.db.collection(COL.invoices).where('editorId', '==', u.uid);
+    let firstQ = true;
+    await Promise.all([
+      listen(projQ, rows => { state.projects = rows.filter(p => p.status !== 'archived'); }),
+      listen(fb.db.collection(COL.questions).where('editorId', '==', u.uid), rows => {
+        const before = Object.fromEntries(state.questions.map(q => [q.id, q.status]));
+        state.questions = rows.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+        if (!firstQ) rows.filter(q => q.status === 'answered' && before[q.id] && before[q.id] !== 'answered')
+          .forEach(q => notify(`💬 ディレクターから「${q.todo || '相談'}」への回答が届きました`));
+        firstQ = false;
+      }),
+      listen(invQ, rows => { state.invoices = rows.filter(i => isDirector || i.month === t.ym); }),
+      isDirector ? listen(fb.db.collection(COL.editors), rows => { state.editors = rows.map(r => ({ id: r.id, name: r.name || r.email, stats: r.stats || {} })); }) : Promise.resolve(),
+    ]);
+    // Premiere パネルが積んだ作業時間・進捗%だけを取り込む（Web 側の編集中の内容は上書きしない）
+    this.unsubs.push(this.doc(COL.plans, `${u.uid}_${t.ymd}`).onSnapshot(snap => {
+      const d = snap.data();
+      if (!d || !state.plan) return;
+      state.plan.pluginSec = d.pluginSec || {};
+      state.plan.todoProgress = d.todoProgress || {};
+      state.plan.lastPluginAt = d.lastPluginAt || null;
+      // パネルでチェックされた手順を反映
+      let changed = false;
+      for (const [todoId, idxs] of Object.entries(d.pluginStepsDone || {})) {
+        const t = state.plan.todos.find(x => x.id === todoId);
+        (idxs || []).forEach(i => { if (t?.steps[i] && !t.steps[i].done) { t.steps[i].done = true; t.stepMark = elapsedSec(t); changed = true; } });
+      }
+      if (changed) savePlanSoon();
+      renderPlan();
+    }));
+  },
+  stop() { this.unsubs.forEach(f => f()); this.unsubs = []; },
+  async savePlan(plan) {
+    const { pluginSec, todoProgress, lastPluginAt, pluginStepsDone, addnessIds, addnessSyncedAt, ...own } = plan;
+    await this.doc(COL.plans, `${state.user.uid}_${plan.date}`).set({ ...own, editorId: state.user.uid }, { merge: true });
+  },
+  async saveProfile(p) { await this.doc(COL.editors, state.user.uid).set(p, { merge: true }); },
+  async createProject(p) { const { id, ...data } = p; await this.doc(COL.projects, id).set(data); },
+  async connectAddness(goal, token) { const r = await this.call('/addness/connect', { goal, token }); state.goal = r.goal; },
+  addnessSync() { return this.call('/addness/sync', {}); },
+  plan(body) { return this.call('/plan', body); },
+  replan(body) { return this.call('/replan', body); },
+  worklog(body) { return this.call('/worklog', { ...body, source: 'web' }); },
+  pluginToken() { return this.call('/plugin/token', {}); },
+  ask(body) { return this.call('/ask', body); },
+  escalate(questionId, message) { return this.call('/escalate', { questionId, message }); },
+  delivery(projectId, note, url) { return this.call('/delivery', { projectId, note, url }); },
+  issueInvoices() { return this.call('/invoices/issue', { month: today().ym }); },
+};
+
+const backend = () => (state.mode === 'live' ? Live : Demo);
+
+/* ═══════════════════════════ DERIVED ═══════════════════════════ */
+
+function totals(lines) {
+  const subtotal = (lines || []).reduce((s, l) => s + (Number(l.fee) || 0), 0);
+  const tax = Math.floor(subtotal * TAX_RATE);
+  return { subtotal, tax, total: subtotal + tax };
+}
+const projectById = id => state.projects.find(p => p.id === id);
+const myProjects = () => state.mode === 'live' && state.user ? state.projects.filter(p => p.editorId === state.user.uid) : state.projects.filter(p => p.editorId === 'me' || !p.editorId);
+
+function monthStats() {
+  const t = today();
+  const mine = myProjects();
+  const approved = mine.filter(p => p.status === 'approved' && String(p.approvedAt || '').startsWith(t.ym));
+  const target = state.goal?.deliveriesTarget || mine.filter(p => String(p.deadline || '').startsWith(t.ym) || p.status === 'approved' && String(p.approvedAt || '').startsWith(t.ym)).length;
+  const revenueTarget = state.goal?.revenueTarget || 0;
+  const done = approved.length;
+  const revenue = approved.reduce((s, p) => s + (Number(p.fee) || 0), 0);
+  const weeksLeft = Math.max(t.daysLeft / 7, 1 / 7);
+  const pace = Math.max(target - done, 0) / weeksLeft;
+  const expected = target * (t.day / t.lastDay);
+  const status = done >= expected - 0.5 ? 'on_track' : done >= expected - 1.5 ? 'slightly_behind' : 'behind';
+  return { t, done, target, revenue, revenueTarget, pace, status, expected, pipeline: mine.filter(p => p.status !== 'approved') };
+}
+
+/* ═══════════════════════════ LOCAL AI（デモ用の簡易ロジック） ═══════════════════════════ */
+
+/** 過去実績から、工程ごとの「見積もり→実績」倍率（2件以上たまったら使う） */
+function calibrationFor(phaseKey) {
+  const v = state.stats?.todos?.[phaseKey];
+  return v && v.n >= 2 && v.estSec > 0 ? Math.round(v.actSec / v.estSec * 100) / 100 : 1;
+}
+function budgetRatioFor(stats, phaseKey) {
+  const v = stats?.budgets?.[phaseKey];
+  return v && v.n >= 1 && v.budgetSec > 0 ? Math.round(v.actualSec / v.budgetSec * 100) / 100 : null;
+}
+
+/* 編集ソフト上の操作レベルの手順（秒） */
+const STEP_TEMPLATES = {
+  roughCut: [['素材をシーケンスにインポート', 10], ['まず00のファイルをシーケンスに並べる', 10], ['音声を同期する', 300], ['00のセクションの粗カット', 1800], ['01のセクションの粗カット', 1800], ['通しで見て尺をメモする', 600]],
+  fineCut: [['粗カットを通しで見直す', 600], ['カットの間（テンポ）を詰める', 1800], ['BGM・SEを仮置きする', 900], ['色を揃える（基本補正）', 900], ['書き出してスマホで確認', 300]],
+  fix: [['指摘事項を1行ずつ書き出す', 180], ['該当箇所にマーカーを打つ', 300], ['指摘の修正', 1800], ['修正箇所だけ通しで確認', 600], ['書き出し', 600], ['納品報告を送る', 120]],
+  finish: [['通しで再生してチェックリスト確認', 900], ['誤字・音量・色の最終チェック', 600], ['書き出し設定を確認して書き出し', 900], ['納品ファイルをアップロード', 300], ['納品報告を送る', 120]],
+  prep: [['素材をバックアップする', 300], ['素材をフォルダ分け（00, 01…）', 600], ['不足カット・疑問点をメモ', 600], ['ディレクターに共有', 180]],
+  plan: [['参考動画を2本見てメモ', 900], ['見出しを5つ書き出す', 600], ['各見出しに尺を割り振る', 600], ['1枚にまとめて共有', 300]],
+  review: [['できた／できなかったを書く', 300], ['明日の最初のTODOを決める', 300]],
+};
+function mkTodo(title, projectId, phaseKey, template, why, doneWhen) {
+  const k = calibrationFor(phaseKey);
+  const steps = template.map(([t, sec]) => ({ title: t, seconds: Math.round(sec * k / 5) * 5 || sec, done: false }));
+  const minutes = Math.ceil(steps.reduce((a, s) => a + s.seconds, 0) / 60);
+  return { title, projectId, phaseKey, steps, minutes, why, doneWhen, calibrated: k !== 1 ? k : null };
+}
+
+function localPlan({ workHours, leftovers = [], fixedEvents = [] }) {
+  const t = today();
+  const s = monthStats();
+  const tasks = [];
+  const pipeline = s.pipeline.slice().sort((a, b) => {
+    const pr = p => (p.status === 'rejected' ? 0 : p.status === 'delivered' ? 3 : 1);
+    return pr(a) - pr(b) || String(a.deadline).localeCompare(String(b.deadline));
+  });
+  leftovers.forEach(title => tasks.push(mkTodo(`（昨日の続き）${title}`, '', 'その他', [[title, 1800]], '昨日のやり残しを先に片付ける', '完了にチェックできる状態')));
+  pipeline.forEach(p => {
+    const due = String(p.deadline || '').slice(5).replace('-', '/');
+    if (p.status === 'rejected') tasks.push(mkTodo(`差し戻し対応：${p.name}`, p.id, '修正', STEP_TEMPLATES.fix, '差し戻しは最優先。承認と請求を早める', `指摘（${(p.rejectReason || '').slice(0, 30)}）を全て反映して再納品`));
+    else if (p.status === 'delivered') return;
+    else if (p.phase === '編集') {
+      const roughLeft = (p.budgetsH?.['粗カット'] || 0) * 3600 - (p.actualSec?.['粗カット'] || 0);
+      tasks.push(!p.budgetsH?.['粗カット'] || roughLeft > 0
+        ? mkTodo(`${p.name}：粗カット`, p.id, '粗カット', STEP_TEMPLATES.roughCut, `締切 ${due} から逆算すると今日は粗カットを進める日`, '00・01セクションの粗カットが繋がっている')
+        : mkTodo(`${p.name}：本編集`, p.id, '本編集', STEP_TEMPLATES.fineCut, `締切 ${due} の納品に向けて`, '通しで見てテンポと音が整っている'));
+    }
+    else if (p.phase === '確認') tasks.push(mkTodo(`${p.name}：最終チェックして納品`, p.id, '書き出し', STEP_TEMPLATES.finish, '今日納品できれば請求に直結', 'チェックリストを通して納品報告を送信'));
+    else if (p.phase === '撮影') tasks.push(mkTodo(`${p.name}：素材の確認と整理`, p.id, '素材準備', STEP_TEMPLATES.prep, '素材の不足に早く気づく', '素材の不足・疑問点を共有済み'));
+    else if (p.phase === '企画') tasks.push(mkTodo(`${p.name}：構成案のたたき台`, p.id, 'その他', STEP_TEMPLATES.plan, '後工程の見積もりを確定させる', '構成案（見出し＋尺）を1枚にまとめる'));
+  });
+  tasks.push(mkTodo('今日の振り返り（明日の最初の一手を決める）', '', 'その他', STEP_TEMPLATES.review, 'ゴールとのズレを毎日小さく直す', '明日の最初のTODOが決まっている'));
+
+  const start = Math.max(toMin(workHours.start), Math.ceil((toMin(t.hm) + 5) / 5) * 5);
+  const end = toMin(workHours.end);
+  const busy = fixedEvents.map(e => [toMin(e.start), toMin(e.end)]);
+  let cur = start;
+  const todos = [];
+  for (const task of tasks) {
+    for (const [bs, be] of busy) if (cur < be && cur + task.minutes > bs) cur = be + 5;
+    if (cur + task.minutes > end) continue;
+    todos.push({ ...task, start: fromMin(cur), end: fromMin(cur + task.minutes) });
+    cur += task.minutes + 10;
   }
-  setTimeout(renderAll, 180);
+  const behind = Math.max(0, Math.round(s.expected - s.done));
+  return {
+    progress: {
+      status: s.status,
+      summary: `今月の納品は ${s.done}/${s.target}本、承認済みの請求は ${yen(s.revenue)} です。残り${t.daysLeft}日で、あと${Math.max(s.target - s.done, 0)}本を納品する必要があります。`,
+      gap: behind ? `予定ペースより約${behind}本遅れ（週${s.pace.toFixed(1)}本のペースが必要）` : `予定どおり（週${s.pace.toFixed(1)}本のペースを維持）`,
+      bottleneck: pipeline[0] ? (pipeline[0].status === 'rejected' ? `「${pipeline[0].name}」の差し戻し対応` : `「${pipeline[0].name}」（締切 ${pipeline[0].deadline.slice(5).replace('-', '/')}）`) : '特になし',
+    },
+    todos,
+    focusMessage: pipeline[0]?.status === 'rejected' ? 'まず差し戻しを片付けて、承認と請求を前に進めましょう。' : '午前中の集中時間で、一番重い編集から進めましょう。',
+  };
 }
 
-function showToast(msg) {
-  const wrap = document.getElementById('toastWrap');
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = msg;
-  wrap.appendChild(el);
-  setTimeout(() => el.remove(), 3400);
+function localAsk(body) {
+  const text = [body.stuckPoint, body.tried, body.needToKnow].join(' ');
+  const needsDirector = /(尺|納期|締切|金額|予算|クライアント|方針|OK|判断|素材が(ない|足りない)|追加)/.test(text);
+  return {
+    diagnosis: needsDirector ? '自分では決められない「判断」を待っている状態です' : '選択肢が多く、決め手がないまま手が止まっている状態です',
+    answer: needsDirector
+      ? '尺・方針・素材の過不足などはディレクター（クライアント）側の判断が必要です。選択肢を2つに絞って「A/Bどちらで進めるか」を聞くと、すぐ返事がもらえます。'
+      : '完璧な正解を探すより、仮決めで一度通しを作る方が早く進みます。15分だけタイマーをかけて、案を1つに決めて繋いでみましょう。',
+    nextSteps: needsDirector
+      ? ['迷っている点を「A案／B案」の2択にする', 'それぞれの影響（尺・作業時間）を一言添える', 'ディレクターに送って、返事待ちの間は別のTODOを進める']
+      : ['参考動画から「真似る1点」を決める', '15分で仮の繋ぎを作る', '通しで見て違和感のある所だけ直す'],
+    confidence: needsDirector ? 'low' : 'medium',
+    shouldEscalate: needsDirector,
+    escalateReason: needsDirector ? '方針や条件の判断はディレクターの確認が必要なため' : '',
+    directorMessage: `「${body.todo.title}」で相談です。\n\n■ 状況\n${body.stuckPoint || '—'}\n\n■ 試したこと\n${body.tried || '—'}\n\n■ 確認したいこと\n${body.needToKnow || '—'}`,
+  };
 }
 
-/* ═══════════════════════════ RENDER ═══════════════════════════ */
-function channelName(id) { const c = channels.find(c => c.id === id); return c ? c.name : ''; }
+/* ═══════════════════════════ GOAL ═══════════════════════════ */
 
-function renderGreeting() {
-  const now = new Date();
-  const h = now.getHours();
-  const greet = h < 11 ? 'おはようございます' : h < 18 ? 'こんにちは' : 'こんばんは';
-  document.getElementById('greetingTitle').textContent = `${greet}、中村さん`;
-  const wd = ['日','月','火','水','木','金','土'][now.getDay()];
-  document.getElementById('greetingDate').textContent = `${now.getMonth()+1}月${now.getDate()}日（${wd}）`;
-}
-
-function renderTodayTasks() {
-  const list = document.getElementById('todayTaskList');
-  document.getElementById('todayCount').textContent = todayTasks.length ? `${todayTasks.length}件` : '';
-  document.getElementById('sbMyTaskBadge').textContent = todayTasks.length;
-
-  if (!todayTasks.length) {
-    list.innerHTML = `<div class="empty-note">今日のタスクはすべて完了しています 🎉</div>`;
-    document.getElementById('btnShowAllTasks').style.display = 'none';
+function renderGoal() {
+  const el = document.getElementById('goalCard');
+  const t = today();
+  if (!state.goal) {
+    el.innerHTML = `<div class="goal-month">${t.month}月のゴール</div>
+      <div class="goal-empty">
+        <p>今月のゴールは Addness で設定します。<br>Addness の月ゴールを連携すると、そこから逆算して今日のTODOを出し、進み具合も Addness に反映されます。</p>
+        <button class="btn-light" onclick="openSettings()">Addness と連携する</button>
+      </div>`;
     return;
   }
-  const order = { '最優先': 0, '優先': 1, '通常': 2 };
-  const sorted = [...todayTasks].sort((a, b) => order[a.priority] - order[b.priority]);
-  const shown = showAllTasks ? sorted : sorted.slice(0, 3);
-  document.getElementById('btnShowAllTasks').style.display = todayTasks.length > 3 ? 'block' : 'none';
-  document.getElementById('btnShowAllTasks').textContent = showAllTasks ? '閉じる' : 'すべて見る';
-
-  list.innerHTML = shown.map(t => {
-    const p = projects.find(p => p.id === t.projectId);
-    if (!p) return '';
-    const color = colorFor(p.name);
-    const soon = /今日/.test(t.deadline);
-    return `
-    <div class="task-row" data-task="${t.id}">
-      <span class="pr-badge ${t.priority}">${t.priority}</span>
-      <div class="proj-logo" style="background:${color}">${initials(p.name)}</div>
-      <div class="task-main">
-        <div class="task-title-row">
-          <span class="task-proj">${p.name}</span>
-          <span class="task-ch">${channelName(p.channelId)}</span>
-        </div>
-        <div class="task-action">${t.action}</div>
+  const g = state.goal;
+  const s = monthStats();
+  const pctD = s.target ? Math.min(100, s.done / s.target * 100) : 0;
+  el.innerHTML = `
+    <div class="goal-top">
+      <div style="min-width:0">
+        <div class="goal-month">${t.month}月のゴール ・ Addness${g.due ? ` ・ 期限 ${esc(g.due.slice(5).replace('-', '/'))}` : ''}</div>
+        <div class="goal-ideal">${esc(g.title)}</div>
+        ${g.ideal ? `<div class="goal-why">理想：${esc(g.ideal)}</div>` : ''}
       </div>
-      <div class="task-meta">
-        <span class="meta-comment">💬 ${t.comments}</span>
-        <span class="meta-deadline ${soon ? 'soon' : ''}">${t.deadline}</span>
-      </div>
-      <button class="primary-action-btn" onclick="completeTask('${t.id}')">${t.primaryLabel}</button>
+      ${g.url ? `<a class="goal-edit" href="${esc(g.url)}" target="_blank" style="display:flex;align-items:center">Addnessで開く</a>` : ''}
+    </div>
+    <div class="goal-stats">
+      <div class="goal-stat"><div class="k">納品（OK済み）</div><div class="v">${s.done}<small> / ${s.target}本</small></div><div class="goal-bar"><div style="width:${pctD}%"></div></div></div>
+      <div class="goal-stat"><div class="k">請求（税抜）</div><div class="v">${yen(s.revenue)}</div></div>
+      <div class="goal-stat"><div class="k">残り日数</div><div class="v">${t.daysLeft}<small> 日</small></div></div>
+      <div class="goal-stat"><div class="k">必要ペース</div><div class="v">${s.pace.toFixed(1)}<small> 本/週</small></div></div>
     </div>`;
-  }).join('');
 }
+
+const STATUS_LABEL = { on_track: '順調', slightly_behind: 'やや遅れ', behind: '遅れ' };
+function renderPlanNote() {
+  const el = document.getElementById('planNote');
+  const pr = state.plan?.progress;
+  if (!pr) { el.innerHTML = ''; return; }
+  el.innerHTML = `<span class="now-status ${pr.status}">${STATUS_LABEL[pr.status] || ''}</span>${esc(pr.gap)}${pr.bottleneck ? ` ・ ボトルネック：${esc(pr.bottleneck)}` : ''}`;
+}
+
+/* ═══════════════════════════ 今日のプラン ═══════════════════════════ */
+
+let planSaveTimer = null;
+let addnessTimer = null;
+function savePlanSoon() {
+  clearTimeout(planSaveTimer);
+  planSaveTimer = setTimeout(() => backend().savePlan(state.plan)
+    .then(() => { if (state.plan?.status === 'confirmed') syncAddnessSoon(); })
+    .catch(e => showToast('プランの保存に失敗：' + e.message)), 600);
+}
+/** 確定したプランと手順のチェックを Addness に反映（案件ゴール › TODO › 手順） */
+function syncAddnessSoon() {
+  if (!state.goal?.goalId) return;
+  clearTimeout(addnessTimer);
+  addnessTimer = setTimeout(() => backend().addnessSync().catch(e => console.warn('addness', e)), 2500);
+}
+
+async function proposePlan() {
+  if (state.planning) return;
+  state.planning = true; state.planError = '';
+  renderPlan();
+  try {
+    const leftovers = (state.prevPlan?.todos || []).filter(t => !t.done).map(t => t.title);
+    const res = await backend().plan({ workHours: state.profile.workHours, leftovers, fixedEvents: [] });
+    const keepDone = (state.plan?.todos || []).filter(t => t.done);
+    state.plan = {
+      date: today().ymd,
+      status: 'proposed',
+      progress: res.progress,
+      focusMessage: res.focusMessage,
+      todos: [...keepDone, ...(res.todos || []).map(normalizeTodo)],
+      proposedAt: new Date().toISOString(),
+    };
+    savePlanSoon();
+  } catch (e) {
+    state.planError = e.message;
+  }
+  state.planning = false;
+  renderAll();
+}
+
+function normalizeTodo(t) {
+  const steps = (t.steps && t.steps.length ? t.steps : [{ title: t.title, seconds: (Number(t.minutes) || 30) * 60 }])
+    .map(s => ({ title: s.title, seconds: Number(s.seconds) || 0, done: Boolean(s.done) }));
+  const minutes = Number(t.minutes) || Math.ceil(steps.reduce((a, s) => a + s.seconds, 0) / 60);
+  return { done: false, elapsedSec: 0, startedAt: null, extraMin: 0, phaseKey: 'その他', ...t, id: t.id || uid('t'), steps, minutes };
+}
+const pluginSecOf = t => state.plan?.pluginSec?.[t.id] || 0;
+const runningSec = t => (t.startedAt ? (Date.now() - new Date(t.startedAt).getTime()) / 1000 : 0);
+function elapsedSec(t) { return (t.elapsedSec || 0) + runningSec(t) + pluginSecOf(t); }
+function stepPct(t) {
+  const total = (t.steps || []).reduce((a, s) => a + s.seconds, 0);
+  return total ? Math.round((t.steps.filter(s => s.done).reduce((a, s) => a + s.seconds, 0) / total) * 100) : 0;
+}
+const nextStep = t => (t.steps || []).find(s => !s.done);
+const fmtDur = sec => (sec < 60 ? `${Math.round(sec)}秒` : sec < 3600 ? `${Math.round(sec / 60)}分` : `${(sec / 3600).toFixed(1)}時間`);
+function pluginActive() { return state.plan?.lastPluginAt && Date.now() - new Date(state.plan.lastPluginAt).getTime() < 3 * 60 * 1000; }
+
+/** 砂時計：ratio = 経過 / 予算。1を超えたら琥珀色 */
+function hourglassSvg(ratio, size = 16) {
+  const r = Math.max(0, Math.min(1, ratio));
+  const over = ratio > 1;
+  const sand = over ? '#d97706' : '#22c55e';
+  const topH = 7 * (1 - r), botH = 7 * r;
+  const w = size * 0.7;
+  return `<svg width="${w}" height="${size}" viewBox="0 0 12 18" aria-hidden="true">
+    <path d="M1.5 1h9M1.5 17h9" stroke="#0a3d22" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M2.5 1.8 L9.5 1.8 L6 8.6 Z" fill="${sand}" fill-opacity="0.12" stroke="#0a3d22" stroke-width="0.8"/>
+    <path d="M6 9.4 L9.5 16.2 L2.5 16.2 Z" fill="${sand}" fill-opacity="0.12" stroke="#0a3d22" stroke-width="0.8"/>
+    <polygon points="${2.5 + 3.5 * (1 - topH / 7)},${8.6 - topH * (6.8 / 7)} ${9.5 - 3.5 * (1 - topH / 7)},${8.6 - topH * (6.8 / 7)} 6,8.6" fill="${sand}" ${topH < 0.2 ? 'opacity="0"' : ''}/>
+    <polygon points="${6 - 3.5 * (botH / 7)},16.2 ${6 + 3.5 * (botH / 7)},16.2 ${6 + 3.5 * (botH / 7) * 0.15},${16.2 - botH * (6.8 / 7)} ${6 - 3.5 * (botH / 7) * 0.15},${16.2 - botH * (6.8 / 7)}" fill="${sand}"/>
+    ${r > 0 && r < 1 ? `<line x1="6" y1="8.6" x2="6" y2="16" stroke="${sand}" stroke-width="0.6"/>` : ''}
+  </svg>`;
+}
+function hgHtml(t) {
+  const budget = ((Number(t.minutes) || 0) + (t.extraMin || 0)) * 60;
+  const el = elapsedSec(t);
+  if (!el && !t.startedAt) return `${hourglassSvg(0)}<span class="hg-text">${fmtDur(budget)}<small>見積</small></span>`;
+  const left = budget - el;
+  return `${hourglassSvg(budget ? el / budget : 1)}<span class="hg-text">${left >= 0 ? `残り ${fmtElapsed(left)}` : `+${fmtElapsed(-left)}`}<small>${left >= 0 ? `経過 ${fmtElapsed(el)}` : '超過'}</small></span>`;
+}
+function isOverrun(t) { return !t.done && elapsedSec(t) > ((Number(t.minutes) || 0) + (t.extraMin || 0)) * 60; }
+function fmtElapsed(sec) {
+  sec = Math.max(0, Math.floor(sec));
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  return h ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
+}
+
+function renderPlan() {
+  renderPlanNote();
+  const list = document.getElementById('todoList');
+  const foot = document.getElementById('planFoot');
+  const stateEl = document.getElementById('planState');
+  const plan = state.plan;
+  const todos = plan?.todos || [];
+  const remaining = todos.filter(t => !t.done).length;
+  document.getElementById('todayCount').textContent = todos.length ? `${todos.length - remaining}/${todos.length}` : '';
+  document.getElementById('sbMyTaskBadge').textContent = remaining;
+  stateEl.style.display = plan ? '' : 'none';
+  stateEl.textContent = plan?.status === 'confirmed' ? '進行中' : 'AI提案';
+  stateEl.className = 'plan-state ' + (plan?.status === 'confirmed' ? 'confirmed' : '');
+  document.getElementById('btnReplan').style.display = plan && !state.planning ? '' : 'none';
+
+  if (state.planning) {
+    list.innerHTML = `<div class="loading"><span class="spinner"></span>ゴールと案件の状況から、今日のTODOと時間割を組み立てています…</div>`;
+    foot.innerHTML = '';
+    return;
+  }
+  if (state.planError) {
+    list.innerHTML = `<div class="empty-note" style="color:var(--red)">プランを作れませんでした：${esc(state.planError)}</div>`;
+    foot.innerHTML = `<button class="btn-sm primary" onclick="proposePlan()">もう一度試す</button>`;
+    return;
+  }
+  if (!plan) {
+    list.innerHTML = `<div class="empty-note">${state.goal ? '今日のプランはまだありません。' : 'Addness の月ゴールを連携すると、そこから逆算して今日のTODOを提案します。'}</div>`;
+    foot.innerHTML = state.goal
+      ? `<button class="btn-sm primary" onclick="proposePlan()">今日のプランを提案してもらう</button>`
+      : `<button class="btn-sm primary" onclick="proposePlan()">今日のプランを作る</button><button class="btn-sm" onclick="openSettings()">Addness の月ゴールを連携</button>`;
+    return;
+  }
+  const cur = currentTodo();
+  if (cur && !openTodos.has('closed:' + cur.id)) openTodos.add(cur.id);
+  list.innerHTML = todos.length ? todos.map(renderTodo).join('') : `<div class="empty-note">TODOがありません</div>`;
+  const totalMin = todos.filter(t => !t.done).reduce((s, t) => s + (Number(t.minutes) || 0), 0);
+  const calibrated = [...new Set(todos.filter(t => t.calibrated).map(t => `${t.phaseKey}×${t.calibrated}`))];
+  foot.innerHTML = `
+    <button class="btn-sm" onclick="addTodo()">＋ TODOを追加</button>
+    <span class="plan-total">残り ${remaining}件 ・ ${Math.floor(totalMin / 60)}時間${totalMin % 60}分${pluginActive() ? ' ・ 🎬 Premiereで計測中' : ''}</span>
+    <span class="spacer"></span>
+    ${plan.status !== 'confirmed' ? `<button class="btn-sm primary" onclick="confirmPlan()">このプランで進める</button>` : ''}
+    ${calibrated.length ? `<div class="plan-total" style="width:100%">📈 過去の実績から見積もりを補正しています（${esc(calibrated.join('、'))}）</div>` : ''}
+    ${(plan.deferred || []).length ? `<div class="deferred" style="width:100%">⏭ 明日以降に回したもの：${plan.deferred.map(d => `${esc(d.title)}（${esc(d.when)}）`).join('、')}</div>` : ''}`;
+}
+
+function renderTodo(t) {
+  const p = projectById(t.projectId);
+  const running = Boolean(t.startedAt);
+  const cls = ['todo', t.done ? 'done' : '', running ? 'running' : '', isOverrun(t) ? 'overrun' : '', openTodos.has(t.id) ? 'open' : ''].join(' ');
+  const next = nextStep(t);
+  const pct = t.todoPctOverride ?? state.plan?.todoProgress?.[t.id]?.pct ?? stepPct(t);
+  const budget = (Number(t.minutes) || 0) + (t.extraMin || 0);
+  return `<div class="${cls}" data-todo="${t.id}">
+    <div class="todo-row">
+      <input type="checkbox" class="todo-check" ${t.done ? 'checked' : ''} onchange="toggleDone('${t.id}', this.checked)">
+      <span class="todo-time"><input type="text" inputmode="numeric" maxlength="5" value="${esc(t.start)}" title="開始時刻を変更" onchange="editTime('${t.id}', this.value)">–<span>${esc(t.end)}</span></span>
+      <div class="todo-main" onclick="toggleOpen('${t.id}')">
+        <div class="todo-title">${esc(t.title)}</div>
+        <div class="todo-sub">${p ? `<span class="todo-proj">${esc(p.name)}</span>` : ''}<span>${esc(t.phaseKey || '')}</span><span>手順 ${t.steps.filter(s => s.done).length}/${t.steps.length}</span></div>
+        ${!t.done && next ? `<div class="todo-next"><b>次</b><span>${esc(next.title)}</span><span class="sec">${fmtDur(next.seconds)}</span></div>` : ''}
+      </div>
+      <span class="hg" data-hg="${t.id}">${hgHtml(t)}</span>
+      <div class="todo-btns">
+        ${t.done ? '' : `<button class="icon-btn" title="${running ? '一時停止' : '開始'}" onclick="toggleTimer('${t.id}')">${running ? '⏸' : '▶'}</button>
+        <button class="btn-sm warn" onclick="openAsk('${t.id}')">詰まった</button>`}
+        <button class="icon-btn" title="削除" onclick="removeTodo('${t.id}')">✕</button>
+      </div>
+    </div>
+    <div class="todo-detail">
+      <ul class="steps">${t.steps.map((st, i) => `<li class="${st.done ? 'done' : st === next ? 'next' : ''}">
+        <input type="checkbox" ${st.done ? 'checked' : ''} onchange="toggleStep('${t.id}', ${i}, this.checked)"><span class="t">${esc(st.title)}</span><span class="sec">${fmtDur(st.seconds)}</span></li>`).join('')}</ul>
+      <div class="step-bar"><div style="width:${stepPct(t)}%"></div></div>
+      <div style="margin-top:6px">${t.why ? `<b>なぜ：</b>${esc(t.why)}<br>` : ''}${t.doneWhen ? `<b>完了の定義：</b>${esc(t.doneWhen)}` : ''}</div>
+    </div>
+    <div class="overrun-bar">
+      <span>⌛ 見積もりの${budget}分を超えました。いま何%まで進んでいますか？</span>
+      <div class="pct-row"><input type="range" min="0" max="100" step="5" value="${pct}" oninput="setPct('${t.id}', this.value)"><span class="pct" id="pct-${t.id}">${pct}%</span></div>
+      <button class="btn-sm primary" onclick="openReplan('${t.id}')">⏳ AIに巻き返しプランを出してもらう</button>
+      <button class="btn-sm" onclick="openAsk('${t.id}')">詰まりを相談</button>
+      <button class="btn-sm" onclick="extendTodo('${t.id}')">+15分</button>
+    </div>
+  </div>`;
+}
+
+/** いま取り組むTODO：計測中のもの → なければ時間割で次の未完了 */
+function currentTodo() {
+  const todos = (state.plan?.todos || []).filter(t => !t.done);
+  return todos.find(t => t.startedAt) || todos.slice().sort((a, b) => toMin(a.start) - toMin(b.start))[0] || null;
+}
+const stepElapsed = t => Math.max(0, elapsedSec(t) - (t.stepMark || 0));
+
+const openTodos = new Set();
+const todoById = id => state.plan?.todos.find(t => t.id === id);
+function toggleOpen(id) {
+  if (openTodos.has(id)) { openTodos.delete(id); openTodos.add('closed:' + id); } else { openTodos.add(id); openTodos.delete('closed:' + id); }
+  renderPlan();
+}
+/** 計測中の時間を確定して作業ログに送る（案件の工程別実績・予算の砂時計に積まれる） */
+function flushTimer(t, keepRunning) {
+  if (!t.startedAt) return;
+  const delta = runningSec(t);
+  t.elapsedSec = (t.elapsedSec || 0) + delta;
+  t.startedAt = keepRunning ? new Date().toISOString() : null;
+  if (t.projectId && delta >= 1) sendWorklog({ projectId: t.projectId, todoId: t.id, phaseKey: t.phaseKey, seconds: Math.round(delta) });
+}
+function stopTimer(t) { flushTimer(t, false); }
+function sendWorklog(body) {
+  const chunks = [];
+  let rest = body.seconds || 0;
+  do { chunks.push(Math.min(rest, 900)); rest -= 900; } while (rest > 0);
+  chunks.forEach(sec => backend().worklog({ ...body, seconds: sec }).then(r => {
+    if (r?.overrun) renderProjects();
+  }).catch(e => console.warn('worklog', e)));
+  if (state.mode === 'demo') renderProjects();
+}
+function toggleStep(id, i, done) {
+  const t = todoById(id);
+  t.steps[i].done = done;
+  if (done) {
+    // 手順ごとの実績を記録（次回の手順見積もりに使える）
+    t.steps[i].actualSec = Math.round(stepElapsed(t));
+    t.stepMark = elapsedSec(t);
+  }
+  delete t.todoPctOverride;
+  if (done && t.steps.every(s => s.done) && !t.done) {
+    showToast('✓ 手順がすべて終わりました。TODOを完了にします');
+    return toggleDone(id, true);
+  }
+  savePlanSoon(); renderPlan();
+}
+function setPct(id, v) {
+  const t = todoById(id);
+  t.todoPctOverride = Number(v);
+  document.getElementById('pct-' + id).textContent = v + '%';
+}
+function toggleTimer(id) {
+  const t = todoById(id);
+  if (t.startedAt) stopTimer(t);
+  else {
+    state.plan.todos.forEach(stopTimer);
+    t.startedAt = new Date().toISOString();
+    if (state.plan.status !== 'confirmed') state.plan.status = 'confirmed';
+  }
+  savePlanSoon(); renderPlan();
+}
+function toggleDone(id, done) {
+  const t = todoById(id);
+  stopTimer(t); t.done = done; t.doneAt = done ? new Date().toISOString() : null;
+  if (done) {
+    t.steps.forEach(s => { s.done = true; });
+    // 見積もりと実績の差を記録 → 次回の見積もりの補正係数になる
+    const est = ((Number(t.originalMinutes || t.minutes) || 0)) * 60;
+    if (est && elapsedSec(t) >= 60) backend().worklog({ phaseKey: t.phaseKey, completed: { estimateSec: est, actualSec: Math.round(elapsedSec(t)) } }).catch(() => {});
+  }
+  savePlanSoon(); renderAll();
+  if (done) showToast(`✓ 「${t.title}」完了${elapsedSec(t) ? `（${Math.round(elapsedSec(t) / 60)}分）` : ''}`);
+}
+function editTime(id, value) {
+  const t = todoById(id);
+  const m = String(value).replace('：', ':').match(/^(\d{1,2}):?(\d{2})$/);
+  if (!m || +m[1] > 23 || +m[2] > 59) { showToast('時刻は 13:30 の形式で入力してください'); renderPlan(); return; }
+  const start = `${pad(+m[1])}:${m[2]}`;
+  t.start = start; t.end = fromMin(toMin(start) + (Number(t.minutes) || 0));
+  state.plan.todos.sort((a, b) => toMin(a.start) - toMin(b.start));
+  savePlanSoon(); renderPlan();
+}
+function extendTodo(id) { const t = todoById(id); t.extraMin = (t.extraMin || 0) + 15; overrunNotified.delete(id); savePlanSoon(); renderPlan(); }
+function removeTodo(id) { state.plan.todos = state.plan.todos.filter(t => t.id !== id); savePlanSoon(); renderAll(); }
+function addTodo() {
+  const title = prompt('TODOの内容');
+  if (!title) return;
+  const minutes = Number(prompt('見積もり時間（分）', '30')) || 30;
+  const last = state.plan.todos.filter(t => !t.done).slice(-1)[0];
+  const start = last ? toMin(last.end) + 10 : Math.max(toMin(state.profile.workHours.start), toMin(today().hm));
+  state.plan.todos.push({ id: uid('t'), title, projectId: '', minutes, start: fromMin(start), end: fromMin(start + minutes), why: '', doneWhen: '', done: false, elapsedSec: 0, startedAt: null, extraMin: 0 });
+  savePlanSoon(); renderAll();
+}
+function confirmPlan() {
+  state.plan.status = 'confirmed'; state.plan.confirmedAt = new Date().toISOString();
+  savePlanSoon(); renderPlan();
+  showToast(state.goal ? '✓ プランを確定し、Addness の今やるべきToDoに入れました' : '✓ 今日のプランを確定しました。▶で時間を計りながら進めましょう');
+}
+
+const overrunNotified = new Set();
+function tickTimers() {
+  (state.plan?.todos || []).forEach(t => {
+    const el = document.querySelector(`[data-hg="${t.id}"]`);
+    if (!el) return;
+    if (t.startedAt || pluginSecOf(t)) el.innerHTML = hgHtml(t);
+    // 5分ごとに作業ログへ送る（閉じても実績が残る）
+    if (t.startedAt && runningSec(t) >= 300) { flushTimer(t, true); savePlanSoon(); }
+    const row = el.closest('.todo');
+    const over = isOverrun(t);
+    row.classList.toggle('overrun', over);
+    if (over && t.startedAt && !overrunNotified.has(t.id)) {
+      overrunNotified.add(t.id);
+      showToast(`⏱ 「${t.title}」が見積もりを超えました。詰まっていることを言語化してみましょう`);
+    }
+  });
+}
+setInterval(tickTimers, 1000);
+
+
+/* ═══════════════════════════ 見積もり超過 → 巻き返し（ゴールシーク） ═══════════════════════════ */
+
+let replanCtx = null;
+async function openReplan(todoId) {
+  const t = todoById(todoId);
+  flushTimer(t, Boolean(t.startedAt));
+  const pct = t.todoPctOverride ?? state.plan?.todoProgress?.[t.id]?.pct ?? stepPct(t);
+  replanCtx = { todo: t, pct, res: null };
+  document.getElementById('replanBody').innerHTML = `<div class="loading"><span class="spinner"></span>進捗${pct}%・経過${Math.round(elapsedSec(t) / 60)}分から、今日の残りを逆算しています…</div>`;
+  document.getElementById('replanFoot').innerHTML = '';
+  document.getElementById('replanOverlay').classList.add('visible');
+  const remaining = state.plan.todos.filter(x => !x.done && x.id !== t.id);
+  try {
+    const res = await backend().replan({
+      progressPct: pct,
+      workEnd: state.profile.workHours.end,
+      todo: { ...t, elapsedMin: Math.round(elapsedSec(t) / 60) },
+      remaining,
+    });
+    replanCtx.res = res;
+    renderReplan();
+  } catch (e) {
+    document.getElementById('replanBody').innerHTML = `<div class="empty-note" style="color:var(--red)">巻き返しプランを作れませんでした：${esc(e.message)}</div>`;
+  }
+}
+function renderReplan() {
+  const { res, todo } = replanCtx;
+  document.getElementById('replanBody').innerHTML = `
+    <div class="ai-answer"><div class="diag">🤖 ${esc(res.assessment)}</div>${esc(res.message)}</div>
+    <div class="field-lbl">今からの時間割</div>
+    <div class="replan-sched">${res.todos.map(r => `<div class="r ${r.id === todo.id ? 'delayed' : ''}">
+      <span class="tm">${esc(r.start)}–${esc(r.end)}</span>
+      <div style="min-width:0"><b>${esc(r.title)}</b>（${r.minutes}分）
+        <div class="st">${(r.steps || []).slice(0, 4).map(s => `${esc(s.title)} ${fmtDur(s.seconds)}`).join(' → ')}${(r.steps || []).length > 4 ? ' …' : ''}</div></div>
+    </div>`).join('') || '<div class="r">今日の残り時間に入るTODOがありません</div>'}</div>
+    ${res.deferred.length ? `<div class="deferred">⏭ 明日以降に回す：${res.deferred.map(d => `${esc(d.title)}（${esc(d.when)}）`).join('、')}</div>` : ''}
+    ${res.askDirector ? `<div class="escalate-box" style="margin-top:10px"><div class="why">👤 締切に影響しそうです。ディレクターに早めに共有しましょう。</div><button class="btn-sm warn" onclick="closeOverlay('replanOverlay');openAsk('${todo.id}')">ディレクターに相談する</button></div>` : ''}`;
+  document.getElementById('replanFoot').innerHTML = `<span class="hint">超過は記録され、次回の見積もりに反映されます。</span>
+    <button class="btn-cancel" onclick="closeOverlay('replanOverlay')">今のまま続ける</button>
+    <button class="btn-submit" onclick="applyReplan()">この時間割で進める</button>`;
+}
+function applyReplan() {
+  const { res, todo, pct } = replanCtx;
+  const plan = state.plan;
+  const byId = Object.fromEntries(plan.todos.map(t => [t.id, t]));
+  const updated = res.todos.map(r => {
+    const ex = r.id && byId[r.id];
+    if (ex && ex.id === todo.id) {
+      return { ...ex, title: r.title, start: r.start, end: r.end, extraMin: 0,
+        originalMinutes: ex.originalMinutes || ex.minutes,
+        minutes: Math.round(elapsedSec(ex) / 60) + r.minutes,
+        steps: [...ex.steps.filter(s => s.done), ...r.steps.map(s => ({ title: s.title, seconds: s.seconds, done: false }))] };
+    }
+    if (ex) return { ...ex, title: r.title, start: r.start, end: r.end, minutes: r.minutes, why: r.why || ex.why, doneWhen: r.doneWhen || ex.doneWhen,
+      steps: r.steps?.length ? r.steps.map(s => ({ title: s.title, seconds: s.seconds, done: false })) : ex.steps };
+    return normalizeTodo(r);
+  });
+  const deferredIds = new Set(plan.todos.filter(t => !t.done && !res.todos.some(r => r.id === t.id)).map(t => t.id));
+  plan.todos = [...plan.todos.filter(t => t.done), ...updated];
+  plan.deferred = [...(plan.deferred || []), ...res.deferred];
+  plan.replans = [...(plan.replans || []), { at: new Date().toISOString(), todoId: todo.id, pct, elapsedMin: Math.round(elapsedSec(todo) / 60), remainingMinutes: res.remainingMinutes, deferred: [...deferredIds] }];
+  overrunNotified.delete(todo.id);
+  savePlanSoon(); closeOverlay('replanOverlay'); renderAll();
+  showToast('⏳ 時間割を引き直しました。次の手順から進めましょう');
+}
+
+function localReplan({ progressPct, workEnd, todo, remaining }) {
+  const pct = Math.max(5, Math.min(95, Number(progressPct) || 5));
+  const elapsedMin = Math.max(1, todo.elapsedMin);
+  const remainingMinutes = Math.max(5, Math.ceil(elapsedMin * (100 - pct) / pct));
+  const undone = todo.steps.filter(s => !s.done);
+  const undoneSec = undone.reduce((a, s) => a + s.seconds, 0) || 1;
+  const scale = remainingMinutes * 60 / undoneSec;
+  const now = new Date();
+  let cur = Math.ceil((now.getHours() * 60 + now.getMinutes() + 1) / 5) * 5;
+  const end = toMin(workEnd || '19:00');
+  const out = [], deferred = [];
+  const place = (t, minutes, steps) => {
+    if (cur + minutes > end && out.length) { deferred.push({ title: t.title, when: '明日の午前' }); return; }
+    out.push({ id: t.id, title: t.title, projectId: t.projectId, phaseKey: t.phaseKey, minutes, start: fromMin(cur), end: fromMin(cur + minutes), why: t.why, doneWhen: t.doneWhen, steps });
+    cur += minutes + 10;
+  };
+  place(todo, remainingMinutes, (undone.length ? undone : [{ title: todo.title, seconds: undoneSec }]).map(s => ({ title: s.title, seconds: Math.round(s.seconds * scale / 5) * 5 || 5 })));
+  remaining.sort((a, b) => toMin(a.start) - toMin(b.start)).forEach(t => place(t, Number(t.minutes) || 30, t.steps.filter(s => !s.done)));
+  const ratio = (elapsedMin / (todo.minutes * pct / 100)).toFixed(1);
+  const project = projectById(todo.projectId);
+  const soon = project?.deadline && project.deadline <= ymdOf(addDays(new Date(), 1));
+  return {
+    assessment: `${elapsedMin}分で進捗${pct}%。今のペースだと残り約${remainingMinutes}分（見積もりの約${ratio}倍のペース）です。`,
+    remainingMinutes,
+    message: deferred.length
+      ? `まず「${todo.title}」の残り手順を終わらせ、${deferred.map(d => `「${d.title}」`).join('')}は明日の午前に回しましょう。今やることは「${(undone[0] || {}).title || todo.title}」です。`
+      : `今日の残り時間に収まります。次の「${(undone[0] || {}).title || todo.title}」から再開しましょう。`,
+    askDirector: Boolean(soon && (deferred.length || cur > end)),
+    todos: out,
+    deferred,
+  };
+}
+
+/* ═══════════════════════════ 詰まり → 相談 ═══════════════════════════ */
+
+let askCtx = null;
+function openAsk(todoId) {
+  const t = todoById(todoId);
+  askCtx = { todo: t, questionId: null, ai: null };
+  document.getElementById('askTask').value = t.title;
+  ['askStuck', 'askTried', 'askNeed'].forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('askForm').style.display = '';
+  document.getElementById('askResult').innerHTML = '';
+  renderAskFoot('form');
+  document.getElementById('askOverlay').classList.add('visible');
+  setTimeout(() => document.getElementById('askStuck').focus(), 40);
+}
+function renderAskFoot(mode) {
+  const foot = document.getElementById('askFoot');
+  if (mode === 'form') foot.innerHTML = `<span class="hint">言葉にするだけで解決することも多いです。</span><button class="btn-cancel" data-close>閉じる</button><button class="btn-submit" onclick="submitAsk()">AIに聞く</button>`;
+  if (mode === 'loading') foot.innerHTML = `<span class="hint"><span class="spinner" style="display:inline-block;vertical-align:middle"></span> AIが考えています…</span>`;
+  if (mode === 'answered') foot.innerHTML = `<button class="btn-cancel" onclick="showEscalate()">ディレクターに送る</button><button class="btn-submit" onclick="askResolved()">解決した</button>`;
+  if (mode === 'escalate') foot.innerHTML = `<button class="btn-cancel" onclick="renderAskFoot('answered');document.getElementById('escalateBox').remove()">戻る</button><button class="btn-submit" id="escalateSend" onclick="sendEscalate()">LINEで送信</button>`;
+  foot.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => closeOverlay('askOverlay')));
+}
+async function submitAsk() {
+  const t = askCtx.todo;
+  const body = {
+    todo: { title: t.title, projectId: t.projectId, minutes: Number(t.minutes) || 0, elapsedMin: Math.round(elapsedSec(t) / 60) },
+    stuckPoint: document.getElementById('askStuck').value.trim(),
+    tried: document.getElementById('askTried').value.trim(),
+    needToKnow: document.getElementById('askNeed').value.trim(),
+  };
+  if (!body.stuckPoint) { showToast('「どこで止まっている？」を書いてください'); return; }
+  renderAskFoot('loading');
+  try {
+    const res = await backend().ask(body);
+    askCtx.questionId = res.id; askCtx.ai = res;
+    document.getElementById('askForm').style.display = 'none';
+    document.getElementById('askResult').innerHTML = `<div class="ai-answer">
+      <div class="diag">🤖 ${esc(res.diagnosis)}<span class="conf ${res.confidence}">自信度 ${{ high: '高', medium: '中', low: '低' }[res.confidence] || ''}</span></div>
+      ${esc(res.answer)}
+      ${(res.nextSteps || []).length ? `<ol>${res.nextSteps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : ''}
+    </div>
+    ${res.shouldEscalate ? `<div class="escalate-box"><div class="why">👤 ディレクターに確認するのがおすすめです：${esc(res.escalateReason)}</div></div>` : ''}`;
+    renderAskFoot('answered');
+    renderQuestions();
+  } catch (e) {
+    showToast('AIに聞けませんでした：' + e.message);
+    renderAskFoot('form');
+  }
+}
+function showEscalate() {
+  const box = document.createElement('div');
+  box.id = 'escalateBox';
+  box.innerHTML = `<label class="field-lbl">ディレクターに送る内容（編集できます）</label>
+    <textarea class="field-ta" id="escalateMsg" style="min-height:150px">${esc(askCtx.ai.directorMessage)}</textarea>
+    <div class="field-note">ディレクターのLINEに届きます。LINEでリプライされた回答は、右の「🙋 相談」に表示されます。</div>`;
+  document.getElementById('askResult').appendChild(box);
+  renderAskFoot('escalate');
+  document.getElementById('escalateMsg').focus();
+}
+async function sendEscalate() {
+  const btn = document.getElementById('escalateSend');
+  btn.disabled = true; btn.textContent = '送信中…';
+  try {
+    await backend().escalate(askCtx.questionId, document.getElementById('escalateMsg').value.trim());
+    closeOverlay('askOverlay');
+    showToast('📨 ディレクターのLINEに送信しました。返事を待つ間は次のTODOへ進みましょう');
+    if (state.mode === 'demo') { const q = state.questions.find(x => x.id === askCtx.questionId); if (q) q.status = 'sent'; }
+    renderQuestions();
+  } catch (e) {
+    showToast('送信できませんでした：' + e.message);
+    btn.disabled = false; btn.textContent = 'LINEで送信';
+  }
+}
+function askResolved() {
+  const t = todoById(askCtx.todo.id);
+  if (!t) { closeOverlay('askOverlay'); return; }
+  t.extraMin = (t.extraMin || 0) + 15; overrunNotified.delete(t.id);
+  savePlanSoon(); closeOverlay('askOverlay'); renderPlan();
+  showToast('👍 解決してよかったです。見積もりを15分延長しました');
+}
+
+const Q_LABEL = { ai: 'AI回答', sent: '返信待ち', answered: '回答あり' };
+function renderQuestions() {
+  const wrap = document.getElementById('questionList');
+  const qs = state.questions.slice(0, 6);
+  document.getElementById('qCount').textContent = state.questions.length ? `${state.questions.length}件` : '';
+  wrap.innerHTML = qs.length ? qs.map(q => `<div class="q-item" onclick="openQuestion('${q.id}')">
+      <div class="q-head"><span class="q-title">${esc(q.todo || q.stuckPoint)}</span><span class="q-st ${q.status}">${Q_LABEL[q.status] || q.status}</span></div>
+      ${q.status === 'answered' ? `<div class="q-answer">${esc(q.answer)}</div>` : ''}
+    </div>`).join('') : `<div class="empty-note">詰まったらTODOの「詰まった」から相談できます</div>`;
+}
+function openQuestion(id) {
+  const q = state.questions.find(x => x.id === id);
+  if (!q) return;
+  document.getElementById('questionDetail').innerHTML = `
+    <div style="font-size:12.5px;font-weight:700;margin-bottom:8px">${esc(q.todo)}</div>
+    <div style="font-size:11px;line-height:1.7;color:var(--text2);white-space:pre-wrap;margin-bottom:12px"><b>止まっている所：</b>${esc(q.stuckPoint)}${q.tried ? `\n<b>試したこと：</b>${esc(q.tried)}` : ''}${q.needToKnow ? `\n<b>知りたいこと：</b>${esc(q.needToKnow)}` : ''}</div>
+    ${q.ai ? `<div class="ai-answer"><div class="diag">🤖 ${esc(q.ai.diagnosis)}</div>${esc(q.ai.answer)}</div>` : ''}
+    ${q.status === 'answered' ? `<div class="ai-answer" style="background:#fff;border-color:var(--green)"><div class="diag">👤 ディレクターの回答</div><div style="white-space:pre-wrap">${esc(q.answer)}</div></div>` : ''}
+    ${q.status === 'sent' ? `<div class="empty-note">ディレクターのLINEに送信済み。返信を待っています。</div>` : ''}
+    ${q.status === 'ai' ? `<button class="btn-sm primary" onclick="reopenEscalate('${q.id}')">ディレクターに送る</button>` : ''}`;
+  document.getElementById('questionOverlay').classList.add('visible');
+}
+function reopenEscalate(id) {
+  const q = state.questions.find(x => x.id === id);
+  closeOverlay('questionOverlay');
+  askCtx = { todo: { title: q.todo, projectId: q.projectId, minutes: q.estimateMin, id: '' }, questionId: q.id, ai: q.ai };
+  document.getElementById('askForm').style.display = 'none';
+  document.getElementById('askResult').innerHTML = '';
+  document.getElementById('askOverlay').classList.add('visible');
+  showEscalate();
+}
+
+/* ═══════════════════════════ 案件・納品 ═══════════════════════════ */
 
 function renderProjectFilters() {
   const wrap = document.getElementById('projFilters');
@@ -639,132 +1774,328 @@ function renderProjectFilters() {
   wrap.querySelectorAll('.filter-tab').forEach(btn => btn.addEventListener('click', () => { currentFilter = btn.dataset.filter; renderProjects(); }));
 }
 
+const P_STATUS = { delivered: '承認待ち', rejected: '差し戻し', approved: '納品完了' };
+function canDeliver(p) {
+  const mine = state.mode === 'demo' ? (p.editorId === 'me' || !p.editorId) : p.editorId === state.user?.uid;
+  return mine && ['active', 'rejected'].includes(p.status || 'active');
+}
 function renderProjects() {
   document.querySelectorAll('.filter-tab').forEach(b => b.classList.toggle('active', b.dataset.filter === currentFilter));
-  const active = projects.filter(p => p.status !== 'archived');
+  const active = state.projects.filter(p => p.status !== 'archived');
   const filtered = currentFilter === 'すべて' ? active : active.filter(p => p.phase === currentFilter);
   document.getElementById('projCount').textContent = `${filtered.length}件`;
-
   const cards = document.getElementById('projCards');
-  if (!filtered.length) {
-    cards.innerHTML = `<div class="empty-note" style="flex:1;">該当する案件はありません</div>`;
-    return;
-  }
-  cards.innerHTML = filtered.map(p => {
+  if (!filtered.length) { cards.innerHTML = `<div class="empty-note" style="flex:1;">該当する案件はありません</div>`; return; }
+  const order = { rejected: 0, active: 1, delivered: 2, approved: 3 };
+  cards.innerHTML = filtered.slice().sort((a, b) => (order[a.status] ?? 1) - (order[b.status] ?? 1) || String(a.deadline).localeCompare(String(b.deadline))).map(p => {
     const color = colorFor(p.name);
-    const pc = PHASE_COLOR[p.phase];
-    const progress = PHASE_PROGRESS[p.phase];
+    const pc = PHASE_COLOR[p.phase] || '#6b7280';
+    const progress = p.status === 'approved' ? 100 : PHASE_PROGRESS[p.phase] || 0;
     return `
-    <div class="proj-card" onclick="showToast('「${p.name}」の詳細画面（実装予定）')">
+    <div class="proj-card">
       <div class="proj-card-top">
-        <div class="proj-logo" style="background:${color}">${initials(p.name)}</div>
+        <div class="proj-logo" style="background:${color}">${esc(initials(p.name))}</div>
         <div class="proj-card-names">
-          <div class="proj-card-ch">${channelName(p.channelId)}</div>
-          <div class="proj-card-name">${p.name}</div>
+          <div class="proj-card-ch">${esc(p.channelName)}${state.role === 'director' && p.editorName ? ` ・ ${esc(p.editorName)}` : ''}</div>
+          <div class="proj-card-name">${esc(p.name)}</div>
         </div>
       </div>
-      <span class="phase-badge" style="background:${pc}1a;color:${pc}">${p.phase}</span>
-      <div class="progress-track"><div class="progress-fill" style="width:${progress}%;background:${pc}"></div></div>
-      <div class="proj-card-next">次：<b>${p.nextAction}</b></div>
-      <div class="proj-card-bottom">
-        <span class="meta-comment">💬 ${p.comments}</span>
-        <span>${p.deadline.slice(5).replace('-', '/')} 締切</span>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <span class="phase-badge" style="background:${pc}1a;color:${pc}">${esc(p.phase)}</span>
+        ${P_STATUS[p.status] ? `<span class="proj-status ${p.status}">${P_STATUS[p.status]}</span>` : ''}
       </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${progress}%;background:${pc}"></div></div>
+      ${budgetHtml(p)}
+      ${p.status === 'rejected' && p.rejectReason ? `<div class="proj-reject">↩️ ${esc(p.rejectReason)}</div>` : ''}
+      ${p.directorComment && p.status !== 'rejected' ? `<div class="proj-card-next">💬 ${esc(p.directorComment)}</div>` : ''}
+      <div class="proj-card-bottom">
+        <span class="proj-fee">${p.fee ? yen(p.fee) : ''}</span>
+        <span>${p.deadline ? esc(String(p.deadline).slice(5).replace('-', '/')) + ' 締切' : ''}</span>
+      </div>
+      ${canDeliver(p) ? `<div class="proj-card-actions"><button class="btn-sm primary" style="flex:1" onclick="openDelivery('${p.id}')">📦 ${p.status === 'rejected' ? '修正して再納品' : '納品する'}</button></div>` : ''}
     </div>`;
   }).join('');
+}
+
+/** 工程ごとの時間予算に対する実績（砂時計）。超過したら記録済みを表示 */
+function budgetHtml(p) {
+  const keys = Object.keys(p.budgetsH || {}).filter(k => Number(p.budgetsH[k]) > 0);
+  if (!keys.length) return '';
+  return `<div class="budget">${keys.map(k => {
+    const h = Number(p.budgetsH[k]);
+    const used = (p.actualSec?.[k] || 0) / 3600;
+    const over = used > h;
+    return `<div class="budget-row ${over ? 'over' : ''}" title="${over ? `予算超過を記録済み（次回の見積もりに反映）` : ''}">
+      ${hourglassSvg(used / h, 13)}<span class="k">${esc(k)}</span><span class="bar"><div style="width:${Math.min(100, used / h * 100)}%"></div></span>
+      <span class="v">${used.toFixed(1)}/${h}h${over ? ` +${(used - h).toFixed(1)}` : ''}</span></div>`;
+  }).join('')}</div>`;
+}
+
+let deliveryPid = null;
+function openDelivery(pid) {
+  deliveryPid = pid;
+  const p = projectById(pid);
+  document.getElementById('deliveryProject').textContent = `${p.name}（${p.fee ? yen(p.fee) + '・税抜' : '金額未設定'}）`;
+  document.getElementById('deliveryUrl').value = p.deliveryUrl || '';
+  document.getElementById('deliveryNote').value = '';
+  document.getElementById('deliveryOverlay').classList.add('visible');
+}
+async function submitDelivery() {
+  const btn = document.getElementById('deliverySubmit');
+  btn.disabled = true;
+  try {
+    await backend().delivery(deliveryPid, document.getElementById('deliveryNote').value.trim(), document.getElementById('deliveryUrl').value.trim());
+    closeOverlay('deliveryOverlay');
+    showToast('📦 納品を報告しました。ディレクターのOKで請求明細に追加されます');
+    renderAll();
+  } catch (e) { showToast('報告できませんでした：' + e.message); }
+  btn.disabled = false;
 }
 
 function renderChannels() {
-  document.getElementById('chCount').textContent = `${channels.length}件`;
+  const names = [...new Set(state.projects.map(p => p.channelName).filter(Boolean))];
+  document.getElementById('chCount').textContent = `${names.length}件`;
   const wrap = document.getElementById('chCards');
-  wrap.innerHTML = channels.map(c => {
-    const count = projects.filter(p => p.channelId === c.id && p.status !== 'archived').length;
-    const color = colorFor(c.name);
-    return `
-    <div class="ch-card" onclick="currentFilter='すべて';renderProjectFilters();renderProjects();document.querySelector('[data-sec=projects]').scrollIntoView({behavior:'smooth'})">
-      <div class="ch-logo-lg" style="background:${color}">${initials(c.name)}</div>
-      <div class="ch-card-name">${c.name}</div>
-      <div class="ch-card-count">${count}案件</div>
+  wrap.innerHTML = names.map(name => {
+    const count = state.projects.filter(p => p.channelName === name && p.status !== 'approved').length;
+    return `<div class="ch-card" onclick="document.querySelector('[data-sec=projects]').scrollIntoView({behavior:'smooth'})">
+      <div class="ch-logo-lg" style="background:${colorFor(name)}">${esc(initials(name))}</div>
+      <div class="ch-card-name">${esc(name)}</div>
+      <div class="ch-card-count">進行中 ${count}案件</div>
     </div>`;
-  }).join('') + `<button class="ch-add-card" id="btnAddChannel">＋<br>チャンネルを追加</button>`;
-  document.getElementById('btnAddChannel').addEventListener('click', () => showToast('チャンネル追加（実装予定）'));
+  }).join('') || `<div class="empty-note" style="flex:1;">案件が登録されると表示されます</div>`;
+  document.getElementById('sbFavorites').innerHTML = names.slice(0, 5).map(name => `<div class="sb-fav-item" onclick="document.querySelector('[data-sec=channels]').scrollIntoView({behavior:'smooth'})">
+      <div class="sb-fav-logo" style="background:${colorFor(name)}">${esc(initials(name))}</div><div class="sb-fav-name">${esc(name)}</div></div>`).join('');
 }
 
-function renderSidebarFavorites() {
-  const wrap = document.getElementById('sbFavorites');
-  wrap.innerHTML = channels.filter(c => c.favorite).map(c => {
-    const color = colorFor(c.name);
-    return `<div class="sb-fav-item" onclick="document.querySelector('[data-sec=channels]').scrollIntoView({behavior:'smooth'})">
-      <div class="sb-fav-logo" style="background:${color}">${initials(c.name)}</div>
-      <div class="sb-fav-name">${c.name}</div>
-    </div>`;
-  }).join('');
-}
-
-const REASON_CLASS = { '自分の確認待ち': 'self', 'クライアント確認待ち': 'client', '編集者から初稿待ち': 'editor', '素材待ち': 'material', '担当者確認待ち': 'assignee' };
 function daysAgo(dateStr) {
+  if (!dateStr) return '';
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
   return diff <= 0 ? '今日' : `${diff}日前`;
 }
 function renderWaiting() {
-  const waiting = projects.filter(p => p.blockedBy);
+  const waiting = state.projects.filter(p => p.status === 'delivered' || p.status === 'rejected');
   document.getElementById('waitCount').textContent = `${waiting.length}件`;
   document.getElementById('sbWaitingBadge').textContent = waiting.length;
-  const selfCount = waiting.filter(p => p.blockedBy === '自分の確認待ち').length;
-  const badge = document.getElementById('mnavWaitBadge');
-  badge.style.display = selfCount ? 'block' : 'none';
-
+  document.getElementById('mnavWaitBadge').style.display = waiting.some(p => p.status === 'rejected') ? 'block' : 'none';
   const wrap = document.getElementById('waitingList');
-  if (!waiting.length) {
-    wrap.innerHTML = `<div class="empty-note">確認待ちの案件はありません</div>`;
+  wrap.innerHTML = waiting.length ? waiting.map(p => `
+    <div class="wait-item">
+      <div class="proj-logo" style="background:${colorFor(p.name)};width:20px;height:20px;font-size:9px;">${esc(initials(p.name))}</div>
+      <div class="wait-info">
+        <div class="wait-name">${esc(p.name)}</div>
+        <div class="wait-reason-row"><span class="wait-reason ${p.status === 'rejected' ? 'self' : 'client'}">${p.status === 'rejected' ? '差し戻し対応' : 'ディレクター確認待ち'}</span></div>
+      </div>
+      <span class="wait-since">${daysAgo(p.status === 'rejected' ? p.rejectedAt || p.updatedAt : p.deliveredAt)}</span>
+    </div>`).join('') : `<div class="empty-note">確認待ちの案件はありません</div>`;
+}
+
+/* ═══════════════════════════ 請求 ═══════════════════════════ */
+
+function renderInvoice() {
+  const box = document.getElementById('invoiceBox');
+  const t = today();
+  const invs = state.invoices.filter(i => i.month === t.ym).map(i => ({ ...i, ...totals(i.lines) }));
+  const stEl = document.getElementById('invState');
+  if (state.role === 'director') {
+    stEl.textContent = `${invs.length}名`;
+    const drafts = invs.filter(i => i.status === 'draft' && (i.lines || []).length);
+    box.innerHTML = `<div class="inv-box">
+      ${invs.length ? invs.map(i => `<div class="inv-editor">${esc(i.editorName)}</div>
+        <div class="inv-line"><span>${(i.lines || []).length}件 ・ ${i.status === 'issued' ? '発行済み' : '下書き'}</span><span class="mono">${yen(i.total)}</span></div>
+        ${i.driveUrl ? `<div class="inv-meta"><a href="${esc(i.driveUrl)}" target="_blank" style="color:var(--green)">📄 ドライブで開く</a></div>` : ''}`).join('') : '<div class="inv-meta">今月の請求明細はまだありません</div>'}
+      <div class="inv-meta">毎月最終日の23時に自動で確定し、ドライブ「ものがたりっち請求書」に保存されます。</div>
+      ${drafts.length ? `<button class="btn-sm primary" style="margin-top:8px;width:100%" onclick="issueNow()">今すぐ発行する（${drafts.length}件）</button>` : ''}
+    </div>`;
     return;
   }
-  wrap.innerHTML = waiting.map(p => {
-    const color = colorFor(p.name);
-    const cls = REASON_CLASS[p.blockedBy] || 'material';
-    return `
-    <div class="wait-item">
-      <div class="proj-logo" style="background:${color};width:20px;height:20px;font-size:9px;">${initials(p.name)}</div>
-      <div class="wait-info">
-        <div class="wait-name">${p.name}</div>
-        <div class="wait-reason-row">
-          <span class="wait-reason ${cls}">${p.blockedBy}</span>
-        </div>
-      </div>
-      <span class="wait-since">${daysAgo(p.updatedAt)}</span>
-    </div>`;
-  }).join('');
+  const inv = invs[0];
+  const lines = inv?.lines || [];
+  stEl.textContent = inv?.status === 'issued' ? '発行済み' : '下書き';
+  const pending = myProjects().filter(p => p.status === 'delivered').reduce((s, p) => s + (Number(p.fee) || 0), 0);
+  box.innerHTML = `<div class="inv-box">
+    ${lines.length ? lines.map(l => `<div class="inv-line"><span>${esc(l.name)}</span><span class="mono">${yen(l.fee)}</span></div>`).join('') : '<div class="inv-meta" style="margin-top:0">ディレクターのOKが出た案件がここに追加されます</div>'}
+    <div class="inv-sum">
+      <div class="inv-line"><span>小計</span><span class="mono">${yen(inv?.subtotal)}</span></div>
+      <div class="inv-line"><span>消費税（10%）</span><span class="mono">${yen(inv?.tax)}</span></div>
+      <div class="inv-line inv-total"><span>合計</span><span class="mono">${yen(inv?.total)}</span></div>
+    </div>
+    ${pending ? `<div class="inv-meta">承認待ち：${yen(pending)}（OKが出ると追加されます）</div>` : ''}
+    <div class="inv-meta">${inv?.status === 'issued'
+      ? `✅ 発行済み ${inv.driveUrl && inv.driveUrl !== '#demo' ? `<a href="${esc(inv.driveUrl)}" target="_blank" style="color:var(--green)">📄 ドライブで開く</a>` : '（デモ：ドライブ保存をシミュレート）'}`
+      : `${t.month}/${t.lastDay} の夜に確定し、請求書PDFがドライブに保存されます。`}
+      ${state.profile.invoiceProfile?.bank ? '' : '<br>⚠️ 請求書の発行者情報（振込先など）が未登録です。<a href="#" data-open-settings style="color:var(--green)">設定する</a>'}</div>
+  </div>`;
+  box.querySelectorAll('[data-open-settings]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); openSettings(); }));
+}
+async function issueNow() {
+  if (!confirm('今月の下書き請求書を確定して、PDFをドライブに保存します。よろしいですか？')) return;
+  try { await backend().issueInvoices(); showToast('🧾 請求書を発行しました'); renderAll(); }
+  catch (e) { showToast('発行できませんでした：' + e.message); }
+}
+
+/* ═══════════════════════════ 設定・ログイン ═══════════════════════════ */
+
+function openSettings() {
+  const p = state.profile, ip = p.invoiceProfile || {};
+  document.getElementById('setName').value = p.name || '';
+  document.getElementById('setStart').value = p.workHours?.start || '10:00';
+  document.getElementById('setEnd').value = p.workHours?.end || '19:00';
+  document.getElementById('setInvName').value = ip.name || '';
+  document.getElementById('setInvAddr').value = ip.address || '';
+  document.getElementById('setInvNo').value = ip.invoiceNo || '';
+  document.getElementById('setInvBank').value = ip.bank || '';
+  document.getElementById('setAgentUrl').value = localStorage.getItem(LS_AGENT_URL) || DEFAULT_AGENT_URL;
+  document.getElementById('setAddnessGoal').value = state.goal?.url || state.goal?.goalId || '';
+  document.getElementById('setAddnessToken').value = '';
+  document.getElementById('settingsOverlay').classList.add('visible');
+}
+async function saveSettings() {
+  const v = id => document.getElementById(id).value.trim();
+  const profile = {
+    name: v('setName') || state.profile.name,
+    workHours: { start: v('setStart') || '10:00', end: v('setEnd') || '19:00' },
+    invoiceProfile: { name: v('setInvName'), address: v('setInvAddr'), invoiceNo: v('setInvNo'), bank: v('setInvBank') },
+  };
+  const prevUrl = agentUrl();
+  localStorage.setItem(LS_AGENT_URL, v('setAgentUrl'));
+  try { await backend().saveProfile(profile); state.profile = profile; }
+  catch (e) { showToast('保存できませんでした：' + e.message); return; }
+  const goalInput = v('setAddnessGoal');
+  if (goalInput && (goalInput !== (state.goal?.url || state.goal?.goalId) || v('setAddnessToken'))) {
+    try { await backend().connectAddness(goalInput, v('setAddnessToken')); showToast(`🎯 Addness の月ゴール「${state.goal.title}」と連携しました`); }
+    catch (e) { showToast('Addness と連携できませんでした：' + e.message); return; }
+  }
+  closeOverlay('settingsOverlay');
+  showToast('✓ 設定を保存しました');
+  if (agentUrl() !== prevUrl) await boot(); else renderAll();
+}
+
+function renderMode() {
+  const live = state.mode === 'live';
+  const pill = document.getElementById('modePill');
+  pill.textContent = live ? (state.role === 'director' ? '連携中・ディレクター' : '連携中') : 'デモ';
+  pill.className = 'mode-pill' + (live ? ' live' : '');
+  document.getElementById('btnLogin').style.display = state.user ? 'none' : '';
+  document.getElementById('btnProfile').textContent = initials(state.profile.name || '？').slice(0, 1);
+  document.getElementById('profileName').textContent = state.user ? `${state.profile.name}（${state.user.email}）` : `${state.profile.name}（デモ）`;
+  document.getElementById('btnLogout').textContent = state.user ? 'ログアウト' : 'デモデータをリセット';
+  document.getElementById('sbSyncLabel').textContent = live ? 'Firestore・AIエージェント連携中' : 'デモデータで表示中';
+  document.getElementById('sbSyncTime').textContent = live ? 'LINE・ドライブと連携' : (state.user ? '設定でエージェントURLを入れると連携します' : 'ログインすると実データに切り替わります');
+  document.getElementById('btnNewProject').style.display = !live || state.role === 'director' ? '' : 'none';
+}
+
+/* ═══════════════════════════ RENDER ═══════════════════════════ */
+
+function renderGreeting() {
+  const now = new Date();
+  const h = now.getHours();
+  const greet = h < 11 ? 'おはようございます' : h < 18 ? 'こんにちは' : 'こんばんは';
+  document.getElementById('greetingTitle').textContent = `${greet}、${state.profile.name || ''}さん`;
+  const wd = ['日','月','火','水','木','金','土'][now.getDay()];
+  document.getElementById('greetingDate').textContent = `${now.getMonth()+1}月${now.getDate()}日（${wd}）`;
 }
 
 function renderNotifications() {
-  document.getElementById('notifDot').style.display = notifications.length ? 'block' : 'none';
-  document.getElementById('notifList').innerHTML = notifications.map(n => `
-    <div class="notif-item">${n.text}<div class="notif-time">${n.time}</div></div>`).join('');
+  document.getElementById('notifDot').style.display = notifications.some(n => !n.read) ? 'block' : 'none';
+  document.getElementById('notifList').innerHTML = notifications.length
+    ? notifications.slice(0, 8).map(n => `<div class="notif-item">${esc(n.text)}<div class="notif-time">${esc(n.time)}</div></div>`).join('')
+    : `<div class="notif-item" style="color:var(--muted2)">新しい通知はありません</div>`;
+}
+function notify(text) {
+  notifications.unshift({ text, time: hmOf(new Date()), read: false });
+  showToast(text);
+  renderNotifications();
 }
 
 function renderAll() {
+  renderMode();
   renderGreeting();
-  renderTodayTasks();
+  renderGoal();
+  renderPlan();
   renderProjectFilters();
   renderProjects();
   renderChannels();
-  renderSidebarFavorites();
   renderWaiting();
+  renderQuestions();
+  renderInvoice();
   renderNotifications();
 }
-renderAll();
+
+function showToast(msg) {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3800);
+}
+function closeOverlay(id) { document.getElementById(id).classList.remove('visible'); }
+
+/* ═══════════════════════════ BOOT ═══════════════════════════ */
+
+async function boot() {
+  Live.stop();
+  state.mode = state.user && agentUrl() ? 'live' : 'demo';
+  try {
+    await backend().load();
+  } catch (e) {
+    console.error(e);
+    showToast('連携モードで読み込めなかったため、デモで表示します：' + e.message);
+    state.mode = 'demo';
+    await Demo.load();
+  }
+  renderAll();
+  if (!state.plan) proposePlan();
+}
+
+if (fb) {
+  fb.auth.onAuthStateChanged(user => { state.user = user; boot(); });
+} else {
+  boot();
+}
 
 /* ═══════════════════════════ INTERACTIONS ═══════════════════════════ */
-document.getElementById('btnShowAllTasks').addEventListener('click', () => { showAllTasks = !showAllTasks; renderTodayTasks(); });
+
+document.getElementById('btnLogin').addEventListener('click', () => {
+  if (!fb) { showToast('Firebaseに接続できません'); return; }
+  fb.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => showToast('ログインに失敗しました：' + e.message));
+});
+document.getElementById('btnLogout').addEventListener('click', () => {
+  if (state.user) { if (confirm('ログアウトしますか？')) fb.auth.signOut(); }
+  else if (confirm('デモデータを初期状態に戻しますか？')) { Demo.reset(); boot(); }
+});
+document.getElementById('btnReplan').addEventListener('click', () => {
+  if (state.plan?.status === 'confirmed' && !confirm('未完了のTODOを作り直します（完了済みは残ります）。よろしいですか？')) return;
+  proposePlan();
+});
+document.getElementById('deliverySubmit').addEventListener('click', submitDelivery);
+document.getElementById('settingsSave').addEventListener('click', saveSettings);
+document.getElementById('pluginCodeBox').addEventListener('click', async e => {
+  if (e.target.id !== 'btnPluginCode') return;
+  if (state.mode !== 'live') { showToast('連携コードはログインしてエージェントに接続すると発行できます'); return; }
+  if (!confirm('新しい連携コードを発行します（以前のコードは使えなくなります）。よろしいですか？')) return;
+  try {
+    const { token } = await Live.pluginToken();
+    document.getElementById('pluginCodeBox').innerHTML = `<div class="plugin-code">${esc(token)}</div><div class="field-note" style="margin:0">このコードは今だけ表示されます。Premiere の「ものがたりっち」パネルに貼り付けてください。</div>`;
+  } catch (err) { showToast('発行できませんでした：' + err.message); }
+});
+document.querySelectorAll('[data-open-settings]').forEach(el => el.addEventListener('click', openSettings));
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('visible'); });
+  ov.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => ov.classList.remove('visible')));
+});
 
 document.querySelectorAll('[data-nav]').forEach(el => {
   el.addEventListener('click', () => {
     document.querySelectorAll('.sb-item[data-nav], .mnav-item[data-nav]').forEach(x => x.classList.remove('active'));
     document.querySelectorAll(`[data-nav="${el.dataset.nav}"]`).forEach(x => x.classList.add('active'));
+    const go = sel => document.querySelector(sel).scrollIntoView({ behavior: 'smooth' });
     if (el.dataset.nav === 'home') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-    if (el.dataset.nav === 'waiting') { document.querySelector('.right-sidebar').scrollIntoView({ behavior: 'smooth' }); return; }
-    if (el.dataset.nav === 'channels' || el.dataset.nav === 'projects') { document.querySelector(`[data-sec="${el.dataset.nav === 'channels' ? 'channels' : 'projects'}"]`).scrollIntoView({ behavior: 'smooth' }); return; }
-    if (el.dataset.nav === 'mytasks') { document.querySelector('[data-sec="today"]').scrollIntoView({ behavior: 'smooth' }); return; }
+    if (el.dataset.nav === 'waiting') { go('.right-sidebar'); return; }
+    if (el.dataset.nav === 'channels') { go('[data-sec="channels"]'); return; }
+    if (el.dataset.nav === 'projects') { go('[data-sec="projects"]'); return; }
+    if (el.dataset.nav === 'mytasks') { go('[data-sec="today"]'); return; }
     if (el.dataset.nav === 'calendar') { window.location.href = 'index.html'; return; }
     showToast('この画面は準備中です');
   });
@@ -774,21 +2105,20 @@ document.querySelectorAll('[data-nav]').forEach(el => {
 const cmdkOverlay = document.getElementById('cmdkOverlay');
 const cmdkInput = document.getElementById('cmdkInput');
 function openCmdk() { cmdkOverlay.classList.add('visible'); cmdkInput.value = ''; runCmdk(''); setTimeout(() => cmdkInput.focus(), 30); }
-function closeCmdk() { cmdkOverlay.classList.remove('visible'); }
 document.getElementById('hdrSearchOpen').addEventListener('click', openCmdk);
-cmdkOverlay.addEventListener('click', e => { if (e.target === cmdkOverlay) closeCmdk(); });
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmdk(); }
-  if (e.key === 'Escape') { closeCmdk(); document.getElementById('newProjOverlay').classList.remove('visible'); }
+  if (e.key === 'Escape') document.querySelectorAll('.overlay.visible').forEach(o => o.classList.remove('visible'));
 });
 function runCmdk(q) {
   const query = q.trim().toLowerCase();
   const results = [];
-  projects.forEach(p => { if (!query || p.name.toLowerCase().includes(query)) results.push({ label: p.name, tag: `案件・${p.phase}` }); });
-  channels.forEach(c => { if (!query || c.name.toLowerCase().includes(query)) results.push({ label: c.name, tag: 'チャンネル' }); });
-  todayTasks.forEach(t => { if (query && t.action.toLowerCase().includes(query)) results.push({ label: t.action, tag: 'タスク' }); });
-  const out = document.getElementById('cmdkResults');
-  out.innerHTML = results.length ? results.slice(0, 12).map(r => `<div class="cmdk-item">${r.label}<span class="tag">${r.tag}</span></div>`).join('') : `<div class="cmdk-empty">一致する結果がありません</div>`;
+  state.projects.forEach(p => { if (!query || p.name.toLowerCase().includes(query)) results.push({ label: p.name, tag: `案件・${p.phase}` }); });
+  (state.plan?.todos || []).forEach(t => { if (query && t.title.toLowerCase().includes(query)) results.push({ label: t.title, tag: 'TODO' }); });
+  state.questions.forEach(x => { if (query && String(x.todo + x.stuckPoint).toLowerCase().includes(query)) results.push({ label: x.todo, tag: '相談' }); });
+  document.getElementById('cmdkResults').innerHTML = results.length
+    ? results.slice(0, 12).map(r => `<div class="cmdk-item">${esc(r.label)}<span class="tag">${esc(r.tag)}</span></div>`).join('')
+    : `<div class="cmdk-empty">一致する結果がありません</div>`;
 }
 cmdkInput.addEventListener('input', () => runCmdk(cmdkInput.value));
 
@@ -798,73 +2128,94 @@ function toggleDropdown(id, others) {
   const willOpen = !el.classList.contains('visible');
   others.forEach(o => document.getElementById(o).classList.remove('visible'));
   el.classList.toggle('visible', willOpen);
+  if (id === 'notifDropdown' && willOpen) { notifications.forEach(n => { n.read = true; }); document.getElementById('notifDot').style.display = 'none'; }
 }
 document.getElementById('btnNotif').addEventListener('click', e => { e.stopPropagation(); toggleDropdown('notifDropdown', ['profileDropdown']); });
 document.getElementById('btnProfile').addEventListener('click', e => { e.stopPropagation(); toggleDropdown('profileDropdown', ['notifDropdown']); });
 document.addEventListener('click', () => { document.getElementById('notifDropdown').classList.remove('visible'); document.getElementById('profileDropdown').classList.remove('visible'); });
 
-/* New project modal */
+/* New project modal（ディレクター：金額と担当編集者を入力） */
 const npOverlay = document.getElementById('newProjOverlay');
 document.getElementById('btnNewProject').addEventListener('click', () => {
-  document.getElementById('npChannel').innerHTML = channels.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  document.getElementById('npName').value = '';
+  document.getElementById('npChannelList').innerHTML = [...new Set(state.projects.map(p => p.channelName).filter(Boolean))].map(n => `<option value="${esc(n)}">`).join('');
+  document.getElementById('npEditor').innerHTML = (state.editors.length ? state.editors : [{ id: 'me', name: state.profile.name }]).map(e => `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join('');
+  ['npName', 'npChannel', 'npFee'].forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('npDeadline').value = ymdOf(addDays(new Date(), 14));
+  document.querySelectorAll('#npBudgets [data-budget]').forEach(i => { i.value = ''; });
+  updateBudgetHint();
   npOverlay.classList.add('visible');
 });
 document.getElementById('npCancel').addEventListener('click', () => npOverlay.classList.remove('visible'));
-npOverlay.addEventListener('click', e => { if (e.target === npOverlay) npOverlay.classList.remove('visible'); });
-document.getElementById('npSubmit').addEventListener('click', () => {
+function updateBudgetHint() {
+  const ed = state.editors.find(e => e.id === document.getElementById('npEditor').value);
+  const tips = BUDGET_KEYS.map(k => [k, budgetRatioFor(ed?.stats, k)]).filter(([, r]) => r && Math.abs(r - 1) >= 0.05);
+  document.getElementById('npBudgetHint').textContent = tips.length
+    ? `📈 ${ed.name}さんの過去実績：${tips.map(([k, r]) => `${k}は予算の${r}倍`).join('、')}。予算をその分多めに見ておくと安全です。`
+    : '着手すると砂時計が落ち始めます。超過は記録され、この編集者の次回の予算提案に使われます。';
+}
+document.getElementById('npEditor').addEventListener('change', updateBudgetHint);
+document.getElementById('npSubmit').addEventListener('click', async () => {
   const name = document.getElementById('npName').value.trim();
   if (!name) { showToast('案件名を入力してください'); return; }
-  const channelId = document.getElementById('npChannel').value;
-  const phase = document.getElementById('npPhase').value;
-  const id = 'p' + Date.now();
-  projects.unshift({ id, name, channelId, phase, nextAction: '担当者をアサイン', assignee: '未定', deadline: '未設定', blockedBy: null, comments: 0, status: 'active', updatedAt: new Date().toISOString() });
+  const editorSel = document.getElementById('npEditor');
+  const p = {
+    id: uid('p'),
+    name,
+    channelName: document.getElementById('npChannel').value.trim(),
+    phase: document.getElementById('npPhase').value,
+    deadline: document.getElementById('npDeadline').value,
+    fee: Number(document.getElementById('npFee').value) || 0,
+    editorId: editorSel.value,
+    editorName: editorSel.selectedOptions[0]?.textContent || '',
+    budgetsH: Object.fromEntries([...document.querySelectorAll('#npBudgets [data-budget]')].filter(i => Number(i.value) > 0).map(i => [i.dataset.budget, Number(i.value)])),
+    actualSec: {},
+    status: 'active',
+    comments: 0,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  try { await backend().createProject(p); } catch (e) { showToast('作成できませんでした：' + e.message); return; }
+  if (state.mode === 'demo') state.projects = Demo.data.projects;
   npOverlay.classList.remove('visible');
   renderAll();
   showToast(`✓ 「${name}」を作成しました`);
 });
 
-/* AI assistant (ローカルデータに基づく簡易応答。本番は MCP 経由で Studio OS / ものがたりっちを参照) */
+/* AI assistant（右カラムのかんたん応答） */
 function aiRespond(q) {
-  const query = q.toLowerCase();
-  if (query.includes('要約') || query.includes('タスク')) {
-    if (!todayTasks.length) return '今日のタスクはありません。お疲れさまでした 🎉';
-    const lines = todayTasks.map(t => { const p = projects.find(p => p.id === t.projectId); return `・[${t.priority}] ${p ? p.name : ''} — ${t.action}（${t.deadline}）`; });
-    return `今日やることは${todayTasks.length}件です。\n${lines.join('\n')}`;
+  const s = monthStats();
+  if (/プラン|要約|今日|タスク/.test(q)) {
+    const todos = (state.plan?.todos || []).filter(t => !t.done);
+    if (!todos.length) return state.plan ? '今日のTODOはすべて完了しています 🎉' : 'まだ今日のプランがありません。「今日のプラン」から提案してもらえます。';
+    return `残りのTODOは${todos.length}件です。\n${todos.map(t => `・${t.start}〜 ${t.title}（${t.minutes}分）`).join('\n')}`;
   }
-  if (query.includes('進捗') || query.includes('更新')) {
-    const byPhase = PHASES.map(ph => `${ph}: ${projects.filter(p => p.phase === ph && p.status !== 'archived').length}件`).join(' / ');
-    const waiting = projects.filter(p => p.blockedBy);
-    const waitLine = waiting.length ? `\n確認待ちが${waiting.length}件あります（${waiting.map(p => p.name).join('、')}）。` : '';
-    return `現在の案件は工程別に ${byPhase} です。${waitLine}\n進捗率は工程から自動算出されているため、手動更新は不要です。`;
+  if (/ゴール|あと|進捗/.test(q)) {
+    if (!state.goal) return 'まだ Addness の月ゴールが連携されていません。設定から連携できます。';
+    return `🎯 ${state.goal.title}\n納品 ${s.done}/${s.target}本、請求 ${yen(s.revenue)}${s.revenueTarget ? ` / ${yen(s.revenueTarget)}` : ''}。\n残り${s.t.daysLeft}日で、週${s.pace.toFixed(1)}本のペースが必要です。`;
   }
-  if (query.includes('スケジュール') || query.includes('撮影')) {
-    const shootEvents = schedule.filter(e => e.name.includes('撮影'));
-    if (!shootEvents.length) return '今週、タイトルに「撮影」を含む予定は登録されていません。';
-    return `今週の撮影関連の予定です。\n${shootEvents.map(e => `・${e.day} ${e.time} ${e.name}（${e.loc}）`).join('\n')}`;
+  if (/請求|いくら|売上/.test(q)) {
+    const inv = state.invoices.find(i => i.month === s.t.ym);
+    const tt = totals(inv?.lines);
+    return `今月の請求明細は${(inv?.lines || []).length}件、合計 ${yen(tt.total)}（税込）です。${inv?.status === 'issued' ? '請求書は発行済みです。' : '月末に確定してドライブに保存されます。'}`;
   }
-  return 'この機能はベータ版です。現在はローカルのデモデータで応答しています。本番ではMCP経由でStudio OSとものがたりっちのデータを読み取り・更新します。';
+  return '作業で詰まったときは、TODOの「詰まった」から相談すると、AIが答えるかディレクターにLINEで確認できます。';
 }
 function aiSend() {
   const input = document.getElementById('aiInput');
   const q = input.value.trim();
   if (!q) return;
   const log = document.getElementById('aiLog');
-  log.insertAdjacentHTML('beforeend', `<div class="ai-msg user">${q}</div>`);
+  log.insertAdjacentHTML('beforeend', `<div class="ai-msg user">${esc(q)}</div>`);
   input.value = '';
   log.scrollTop = log.scrollHeight;
   setTimeout(() => {
-    log.insertAdjacentHTML('beforeend', `<div class="ai-msg assistant">${aiRespond(q).replace(/\n/g, '<br>')}</div>`);
+    log.insertAdjacentHTML('beforeend', `<div class="ai-msg assistant">${esc(aiRespond(q))}</div>`);
     log.scrollTop = log.scrollHeight;
   }, 260);
 }
 document.getElementById('aiSend').addEventListener('click', aiSend);
-document.getElementById('aiInput').addEventListener('keydown', e => { if (e.key === 'Enter') aiSend(); });
+document.getElementById('aiInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) aiSend(); });
 document.querySelectorAll('.ai-chip').forEach(chip => chip.addEventListener('click', () => { document.getElementById('aiInput').value = chip.dataset.q; aiSend(); }));
-
-/* keep sync time label roughly fresh */
-let syncMinutes = 1;
-setInterval(() => { syncMinutes++; document.getElementById('sbSyncTime').textContent = `最終同期：${syncMinutes}分前`; }, 60000);
 </script>
 </body>
 </html>
